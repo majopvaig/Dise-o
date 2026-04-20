@@ -1,4 +1,4 @@
-package Entitys;
+package dtos;
 
 /**
  *
@@ -7,27 +7,27 @@ package Entitys;
  * @author Dayanara Peralta - 262695
  * @author María Valdez - 262775
  */
-public class Asiento {
+public class AsientoDTO {
 
     private Long idAsiento;
     private String fila;
     private Integer numero;
-    private Seccion seccion;
+    private Long idseccion;
 
-    public Asiento() {
+    public AsientoDTO() {
     }
 
-    public Asiento(Long idAsiento, String fila, Integer numero, Seccion seccion) {
+    public AsientoDTO(Long idAsiento, String fila, Integer numero, Long idseccion) {
         this.idAsiento = idAsiento;
         this.fila = fila;
         this.numero = numero;
-        this.seccion = seccion;
+        this.idseccion = idseccion;
     }
 
-    public Asiento(String fila, Integer numero, Seccion seccion) {
+    public AsientoDTO(String fila, Integer numero, Long idseccion) {
         this.fila = fila;
         this.numero = numero;
-        this.seccion = seccion;
+        this.idseccion = idseccion;
     }
 
     public Long getIdAsiento() {
@@ -54,17 +54,17 @@ public class Asiento {
         this.numero = numero;
     }
 
-    public Seccion getSeccion() {
-        return seccion;
+    public Long getIdSeccion() {
+        return idseccion;
     }
 
-    public void setSeccion(Seccion seccion) {
-        this.seccion = seccion;
+    public void setIdSeccion(Long idseccion) {
+        this.idseccion = idseccion;
     }
 
     @Override
     public String toString() {
-        return "Asiento{" + "idAsiento=" + idAsiento + ", fila=" + fila + ", numero=" + numero + ", seccion=" + seccion + '}';
+        return "AsientoDTO{" + "idAsiento=" + idAsiento + ", fila=" + fila + ", numero=" + numero + ", idseccion=" + idseccion + '}';
     }
 
 }

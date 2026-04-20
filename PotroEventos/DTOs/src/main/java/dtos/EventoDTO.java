@@ -1,7 +1,7 @@
-package Entitys;
+package dtos;
 
-import Entitys.ENUMS.CategoriaEvento;
-import Entitys.ENUMS.EstadoEvento;
+import dtos.ENUMS.CategoriaEventoDTO;
+import dtos.ENUMS.EstadoEventoDTO;
 import java.time.LocalDateTime;
 
 /**
@@ -11,20 +11,20 @@ import java.time.LocalDateTime;
  * @author Dayanara Peralta - 262695
  * @author María Valdez - 262775
  */
-public class Evento {
+public class EventoDTO {
 
     private Long idEvento;
-    private CategoriaEvento categoriaEvento;
+    private CategoriaEventoDTO categoriaEvento;
     private String nombreEvento;
     private String informacionEvento;
     private LocalDateTime fechaHora;
     private String ubicacion;
-    private EstadoEvento estadoEvento;
+    private EstadoEventoDTO estadoEvento;
 
-    public Evento() {
+    public EventoDTO() {
     }
 
-    public Evento(Long idEvento, CategoriaEvento categoriaEvento, String nombreEvento, String informacionEvento, LocalDateTime fechaHora, String ubicacion, EstadoEvento estadoEvento) {
+    public EventoDTO(Long idEvento, CategoriaEventoDTO categoriaEvento, String nombreEvento, String informacionEvento, LocalDateTime fechaHora, String ubicacion, EstadoEventoDTO estadoEvento) {
         this.idEvento = idEvento;
         this.categoriaEvento = categoriaEvento;
         this.nombreEvento = nombreEvento;
@@ -34,7 +34,7 @@ public class Evento {
         this.estadoEvento = estadoEvento;
     }
 
-    public Evento(CategoriaEvento categoriaEvento, String nombreEvento, String informacionEvento, LocalDateTime fechaHora, String ubicacion, EstadoEvento estadoEvento) {
+    public EventoDTO(CategoriaEventoDTO categoriaEvento, String nombreEvento, String informacionEvento, LocalDateTime fechaHora, String ubicacion, EstadoEventoDTO estadoEvento) {
         this.categoriaEvento = categoriaEvento;
         this.nombreEvento = nombreEvento;
         this.informacionEvento = informacionEvento;
@@ -51,11 +51,11 @@ public class Evento {
         this.idEvento = idEvento;
     }
 
-    public CategoriaEvento getCategoriaEvento() {
+    public CategoriaEventoDTO getCategoriaEvento() {
         return categoriaEvento;
     }
 
-    public void setCategoriaEvento(CategoriaEvento categoriaEvento) {
+    public void setCategoriaEvento(CategoriaEventoDTO categoriaEvento) {
         this.categoriaEvento = categoriaEvento;
     }
 
@@ -91,17 +91,17 @@ public class Evento {
         this.ubicacion = ubicacion;
     }
 
-    public EstadoEvento getEstadoEvento() {
+    public EstadoEventoDTO getEstadoEvento() {
         return estadoEvento;
     }
 
-    public void setEstadoEvento(EstadoEvento estadoEvento) {
+    public void setEstadoEvento(EstadoEventoDTO estadoEvento) {
         this.estadoEvento = estadoEvento;
     }
 
     @Override
     public String toString() {
-        return "Evento{" + "idEvento=" + idEvento + ", categoriaEvento=" + categoriaEvento + ", nombreEvento=" + nombreEvento + ", informacionEvento=" + informacionEvento + ", fechaHora=" + fechaHora + ", ubicacion=" + ubicacion + '}';
+        return "EventoDTO{" + "idEvento=" + idEvento + ", categoriaEvento=" + categoriaEvento + ", nombreEvento=" + nombreEvento + ", informacionEvento=" + informacionEvento + ", fechaHora=" + fechaHora + ", ubicacion=" + ubicacion + ", estadoEvento=" + estadoEvento + '}';
     }
 
 }

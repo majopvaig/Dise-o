@@ -1,5 +1,6 @@
 package interfaz;
 
+import Entitys.AsientoEvento;
 import Entitys.Evento;
 import Entitys.Usuario;
 import java.util.List;
@@ -13,10 +14,24 @@ import java.util.List;
  */
 public interface IControlOperaciones {
 
-    public List<Evento> obtenerEventosDisponibles();
+    // Eventos
+    List<Evento> obtenerEventosDisponibles();
 
-    public List<Usuario> obtenerUsuarios();
-    
-    
-    
+    Evento obtenerEvento(Long idEvento);
+
+    // Usuarios
+    List<Usuario> obtenerUsuarios();
+
+    Usuario obtenerUsuario(Long idUsuario);
+
+    // Asientos por evento
+    List<AsientoEvento> obtenerAsientosEvento(Long idEvento);
+
+    boolean validarDisponibilidad(Long idEvento, Long idAsiento);
+
+    void agregarEvento(Evento evento);
+
+    void agregarUsuario(Usuario usuario);
+
+    void agregarAsientoEvento(AsientoEvento asientoEvento);
 }
