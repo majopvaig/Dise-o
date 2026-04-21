@@ -17,12 +17,13 @@ public class UsuarioAdapter {
             return null;
         }
         UsuarioDTO dto = new UsuarioDTO();
+
         dto.setIdUsuario(usuario.getIdUsuario());
         dto.setNombre(usuario.getNombre());
         dto.setApellidoPaterno(usuario.getApellidoPaterno());
         dto.setApellidoMaterno(usuario.getApellidoMaterno());
         dto.setCorreo(usuario.getCorreo());
-        
+        dto.setContrasenia(usuario.getContrasenia());
         return dto;
     }
     
@@ -37,6 +38,7 @@ public class UsuarioAdapter {
         usuario.setApellidoPaterno(dto.getApellidoPaterno());
         usuario.setApellidoMaterno(dto.getApellidoMaterno());
         usuario.setCorreo(dto.getCorreo());
+        usuario.setContrasenia(dto.getContrasenia());
         
         return usuario;
     }
