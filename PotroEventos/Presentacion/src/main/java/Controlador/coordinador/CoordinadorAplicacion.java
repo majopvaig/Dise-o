@@ -7,6 +7,10 @@ import Pantallas.FrmPlantillaSistema;
 import Pantallas.FrmRegistrarse;
 import Pantallas.FrmDetallesCompra;
 import Pantallas.FrmRegistroItson;
+import Pantallas.vistas.PnlCategorias;
+import Pantallas.vistas.PnlConsultar;
+import Pantallas.vistas.PnlConsultarEvento;
+import Pantallas.vistas.PnlEventos;
 
 /**
  *
@@ -30,8 +34,16 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
         }
         if (frmRegistrarse != null) {
             frmRegistrarse.setVisible(false);
+        }       
+        if(frmPago != null){
+            frmPago.setVisible(false);
+        }        
+        if(frmDetalles != null){
+            frmDetalles.setVisible(false);
         }
-
+        if(frmRegistro != null){
+            frmRegistro.setVisible(false);
+        }
     }
 
     @Override
@@ -65,21 +77,42 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
 
     @Override
     public void mostrarInicio() {
+        ocultarTodo();
         if (frmPlantilla == null) {
             frmPlantilla = new FrmPlantillaSistema(this);
         }
-        this.frmPlantilla.setVisible(true);
+        frmPlantilla.setContenido(new PnlCategorias(this));
+        frmPlantilla.setVisible(true);
         frmInicioSesion.dispose();
     }
 
     @Override
     public void mostrarConsultar() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        ocultarTodo();
+        if(frmPlantilla == null){
+            frmPlantilla = new FrmPlantillaSistema(this);
+        }
+        frmPlantilla.setContenido(new PnlConsultar(this));
+        frmPlantilla.setVisible(true);
     }
 
     @Override
-    public void mostrarInfoEvento() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void mostrarInfoEvento(EventoDTO evento) {
+        ocultarTodo();
+        if(frmPlantilla == null){
+            frmPlantilla = new FrmPlantillaSistema(this);
+        }
+        frmPlantilla.setContenido(new PnlConsultarEvento(this, evento));
+        frmPlantilla.setVisible(true);       
+    }
+    
+    @Override
+    public void mostrarDetalles(EventoDTO evento){
+        ocultarTodo();
+        if(frmDetalles == null){
+            frmDetalles = new FrmDetallesCompra(this, evento);
+        }
+        frmDetalles.setVisible(true);
     }
 
     @Override
@@ -88,8 +121,13 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
     }
 
     @Override
-    public void mostrarEventos() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void mostrarEventos(CategoriaDTO categoria) {
+        ocultarTodo();
+        if(frmPlantilla == null){
+            frmPlantilla = new FrmPlantillaSistema(this);
+        }
+        frmPlantilla.setContenido(new PnlEventos(this, categoria));
+        frmPlantilla.setVisible(true);
     }
 
     @Override

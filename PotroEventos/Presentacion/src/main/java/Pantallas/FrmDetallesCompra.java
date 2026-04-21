@@ -4,6 +4,10 @@
  */
 package Pantallas;
 
+import Controlador.interfaz.ICoordinadorAplicacion;
+import java.awt.Image;
+import javax.swing.ImageIcon;
+
 /**
  *
  * @author Aaron Burciaga - 262788
@@ -14,12 +18,40 @@ package Pantallas;
 public class FrmDetallesCompra extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmDetallesCompra.class.getName());
+    private ICoordinadorAplicacion coordinador;
+    private EventoDTO evento;
 
     /**
      * Creates new form frmDetallesCompra
      */
-    public FrmDetallesCompra() {
+    public FrmDetallesCompra(ICoordinadorAplicacion coordinador, EventoDTO evento) {
+        this.coordinador = coordinador;
+        this.evento = evento;
         initComponents();
+        setLocationRelativeTo(null);
+        cargarDatos();
+    }
+    
+    public void cargarDatos(){
+        ImageIcon icono = new ImageIcon(evento.getUrlImagen());
+        int ancho = getWidth();
+        int alto = getHeight();
+        if (ancho <= 0) {
+            ancho = 270;
+        }
+        if (alto <= 0) {
+            alto = 188;
+        }
+        Image img = icono.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+        iconEvento.setIcon(new ImageIcon(img));
+        iconEvento.setText("");
+        /*
+        falta establecer los detalles de la compra, pero quiero saber
+        sí si tendremos un DTO de la compra o la reservación.
+        */
+        this.txtEvento.setText(evento.getNombre());
+        this.txtFechaHora.setText(evento.getFecha());
+        this.txtUbicacion.setText(evento.getUbicacion());
     }
 
     /**
@@ -34,26 +66,25 @@ public class FrmDetallesCompra extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnInicio = new javax.swing.JButton();
+        btnConsultar = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
+        iconEvento = new javax.swing.JLabel();
+        lblDetalles = new javax.swing.JLabel();
+        lblAsientos = new javax.swing.JLabel();
+        lblEvento = new javax.swing.JLabel();
+        lblFechaHora = new javax.swing.JLabel();
+        lblUbicacion = new javax.swing.JLabel();
+        txtAsientos = new javax.swing.JLabel();
+        txtEvento = new javax.swing.JLabel();
+        txtFechaHora = new javax.swing.JLabel();
+        txtUbicacion = new javax.swing.JLabel();
+        lblEntrada = new javax.swing.JLabel();
+        iconQR = new javax.swing.JLabel();
+        btnAceptar = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel14 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
+        txtHorasAntes = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
 
@@ -84,33 +115,39 @@ public class FrmDetallesCompra extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(0, 49, 141));
 
-        jTextField1.setText("Buscar...");
+        btnInicio.setBackground(new java.awt.Color(0, 49, 141));
+        btnInicio.setFont(new java.awt.Font("Segoe UI Black", 1, 24)); // NOI18N
+        btnInicio.setForeground(new java.awt.Color(255, 255, 255));
+        btnInicio.setText("Inicio");
+        btnInicio.setBorder(null);
+        btnInicio.setBorderPainted(false);
+        btnInicio.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnInicioMouseClicked(evt);
+            }
+        });
 
-        jButton1.setBackground(new java.awt.Color(0, 49, 141));
-        jButton1.setFont(new java.awt.Font("Segoe UI Black", 1, 24)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Inicio");
-        jButton1.setBorder(null);
-        jButton1.setBorderPainted(false);
-
-        jButton2.setBackground(new java.awt.Color(0, 49, 141));
-        jButton2.setFont(new java.awt.Font("Segoe UI Black", 1, 24)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Consultar");
-        jButton2.setBorder(null);
-        jButton2.setBorderPainted(false);
+        btnConsultar.setBackground(new java.awt.Color(0, 49, 141));
+        btnConsultar.setFont(new java.awt.Font("Segoe UI Black", 1, 24)); // NOI18N
+        btnConsultar.setForeground(new java.awt.Color(255, 255, 255));
+        btnConsultar.setText("Consultar");
+        btnConsultar.setBorder(null);
+        btnConsultar.setBorderPainted(false);
+        btnConsultar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnConsultarMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(36, 36, 36)
-                .addComponent(jButton1)
-                .addGap(33, 33, 33)
-                .addComponent(jButton2)
+                .addGap(38, 38, 38)
+                .addComponent(btnInicio)
+                .addGap(18, 18, 18)
+                .addComponent(btnConsultar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -118,60 +155,64 @@ public class FrmDetallesCompra extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(btnInicio)
+                    .addComponent(btnConsultar))
                 .addContainerGap())
         );
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel2.setText("iconEvento");
+        iconEvento.setText("iconEvento");
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI Black", 0, 24)); // NOI18N
-        jLabel3.setText("Detalles de Compra");
+        lblDetalles.setFont(new java.awt.Font("Segoe UI Black", 0, 24)); // NOI18N
+        lblDetalles.setText("Detalles de Compra");
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI Black", 1, 18)); // NOI18N
-        jLabel4.setText("Asiento(s)");
+        lblAsientos.setFont(new java.awt.Font("Segoe UI Black", 1, 18)); // NOI18N
+        lblAsientos.setText("Asiento(s)");
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI Black", 1, 18)); // NOI18N
-        jLabel5.setText("Evento");
+        lblEvento.setFont(new java.awt.Font("Segoe UI Black", 1, 18)); // NOI18N
+        lblEvento.setText("Evento");
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI Black", 1, 18)); // NOI18N
-        jLabel6.setText("Fecha y Hora");
+        lblFechaHora.setFont(new java.awt.Font("Segoe UI Black", 1, 18)); // NOI18N
+        lblFechaHora.setText("Fecha y Hora");
 
-        jLabel7.setFont(new java.awt.Font("Segoe UI Black", 1, 18)); // NOI18N
-        jLabel7.setText("Ubicacion");
+        lblUbicacion.setFont(new java.awt.Font("Segoe UI Black", 1, 18)); // NOI18N
+        lblUbicacion.setText("Ubicacion");
 
-        jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel8.setText("Info asientos");
+        txtAsientos.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtAsientos.setText("Info asientos");
 
-        jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel9.setText("Nombre Evento");
+        txtEvento.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtEvento.setText("Nombre Evento");
 
-        jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel10.setText("Info fecha y hora");
+        txtFechaHora.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtFechaHora.setText("Info fecha y hora");
 
-        jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel11.setText("Info ubicación");
+        txtUbicacion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtUbicacion.setText("Info ubicación");
 
-        jLabel12.setFont(new java.awt.Font("Segoe UI Black", 1, 18)); // NOI18N
-        jLabel12.setText("Entrada QR");
+        lblEntrada.setFont(new java.awt.Font("Segoe UI Black", 1, 18)); // NOI18N
+        lblEntrada.setText("Entrada QR");
 
-        jLabel13.setText("qr");
+        iconQR.setText("qr");
 
-        jButton3.setBackground(new java.awt.Color(0, 119, 255));
-        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(255, 255, 255));
-        jButton3.setText("Aceptar");
+        btnAceptar.setBackground(new java.awt.Color(0, 119, 255));
+        btnAceptar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnAceptar.setForeground(new java.awt.Color(255, 255, 255));
+        btnAceptar.setText("Aceptar");
+        btnAceptar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnAceptarMouseClicked(evt);
+            }
+        });
 
         jPanel4.setBackground(new java.awt.Color(217, 217, 217));
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel14.setText("Tiempo límite para cancelar antes del evento:");
 
-        jLabel15.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel15.setText("X");
+        txtHorasAntes.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtHorasAntes.setText("X");
 
         jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel16.setText("horas antes del evento. ");
@@ -187,7 +228,7 @@ public class FrmDetallesCompra extends javax.swing.JFrame {
                 .addGap(169, 169, 169)
                 .addComponent(jLabel14)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtHorasAntes, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel16)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -200,7 +241,7 @@ public class FrmDetallesCompra extends javax.swing.JFrame {
                 .addContainerGap(10, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel14)
-                    .addComponent(jLabel15)
+                    .addComponent(txtHorasAntes)
                     .addComponent(jLabel16)
                     .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
@@ -212,36 +253,36 @@ public class FrmDetallesCompra extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(31, 31, 31)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(iconEvento, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(48, 48, 48)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtUbicacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(459, 459, 459))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel4)
+                        .addComponent(lblAsientos)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel3)
+                                .addComponent(lblDetalles)
                                 .addGap(295, 295, 295))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel12)
+                                .addComponent(lblEntrada)
                                 .addGap(109, 109, 109))))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE))
+                            .addComponent(txtEvento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtAsientos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblEvento)
+                            .addComponent(lblFechaHora)
+                            .addComponent(txtFechaHora, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(iconQR, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(65, 65, 65))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel7)
+                        .addComponent(lblUbicacion)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton3)
+                        .addComponent(btnAceptar)
                         .addGap(121, 121, 121))))
             .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -249,35 +290,35 @@ public class FrmDetallesCompra extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addComponent(jLabel3)
+                .addComponent(lblDetalles)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGap(43, 43, 43)
-                                .addComponent(jLabel8)
+                                .addComponent(txtAsientos)
                                 .addGap(18, 18, 18)
-                                .addComponent(jLabel5)
+                                .addComponent(lblEvento)
                                 .addGap(18, 18, 18)
-                                .addComponent(jLabel9)
+                                .addComponent(txtEvento)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel6))
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(lblFechaHora))
+                            .addComponent(iconEvento, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel10)
+                        .addComponent(txtFechaHora)
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel7)
+                        .addComponent(lblUbicacion)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel11))
+                        .addComponent(txtUbicacion))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel12))
+                            .addComponent(lblAsientos)
+                            .addComponent(lblEntrada))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(iconQR, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(31, 31, 31)
-                        .addComponent(jButton3)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
+                        .addComponent(btnAceptar)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -302,31 +343,47 @@ public class FrmDetallesCompra extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnAceptarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAceptarMouseClicked
+        // TODO add your handling code here:
+        coordinador.mostrarConsultar();
+    }//GEN-LAST:event_btnAceptarMouseClicked
+
+    private void btnInicioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnInicioMouseClicked
+        // TODO add your handling code here:
+        coordinador.mostrarInicio();
+        this.dispose();
+    }//GEN-LAST:event_btnInicioMouseClicked
+
+    private void btnConsultarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConsultarMouseClicked
+        // TODO add your handling code here:
+        coordinador.mostrarConsultar();
+        this.dispose();
+    }//GEN-LAST:event_btnConsultarMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton btnAceptar;
+    private javax.swing.JButton btnConsultar;
+    private javax.swing.JButton btnInicio;
+    private javax.swing.JLabel iconEvento;
+    private javax.swing.JLabel iconQR;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel lblAsientos;
+    private javax.swing.JLabel lblDetalles;
+    private javax.swing.JLabel lblEntrada;
+    private javax.swing.JLabel lblEvento;
+    private javax.swing.JLabel lblFechaHora;
+    private javax.swing.JLabel lblUbicacion;
+    private javax.swing.JLabel txtAsientos;
+    private javax.swing.JLabel txtEvento;
+    private javax.swing.JLabel txtFechaHora;
+    private javax.swing.JLabel txtHorasAntes;
+    private javax.swing.JLabel txtUbicacion;
     // End of variables declaration//GEN-END:variables
 }

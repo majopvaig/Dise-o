@@ -17,6 +17,36 @@ import javax.swing.JPanel;
 public class FrmPlantillaSistema extends javax.swing.JFrame {
 
     private ICoordinadorAplicacion coordinador;
+    
+    /*
+    modo de inicio/de categorías
+    */
+    private boolean categorias;
+    
+    /*
+    modo de consulta de los eventos del usuario
+    */
+    private boolean consultar;
+    
+    /*
+    modo para consultar eventos de cierta categoría
+    */
+    private boolean eventos;
+    
+    /*
+    modo para mostrar la info de un evento
+    */
+    private boolean mostrarEvento;
+    
+    /*
+    modo para pagar
+    */
+    private boolean pago;
+    
+    /*
+    modo para mostrar detalles de compra
+    */
+    private boolean detallesCompra;
 
     /**
      * Creates new form FrmPlantillaSistema
@@ -24,6 +54,7 @@ public class FrmPlantillaSistema extends javax.swing.JFrame {
     public FrmPlantillaSistema(ICoordinadorAplicacion coordinador) {
         this.coordinador = coordinador;
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     public void setContenido(JPanel panel) {
@@ -195,7 +226,7 @@ public class FrmPlantillaSistema extends javax.swing.JFrame {
     }//GEN-LAST:event_botonInicio1ActionPerformed
 
     private void botonInicio1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonInicio1MouseClicked
-        //coordinador.volverACategorias();
+        coordinador.mostrarInicio();
     }//GEN-LAST:event_botonInicio1MouseClicked
 
     private void btnConsultarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConsultarMouseClicked

@@ -16,15 +16,26 @@ import Controlador.interfaz.ICoordinadorAplicacion;
 public class PnlEventos extends javax.swing.JPanel {
 
     private ICoordinadorAplicacion coordinador;
+    private CategoriaDTO categoria;
 
     /**
      * Creates new form PnlEventos
      */
-    public PnlEventos(ICoordinadorAplicacion coordinador) {
+    public PnlEventos(ICoordinadorAplicacion coordinador, CategoriaDTO categoria) {
+        this.categoria = categoria;
         this.coordinador = coordinador;
         initComponents();
     }
 
+    public void cargarDatos(){
+        for(EventoDTO evento : coordinador.consultarEventos(categoria)){
+            PnlEvento panel = PnlEvento.crearParaVista(evento, this);
+            add(panel);
+            revalidate();
+            repaint();
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -36,10 +47,8 @@ public class PnlEventos extends javax.swing.JPanel {
 
         evento1 = new javax.swing.JPanel();
         evento2 = new javax.swing.JPanel();
-        evento3 = new javax.swing.JPanel();
-        evento6 = new javax.swing.JPanel();
-        evento5 = new javax.swing.JPanel();
-        evento4 = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        btnVolver = new javax.swing.JButton();
 
         setOpaque(false);
 
@@ -67,116 +76,82 @@ public class PnlEventos extends javax.swing.JPanel {
         evento2.setLayout(evento2Layout);
         evento2Layout.setHorizontalGroup(
             evento2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 250, Short.MAX_VALUE)
         );
         evento2Layout.setVerticalGroup(
             evento2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
-        evento3.setBackground(new java.awt.Color(153, 153, 153));
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        javax.swing.GroupLayout evento3Layout = new javax.swing.GroupLayout(evento3);
-        evento3.setLayout(evento3Layout);
-        evento3Layout.setHorizontalGroup(
-            evento3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        evento3Layout.setVerticalGroup(
-            evento3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 150, Short.MAX_VALUE)
-        );
+        btnVolver.setBackground(new java.awt.Color(31, 92, 204));
+        btnVolver.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        btnVolver.setForeground(new java.awt.Color(255, 255, 255));
+        btnVolver.setText("Volver");
+        btnVolver.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnVolverMouseClicked(evt);
+            }
+        });
 
-        evento6.setBackground(new java.awt.Color(153, 153, 153));
-
-        javax.swing.GroupLayout evento6Layout = new javax.swing.GroupLayout(evento6);
-        evento6.setLayout(evento6Layout);
-        evento6Layout.setHorizontalGroup(
-            evento6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 250, Short.MAX_VALUE)
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(btnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        evento6Layout.setVerticalGroup(
-            evento6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-
-        evento5.setBackground(new java.awt.Color(153, 153, 153));
-
-        javax.swing.GroupLayout evento5Layout = new javax.swing.GroupLayout(evento5);
-        evento5.setLayout(evento5Layout);
-        evento5Layout.setHorizontalGroup(
-            evento5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 250, Short.MAX_VALUE)
-        );
-        evento5Layout.setVerticalGroup(
-            evento5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 150, Short.MAX_VALUE)
-        );
-
-        evento4.setBackground(new java.awt.Color(153, 153, 153));
-
-        javax.swing.GroupLayout evento4Layout = new javax.swing.GroupLayout(evento4);
-        evento4.setLayout(evento4Layout);
-        evento4Layout.setHorizontalGroup(
-            evento4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        evento4Layout.setVerticalGroup(
-            evento4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(503, Short.MAX_VALUE)
+                .addComponent(btnVolver)
+                .addGap(16, 16, 16))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 798, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(evento4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(evento1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGap(18, 18, 18)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(evento2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(evento5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGap(18, 18, 18)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(evento3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(evento6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(evento1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(evento2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(408, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 330, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(evento1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(evento2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(evento3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGap(18, 18, 18)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(evento4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(evento6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(evento5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(evento1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(evento2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void evento1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_evento1MouseClicked
-        coordinador.mostrarInfoEvento();
+
     }//GEN-LAST:event_evento1MouseClicked
 
+    private void btnVolverMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnVolverMouseClicked
+        // TODO add your handling code here:
+        coordinador.mostrarInicio();
+    }//GEN-LAST:event_btnVolverMouseClicked
+
+    public void mostrarEvento(EventoDTO evento){
+        coordinador.mostrarInfoEvento(evento);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnVolver;
     private javax.swing.JPanel evento1;
     private javax.swing.JPanel evento2;
-    private javax.swing.JPanel evento3;
-    private javax.swing.JPanel evento4;
-    private javax.swing.JPanel evento5;
-    private javax.swing.JPanel evento6;
+    private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

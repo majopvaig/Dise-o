@@ -20,10 +20,12 @@ public interface ICoordinadorAplicacion {
     public void mostrarConsultar();
 
     public void mostrarInfoEvento();
+    
+    public void mostrarDetalles(EventoDTO evento);
 
     public void finalizarCompra();
 
-    public void mostrarEventos();
+    public void mostrarEventos(CategoriaDTO categoria);
 
     public void volverAEventos();
 
