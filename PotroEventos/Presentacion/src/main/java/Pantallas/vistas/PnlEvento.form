@@ -39,7 +39,7 @@
                   <Component id="lblFechaHora" pref="136" max="32767" attributes="0"/>
                   <Component id="lblNombre" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace pref="-8" max="32767" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="32767" attributes="0"/>

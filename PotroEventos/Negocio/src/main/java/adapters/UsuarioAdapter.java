@@ -17,7 +17,6 @@ public class UsuarioAdapter {
             return null;
         }
         UsuarioDTO dto = new UsuarioDTO();
-        
         dto.setIdUsuario(usuario.getIdUsuario());
         dto.setNombre(usuario.getNombre());
         dto.setApellidoPaterno(usuario.getApellidoPaterno());

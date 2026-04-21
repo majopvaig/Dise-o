@@ -4,6 +4,8 @@
  */
 package interfaces;
 
+import dtos.CategoriaDTO;
+import dtos.EventoDTO;
 import java.util.List;
 
 /**

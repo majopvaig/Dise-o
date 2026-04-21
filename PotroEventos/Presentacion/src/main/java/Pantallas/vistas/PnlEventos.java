@@ -5,6 +5,8 @@
 package Pantallas.vistas;
 
 import Controlador.interfaz.ICoordinadorAplicacion;
+import dtos.CategoriaDTO;
+import dtos.EventoDTO;
 
 /**
  *

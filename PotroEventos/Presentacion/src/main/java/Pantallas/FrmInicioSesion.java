@@ -5,6 +5,7 @@
 package Pantallas;
 
 import Controlador.interfaz.ICoordinadorAplicacion;
+import dtos.UsuarioDTO;
 import java.awt.Color;
 import utilerias.BotonUtileria;
 

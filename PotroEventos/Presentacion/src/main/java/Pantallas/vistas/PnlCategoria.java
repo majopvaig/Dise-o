@@ -4,6 +4,8 @@
  */
 package Pantallas.vistas;
 
+import dtos.CategoriaDTO;
+import java.awt.Component;
 import java.awt.Image;
 import java.awt.Panel;
 import javax.swing.Icon;
@@ -16,12 +18,12 @@ import javax.swing.ImageIcon;
 public class PnlCategoria extends javax.swing.JPanel {
     
     private CategoriaDTO categoria;
-    private Panel padre;
+    private Component padre;
 
     /**
      * Creates new form PnlCategoria
      */
-    public PnlCategoria(CategoriaDTO categoria, Panel padre) {
+    public PnlCategoria(CategoriaDTO categoria, Component padre) {
         this.categoria = categoria;
         this.padre = padre;
         initComponents();
@@ -78,7 +80,8 @@ public class PnlCategoria extends javax.swing.JPanel {
 
     private void iconCategoriaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_iconCategoriaMouseClicked
         // TODO add your handling code here:
-        padre.abrirEventosCategoria(categoria);
+        if(padre instanceof PnlCategorias c)
+        c.mostrarEventosCategoria(categoria);
     }//GEN-LAST:event_iconCategoriaMouseClicked
 
 

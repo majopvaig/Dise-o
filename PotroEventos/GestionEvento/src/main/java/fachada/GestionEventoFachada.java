@@ -5,8 +5,10 @@
 package fachada;
 
 import controladores.ControlGestionEvento;
+import dtos.CategoriaDTO;
 import interfaces.IFachadaGestionEvento;
 import java.util.List;
+import dtos.EventoDTO;
 
 /**
  *
@@ -23,7 +25,7 @@ public class GestionEventoFachada implements IFachadaGestionEvento {
 
     @Override
     public boolean cancelarEvento(Long idEvento) {
-        return control.eliminarEvento(idEvento);
+        return control.cancelarEvento(idEvento);
     }
 
     @Override
@@ -42,7 +44,7 @@ public class GestionEventoFachada implements IFachadaGestionEvento {
     }
 
     @Override
-    public List<EventoDTO> consultarEventosPorCategoria(Object categoria) {
+    public List<EventoDTO> consultarEventosPorCategoria(CategoriaDTO categoria) {
         return control.consultarEventosPorCategoria(categoria);
     }
     

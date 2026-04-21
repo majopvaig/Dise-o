@@ -5,6 +5,7 @@
 package Pantallas.vistas;
 
 import Controlador.interfaz.ICoordinadorAplicacion;
+import dtos.EventoDTO;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 import utilerias.BotonUtileria;
@@ -45,9 +46,9 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
         Image img = icono.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
         iconEvento.setIcon(new ImageIcon(img));
         iconEvento.setText("");
-        this.lblNombre.setText(evento.getNombre());
-        this.txtInfo.setText(evento.getDescripcion());
-        this.lblFechaHora.setText(evento.getFecha());
+        this.lblNombre.setText(evento.getNombreEvento());
+        this.txtInfo.setText(evento.getInformacionEvento());
+        this.lblFechaHora.setText(String.valueOf(evento.getFechaHora()));
         this.lblUbicacion.setText(evento.getUbicacion());
     }
 

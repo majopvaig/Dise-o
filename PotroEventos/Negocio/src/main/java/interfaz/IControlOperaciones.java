@@ -34,4 +34,5 @@ public interface IControlOperaciones {
     void agregarUsuario(Usuario usuario);
 
     void agregarAsientoEvento(AsientoEvento asientoEvento);
+
 }

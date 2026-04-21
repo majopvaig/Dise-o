@@ -4,6 +4,9 @@
  */
 package controladores;
 
+import dtos.CategoriaDTO;
+import dtos.ENUMS.CategoriaEventoDTO;
+import dtos.ENUMS.EstadoEventoDTO;
 import dtos.EventoDTO;
 import java.util.List;
 import java.util.ArrayList;
@@ -30,7 +33,7 @@ public class ControlGestionEvento {
     
     public boolean agregarEvento(EventoDTO evento){
         int contador = listaEventos.size();
-        evento.setIdEvento(Long.parseLong(contador+1));
+        evento.setIdEvento(contador+1L);
         listaEventos.add(evento);
         if(contador != listaEventos.size()){
             return true;
@@ -38,10 +41,10 @@ public class ControlGestionEvento {
         return false;
     }
     
-    public boolean eliminarEvento(Long idEvento){
+    public boolean cancelarEvento(Long idEvento){
         for(EventoDTO evento : listaEventos){
-            if(evento.getId() == idEvento){
-                evento.setEstado(EstadoEventoDTO.CANCELADO);
+            if(evento.getIdEvento() == idEvento){
+                evento.setEstadoEvento(EstadoEventoDTO.CANCELADO);
                 return true;
             }
         }
@@ -51,7 +54,7 @@ public class ControlGestionEvento {
     public boolean actualizarEvento(EventoDTO evento){
         int posicion = 0;
         for(EventoDTO e : listaEventos){
-            if(evento.getId() == e.getId()){
+            if(evento.getIdEvento() == e.getIdEvento()){
                 listaEventos.add(posicion, evento);
                 return true;
             }
@@ -62,7 +65,7 @@ public class ControlGestionEvento {
     
     public EventoDTO consultarEvento(Long idEvento){
         for(EventoDTO e : listaEventos){
-            if(e.getId() == idEvento){
+            if(e.getIdEvento() == idEvento){
                 return e;
             }
         }
@@ -76,7 +79,7 @@ public class ControlGestionEvento {
     public List<EventoDTO> consultarEventosPorCategoria(CategoriaDTO categoria){
         List<EventoDTO> eventosCategoria = new ArrayList<>();
         for(EventoDTO e : listaEventos){
-            if(e.getCategoria() == categoria){
+            if(e.getCategoriaDTO().getNombreCategoria() == categoria.getNombreCategoria()){
                 eventosCategoria.add(e);
             }
         }

@@ -5,6 +5,8 @@
 package Pantallas.vistas;
 
 import Controlador.interfaz.ICoordinadorAplicacion;
+import dtos.EventoDTO;
+import dtos.UsuarioDTO;
 
 /**
  *
@@ -25,20 +27,20 @@ public class PnlConsultar extends javax.swing.JPanel {
     public PnlConsultar(ICoordinadorAplicacion coordinador) {
         this.coordinador = coordinador;
         initComponents();
-        for(EventoDTO proximo : coordinador.consultarEventosProximos(usuario.getId())){
-            PnlEvento panel = PnlEvento.crearParaConsulta(proximo, this);
+        for(EventoDTO proximo : coordinador.consultarEventosProximos(usuario.getIdUsuario())){
+            PnlEvento panel = PnlEvento.crearParaConsulta(proximo, null, this);
             add(panel);
             revalidate();
             repaint();
         }
-        for(EventoDTO pasado : coordinador.consultarEventosPasados(usuario.getId())){
-            PnlEvento panel = PnlEvento.crearParaConsulta(pasado, this);
+        for(EventoDTO pasado : coordinador.consultarEventosPasados(usuario.getIdUsuario())){
+            PnlEvento panel = PnlEvento.crearParaConsulta(pasado, null, this);
             add(panel);
             revalidate();
             repaint();
         }
-        for(EventoDTO cancelado : coordinador.consultarEventosCancelados(usuario.getId())){
-            PnlEvento panel = PnlEvento.crearParaConsulta(cancelado, this);
+        for(EventoDTO cancelado : coordinador.consultarEventosCancelados(usuario.getIdUsuario())){
+            PnlEvento panel = PnlEvento.crearParaConsulta(cancelado, null, this);
             add(panel);
             revalidate();
             repaint();
@@ -47,7 +49,6 @@ public class PnlConsultar extends javax.swing.JPanel {
     
     public void mostrarDetalles(EventoDTO evento){
         coordinador.mostrarDetalles(evento);
-        dispose();
     }
 
     /**
