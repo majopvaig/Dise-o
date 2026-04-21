@@ -9,6 +9,7 @@
         <module>Presentacion</module>
         <module>Negocio</module>
         <module>Datos</module>
+        <module>DTOs</module>
         <module>Pago</module>
         <module>GestionEvento</module>
     </modules>
