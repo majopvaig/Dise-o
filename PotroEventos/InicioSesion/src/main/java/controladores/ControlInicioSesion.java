@@ -11,6 +11,7 @@ import java.util.List;
  *
  * @author aaron
  */
+import adapters.UsuarioAdapter;
 public class ControlInicioSesion {
         
     private List<UsuarioDTO> listaUsuarios = new ArrayList<>();

@@ -9,7 +9,7 @@
     <artifactId>Datos</artifactId>
     <packaging>jar</packaging>
     <properties>
-        <maven.compiler.release>24</maven.compiler.release>
+        <maven.compiler.release>23</maven.compiler.release>
         <exec.mainClass>com.mycompany.datos.Datos</exec.mainClass>
     </properties>
 </project>

@@ -6,6 +6,7 @@ import Entitys.Usuario;
 import Entitys.ENUMS.EstadoAsiento;
 import Entitys.ENUMS.EstadoEvento;
 import adapters.UsuarioAdapter;
+import dtos.UsuarioDTO;
 import interfaz.IControlOperaciones;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

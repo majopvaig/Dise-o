@@ -11,6 +11,10 @@ import Pantallas.vistas.PnlCategorias;
 import Pantallas.vistas.PnlConsultar;
 import Pantallas.vistas.PnlConsultarEvento;
 import Pantallas.vistas.PnlEventos;
+import dtos.CategoriaDTO;
+import dtos.EventoDTO;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -143,6 +147,36 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
     @Override
     public void volverAConsultar() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public List<EventoDTO> consultarEventos() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<EventoDTO> consultarEventos(CategoriaDTO categoria) {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<EventoDTO> consultarEventosProximos(Long idUsuario) {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<EventoDTO> consultarEventosPasados(Long idUsuario) {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<EventoDTO> consultarEventosCancelados(Long idUsuario) {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<CategoriaDTO> consultarCategorias() {
+        return new ArrayList<>();
     }
 
 }

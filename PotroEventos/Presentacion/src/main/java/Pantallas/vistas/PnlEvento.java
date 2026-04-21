@@ -4,6 +4,9 @@
  */
 package Pantallas.vistas;
 
+import dtos.EventoDTO;
+import dtos.ReservacionDTO;
+import java.awt.Component;
 import java.awt.Image;
 import java.awt.Panel;
 import javax.swing.ImageIcon;
@@ -21,12 +24,12 @@ public class PnlEvento extends javax.swing.JPanel {
     private boolean modoVista;
     private EventoDTO evento;
     private ReservacionDTO reservacion;
-    private Panel padre;
+    private Component padre;
     
     /**
      * Constructor PRIVADO. Solo puede ser llamado por los métodos estáticos de abajo.
      */
-    private PnlEvento(EventoDTO evento, ReservacionDTO reservacion, Panel padre, boolean modoConsulta) {
+    private PnlEvento(EventoDTO evento, ReservacionDTO reservacion, Component padre, boolean modoConsulta) {
         this.evento = evento;
         this.reservacion = reservacion;
         this.padre = padre;
@@ -38,12 +41,12 @@ public class PnlEvento extends javax.swing.JPanel {
         configurarModo();
     }
 
-    public static PnlEvento crearParaVista(EventoDTO evento, Panel padre) {
+    public static PnlEvento crearParaVista(EventoDTO evento, Component padre) {
         // Le pasamos null a la reservación y false al modoConsulta
         return new PnlEvento(evento, null, padre, false); 
     }
 
-    public static PnlEvento crearParaConsulta(EventoDTO evento, ReservacionDTO reservacion, Panel padre) {
+    public static PnlEvento crearParaConsulta(EventoDTO evento, ReservacionDTO reservacion, Component padre) {
         // Le pasamos la reservación y true al modoConsulta
         return new PnlEvento(evento, reservacion, padre, true);
     }
@@ -61,8 +64,8 @@ public class PnlEvento extends javax.swing.JPanel {
         Image img = icono.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
         iconEvento.setIcon(new ImageIcon(img));
         iconEvento.setText("");
-        this.lblNombre.setText(evento.getNombre());
-        this.lblFechaHora.setText(evento.getFecha());
+        this.lblNombre.setText(evento.getNombreEvento());
+        this.lblFechaHora.setText(String.valueOf(evento.getFechaHora()));
         this.lblUbicacion.setText(evento.getUbicacion());
     }
 
@@ -149,10 +152,11 @@ public class PnlEvento extends javax.swing.JPanel {
 
     private void btnMostrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarActionPerformed
         // TODO add your handling code here:
-        if(modoConsulta){
-            padre.mostrarDetalles(evento);
-        } else {
-            padre.mostrarEvento(evento);
+        if(padre instanceof PnlConsultar c){
+            c.mostrarDetalles(evento);
+        }
+        if(padre instanceof PnlEventos e){
+            e.mostrarEvento(evento);
         }
     }//GEN-LAST:event_btnMostrarActionPerformed
 

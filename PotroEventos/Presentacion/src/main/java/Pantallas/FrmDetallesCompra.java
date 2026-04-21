@@ -5,6 +5,7 @@
 package Pantallas;
 
 import Controlador.interfaz.ICoordinadorAplicacion;
+import dtos.EventoDTO;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 
@@ -49,8 +50,8 @@ public class FrmDetallesCompra extends javax.swing.JFrame {
         falta establecer los detalles de la compra, pero quiero saber
         sí si tendremos un DTO de la compra o la reservación.
         */
-        this.txtEvento.setText(evento.getNombre());
-        this.txtFechaHora.setText(evento.getFecha());
+        this.txtEvento.setText(evento.getNombreEvento());
+        this.txtFechaHora.setText(String.valueOf(evento.getFechaHora()));
         this.txtUbicacion.setText(evento.getUbicacion());
     }
 

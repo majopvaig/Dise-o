@@ -1,0 +1,10 @@
+Entitys\Boleto.class
+Entitys\ENUMS\EstadoBoleto.class
+Entitys\ENUMS\EstadoEvento.class
+Entitys\Evento.class
+Entitys\Asiento.class
+Entitys\AsientoEvento.class
+Entitys\Seccion.class
+Entitys\ENUMS\CategoriaEvento.class
+Entitys\ENUMS\EstadoAsiento.class
+Entitys\Usuario.class

@@ -5,6 +5,7 @@
 package Pantallas.vistas;
 
 import Controlador.interfaz.ICoordinadorAplicacion;
+import dtos.CategoriaDTO;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 
@@ -25,8 +26,8 @@ public class PnlCategorias extends javax.swing.JPanel {
     public PnlCategorias(ICoordinadorAplicacion coordinador) {
         this.coordinador = coordinador;
         initComponents();
-        for(CategoriaDTO categoria : coodinador.consultarCategorias()){
-            PnlCategoria panel = new PnlCategoria(categoria);
+        for(CategoriaDTO categoria : coordinador.consultarCategorias()){
+            PnlCategoria panel = new PnlCategoria(categoria, this);
             add(panel);
             revalidate();
             repaint();

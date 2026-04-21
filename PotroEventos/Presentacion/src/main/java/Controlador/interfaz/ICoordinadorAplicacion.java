@@ -1,5 +1,10 @@
 package Controlador.interfaz;
 
+import dtos.CategoriaDTO;
+import dtos.EventoDTO;
+import java.util.List;
+
+
 /**
  *
  * @author Aaron Burciaga - 262788
@@ -19,7 +24,7 @@ public interface ICoordinadorAplicacion {
 
     public void mostrarConsultar();
 
-    public void mostrarInfoEvento();
+    public void mostrarInfoEvento(EventoDTO evento);
     
     public void mostrarDetalles(EventoDTO evento);
 
@@ -33,5 +38,16 @@ public interface ICoordinadorAplicacion {
 
     public void volverAConsultar();
     
+    public List<EventoDTO> consultarEventos();
+    
+    public List<EventoDTO> consultarEventos(CategoriaDTO categoria);
+    
+    public List<EventoDTO> consultarEventosProximos(Long idUsuario);
+    
+    public List<EventoDTO> consultarEventosPasados(Long idUsuario);
+    
+    public List<EventoDTO> consultarEventosCancelados(Long idUsuario);
+    
+    public List<CategoriaDTO> consultarCategorias();
     
 }
