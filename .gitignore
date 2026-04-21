@@ -1,4 +1,5 @@
 /PotroEventos/Presentacion/target/
 /PotroEventos/Pago/target/
 /PotroEventos/DTOs/target/
-/PotroEventos/GestionEvento/target/
+
+/PotroEventos/Negocio/target/
