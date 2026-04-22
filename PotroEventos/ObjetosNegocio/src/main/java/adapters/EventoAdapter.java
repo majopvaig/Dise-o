@@ -8,6 +8,8 @@ import dtos.CategoriaDTO;
 import dtos.ENUMS.CategoriaEventoDTO;
 import dtos.ENUMS.EstadoEventoDTO;
 import dtos.EventoDTO;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Adapter para convertir entre Evento y EventoDTO. Se usan métodos estáticos
@@ -55,7 +57,7 @@ public class EventoAdapter {
 
         return new Evento(
                 dto.getIdEvento(),
-                convertirCategoriaEntidad(dto.getCategoriaEvento()),
+                convertirCategoriaEntidad(dto.getCategoriaDTO()),
                 dto.getNombreEvento(),
                 dto.getInformacionEvento(),
                 dto.getFechaHora(),
@@ -63,6 +65,14 @@ public class EventoAdapter {
                 convertirEstadoAEntidad(dto.getEstadoEvento()),
                 dto.getUrlImagen()
         );
+    }
+    
+    public static List<EventoDTO> listaDTOs(List<Evento> lista){
+        List<EventoDTO> dtos = new ArrayList<>();
+        for(Evento e : lista){
+            dtos.add(entidadADTO(e));
+        }
+        return dtos;
     }
 
     // Métodos de apoyo (también estáticos)

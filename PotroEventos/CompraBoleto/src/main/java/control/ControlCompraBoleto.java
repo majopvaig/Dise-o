@@ -4,11 +4,15 @@ import dtos.*;
 import dtos.ENUMS.EstadoAsientoDTO;
 import dtos.ENUMS.EstadoEventoDTO;
 import Entitys.*;
-import negocio.*;
+import dtos.ENUMS.CategoriaEventoDTO;
+import objetosNegocio.*;
 import excepciones.CompraBoletoException;
+import interfaces.IEventoBO;
+import interfaces.ISeccionBO;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import objetosNegocio.EventoBO;
 
 /**
  * Controlador de caso de uso para la compra de boletos. Orquesta la
@@ -19,16 +23,16 @@ import java.util.stream.Collectors;
 public class ControlCompraBoleto {
 
     // Dependencias a la capa de Negocio (BOs)
-    private final EventoBO eventoBO;
-    private final SeccionBO seccionBO;
+    private final IEventoBO eventoBO;
+    private final ISeccionBO seccionBO;
     private final AsientoBO asientoBO;
     private final AsientoEventoBO asientoEventoBO;
 
     public ControlCompraBoleto() {
-        this.eventoBO = new EventoBO();
-        this.seccionBO = new SeccionBO();
-        this.asientoBO = new AsientoBO();
-        this.asientoEventoBO = new AsientoEventoBO();
+        this.eventoBO = EventoBO.getInstance();
+        this.seccionBO = SeccionBO.getInstance();
+        this.asientoBO = AsientoBO.getInstance();
+        this.asientoEventoBO = AsientoEventoBO.getInstance();
     }
 
     /**
@@ -36,24 +40,26 @@ public class ControlCompraBoleto {
      */
     public EventoDTO obtenerInformacionEvento(Long idEvento) throws CompraBoletoException {
         try {
-            Evento e = eventoBO.consultarEventoPorId(idEvento);
+            EventoDTO e = eventoBO.obtenerEventoPorId(idEvento);
             if (e == null) {
                 throw new CompraBoletoException("El evento con ID " + idEvento + " no fue encontrado.");
             }
+            return e;
 
             // Conversión de Entidad a DTO usando tu constructor
-            CategoriaDTO catDTO = new CategoriaDTO(e.getCategoria().getIdCategoria(), e.getCategoria().getNombre());
+//            CategoriaDTO catDTO = new CategoriaDTO(e.getCategoriaDTO().getIdCategoria(), e.getCategoriaDTO().getUrlImagen(), CategoriaEventoDTO.valueOf(e.getCategoriaDTO().getNombreCategoria().name()));
+//
+//            return new EventoDTO(
+//                    e.getIdEvento(),
+//                    catDTO,
+//                    e.getNombreEvento(),
+//                    e.getInformacionEvento(),
+//                    e.getFechaHora(),
+//                    e.getUbicacion(),
+//                    EstadoEventoDTO.valueOf(e.getEstadoEvento().name()), // Asumiendo mapeo de Enum
+//                    e.getUrlImagen()
+//            );
 
-            return new EventoDTO(
-                    e.getIdEvento(),
-                    catDTO,
-                    e.getNombre(),
-                    e.getInformacion(),
-                    e.getFechaHora(),
-                    e.getUbicacion(),
-                    EstadoEventoDTO.valueOf(e.getEstado().name()), // Asumiendo mapeo de Enum
-                    e.getUrlImagen()
-            );
         } catch (Exception ex) {
             throw new CompraBoletoException("Error al obtener la información del evento: " + ex.getMessage());
         }
@@ -64,18 +70,18 @@ public class ControlCompraBoleto {
      */
     public List<SeccionDTO> obtenerSeccionesEvento(Long idEvento) throws CompraBoletoException {
         try {
-            List<Seccion> secciones = seccionBO.consultarSeccionesPorEvento(idEvento);
-            List<SeccionDTO> seccionesDTO = new ArrayList<>();
-
-            for (Seccion s : secciones) {
-                seccionesDTO.add(new SeccionDTO(
-                        s.getIdSeccion(),
-                        s.getNombre(),
-                        s.getCapacidad(),
-                        s.getPrecioBase()
-                ));
-            }
-            return seccionesDTO;
+            List<SeccionDTO> secciones = seccionBO.consultarSeccionesPorEvento(idEvento);
+//            List<SeccionDTO> seccionesDTO = new ArrayList<>();
+//
+//            for (Seccion s : secciones) {
+//                seccionesDTO.add(new SeccionDTO(
+//                        s.getIdSeccion(),
+//                        s.getNombre(),
+//                        s.getCapacidad(),
+//                        s.getPrecioBase()
+//                ));
+//            }
+            return secciones;
         } catch (Exception ex) {
             throw new CompraBoletoException("Error al cargar las secciones: " + ex.getMessage());
         }
@@ -87,14 +93,14 @@ public class ControlCompraBoleto {
      */
     public List<AsientoEventoDTO> obtenerOcupacionEvento(Long idEvento) throws CompraBoletoException {
         try {
-            List<AsientoEvento> estados = asientoEventoBO.consultarEstadosPorEvento(idEvento);
-
-            return estados.stream().map(ae -> new AsientoEventoDTO(
-                    ae.getReservacion() != null ? ae.getReservacion().getIdReservacion() : null,
-                    EstadoAsientoDTO.valueOf(ae.getEstado().name()),
-                    ae.getAsiento().getIdAsiento(),
-                    ae.getEvento().getIdEvento()
-            )).collect(Collectors.toList());
+            List<AsientoEventoDTO> estados = asientoEventoBO.consultarEstadosPorEvento(idEvento);
+            return estados;
+//            return estados.stream().map(ae -> new AsientoEventoDTO(
+//                    ae.getReservacion() != null ? ae.getReservacion().getIdReservacion() : null,
+//                    EstadoAsientoDTO.valueOf(ae.getEstado().name()),
+//                    ae.getAsiento().getIdAsiento(),
+//                    ae.getEvento().getIdEvento()
+//            )).collect(Collectors.toList());
 
         } catch (Exception ex) {
             throw new CompraBoletoException("Error al cargar la ocupación del evento: " + ex.getMessage());
@@ -106,13 +112,13 @@ public class ControlCompraBoleto {
      */
     public List<AsientoDTO> obtenerCatalogoAsientos() throws CompraBoletoException {
         try {
-            List<Asiento> asientos = asientoBO.consultarTodosLosAsientos();
+            List<AsientoDTO> asientos = asientoBO.consultarTodosLosAsientos();
 
             return asientos.stream().map(a -> new AsientoDTO(
                     a.getIdAsiento(),
                     a.getFila(),
                     a.getNumero(),
-                    a.getSeccion().getIdSeccion()
+                    a.getIdSeccion()
             )).collect(Collectors.toList());
 
         } catch (Exception ex) {

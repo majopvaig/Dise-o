@@ -17,7 +17,7 @@ public class CompraBoletoFachada implements ICompraBoleto {
 
     @Override
     public EventoDTO obtenerEvento(Long idEvento) throws CompraBoletoException {
-             
+       throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody      
     }
 
     @Override

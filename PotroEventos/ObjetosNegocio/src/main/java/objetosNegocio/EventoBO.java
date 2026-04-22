@@ -1,5 +1,6 @@
 package objetosNegocio;
 
+import Entitys.Evento;
 import adapters.EventoAdapter;
 import daos.EventoDAO;
 import dtos.EventoDTO;
@@ -29,12 +30,15 @@ public class EventoBO implements IEventoBO {
     
     @Override
     public EventoDTO guardarEvento(EventoDTO evento) throws NegocioException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if(!validarDatos(evento)){
+            throw new NegocioException("Evento inválido.");
+        }
+        return EventoAdapter.entidadADTO(eventoDAO.guardar(EventoAdapter.dtoAEntidad(evento)));
     }
     
     @Override
     public List<EventoDTO> obtenerEventos() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return EventoAdapter.listaDTOs(eventoDAO.buscarTodos());
     }
     
     @Override
@@ -62,7 +66,7 @@ public class EventoBO implements IEventoBO {
         eventoDTO.setUbicacion(eventoDTO.getUbicacion().trim().toLowerCase());
 
         // 4. Validar Categoría y Estado (Enums)
-        if (eventoDTO.getCategoriaEvento() == null || eventoDTO.getEstadoEvento() == null) {
+        if (eventoDTO.getCategoriaDTO() == null || eventoDTO.getEstadoEvento() == null) {
             return false;
         }
 
