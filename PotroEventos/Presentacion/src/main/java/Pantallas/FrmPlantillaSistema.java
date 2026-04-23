@@ -5,6 +5,12 @@
 package Pantallas;
 
 import Controlador.interfaz.ICoordinadorAplicacion;
+import Pantallas.vistas.PnlCategoria;
+import Pantallas.vistas.PnlEventos;
+import dtos.CategoriaDTO;
+import java.awt.GridLayout;
+import java.util.List;
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 /**
@@ -17,35 +23,35 @@ import javax.swing.JPanel;
 public class FrmPlantillaSistema extends javax.swing.JFrame {
 
     private ICoordinadorAplicacion coordinador;
-    
+
     /*
     modo de inicio/de categorías
-    */
+     */
     private boolean categorias;
-    
+
     /*
     modo de consulta de los eventos del usuario
-    */
+     */
     private boolean consultar;
-    
+
     /*
     modo para consultar eventos de cierta categoría
-    */
+     */
     private boolean eventos;
-    
+
     /*
     modo para mostrar la info de un evento
-    */
+     */
     private boolean mostrarEvento;
-    
+
     /*
     modo para pagar
-    */
+     */
     private boolean pago;
-    
+
     /*
     modo para mostrar detalles de compra
-    */
+     */
     private boolean detallesCompra;
 
     /**
@@ -55,12 +61,39 @@ public class FrmPlantillaSistema extends javax.swing.JFrame {
         this.coordinador = coordinador;
         initComponents();
         setLocationRelativeTo(null);
+        jpnlContenedor.setLayout(new GridLayout(0, 3, 10, 10));
+
     }
 
     public void setContenido(JPanel panel) {
-        panel.setVisible(true);
         jpnlContenedor.removeAll();
-        jpnlContenedor.add(panel);
+
+        jpnlContenedor.setLayout(new java.awt.BorderLayout());
+
+        jpnlContenedor.add(panel, java.awt.BorderLayout.CENTER);
+
+        jpnlContenedor.revalidate();
+        jpnlContenedor.repaint();
+    }
+
+    public void setCategorias() {
+        jpnlContenedor.removeAll();
+
+        jpnlContenedor.setLayout(new GridLayout(0, 3, 10, 10));
+
+        List<CategoriaDTO> categorias = coordinador.consultarCategorias();
+        for (CategoriaDTO categoria : categorias) {
+            jpnlContenedor.add(new PnlCategoria(categoria, this, coordinador));
+        }
+
+        jpnlContenedor.revalidate();
+        jpnlContenedor.repaint();
+    }
+
+    public void setEventos(CategoriaDTO categoria) {
+        jpnlContenedor.removeAll();
+        jpnlContenedor.add(new PnlEventos(coordinador, categoria));
+
         jpnlContenedor.revalidate();
         jpnlContenedor.repaint();
     }
@@ -253,7 +286,7 @@ public class FrmPlantillaSistema extends javax.swing.JFrame {
                 this, "¿Estás seguro de que deseas cerrar sesión?",
                 "Confirmar salida", javax.swing.JOptionPane.YES_NO_OPTION
         );
-        
+
         if (respuesta == javax.swing.JOptionPane.YES_OPTION) {
             coordinador.cerrarSesion();
         }

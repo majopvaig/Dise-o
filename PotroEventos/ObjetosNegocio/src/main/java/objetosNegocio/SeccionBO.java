@@ -4,6 +4,8 @@
  */
 package objetosNegocio;
 
+import adapters.SeccionAdapter;
+import daos.SeccionDAO;
 import dtos.SeccionDTO;
 import excepciones.NegocioException;
 import interfaces.ISeccionBO;
@@ -16,19 +18,22 @@ import java.util.List;
 public class SeccionBO implements ISeccionBO {
 
     private static SeccionBO instancia;
-    
-    private SeccionBO(){}
-    
-    public static SeccionBO getInstance(){
-        if(instancia == null){
+
+    private SeccionDAO seccionDAO = new SeccionDAO();
+
+    private SeccionBO() {
+    }
+
+    public static SeccionBO getInstance() {
+        if (instancia == null) {
             instancia = new SeccionBO();
         }
         return instancia;
     }
-    
+
     @Override
     public List<SeccionDTO> consultarSeccionesPorEvento(Long idEvento) throws NegocioException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return SeccionAdapter.listaEntidadADTO(seccionDAO.buscarPorEvento(idEvento));
     }
-    
+
 }

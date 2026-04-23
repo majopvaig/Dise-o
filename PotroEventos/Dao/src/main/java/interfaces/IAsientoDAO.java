@@ -13,5 +13,7 @@ import java.util.List;
  */
 public interface IAsientoDAO {
 
-    List<Asiento> buscarTodos();
+    List<Asiento> consultarTodos();
+
+    List<Asiento> consultarPorSeccion(Long idSeccion);
 }

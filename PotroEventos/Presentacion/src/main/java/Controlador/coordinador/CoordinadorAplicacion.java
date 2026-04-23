@@ -11,10 +11,12 @@ import Pantallas.vistas.PnlCategorias;
 import Pantallas.vistas.PnlConsultar;
 import Pantallas.vistas.PnlConsultarEvento;
 import Pantallas.vistas.PnlEventos;
+import dtos.AsientoDTO;
+import dtos.AsientoEventoDTO;
 import dtos.CategoriaDTO;
 import dtos.EventoDTO;
-import dtos.LoginDTO;
 import dtos.ReservacionDTO;
+import dtos.SeccionDTO;
 import dtos.UsuarioDTO;
 import fachada.InicioSesionFachada;
 import interfaces.IFachadaInicioSesion;
@@ -22,9 +24,14 @@ import excepciones.CompraBoletoException;
 import excepciones.NegocioException;
 import fachada.CompraBoletoFachada;
 import interfaz.ICompraBoleto;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import interfaces.IGestionUsuariosFachada;
+import java.util.Map;
+import java.util.stream.Collectors;
+import objetosNegocio.AsientoBO;
+import objetosNegocio.AsientoEventoBO;
+import objetosNegocio.SeccionBO;
+
 /**
  *
  * @author Aaron Burciaga - 262788
@@ -33,9 +40,13 @@ import interfaces.IGestionUsuariosFachada;
  * @author María Valdez - 262775
  */
 public class CoordinadorAplicacion implements ICoordinadorAplicacion {
+
     private IFachadaInicioSesion logi = InicioSesionFachada.getInstance();
 
     private ICompraBoleto controlCompra = new CompraBoletoFachada();
+    private SeccionBO seccionBO = SeccionBO.getInstance();
+    private AsientoBO asientoBO = AsientoBO.getInstance();
+    private AsientoEventoBO asientoEventoBO = AsientoEventoBO.getInstance();
     private FrmInicioSesion frmInicioSesion;
     private FrmRegistrarse frmRegistrarse;
     private FrmPago frmPago;
@@ -49,17 +60,17 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
         }
         if (frmRegistrarse != null) {
             frmRegistrarse.setVisible(false);
-        }       
-        if(frmPago != null){
+        }
+        if (frmPago != null) {
             frmPago.setVisible(false);
-        }        
-        if(frmDetalles != null){
+        }
+        if (frmDetalles != null) {
             frmDetalles.setVisible(false);
         }
-        if(frmRegistro != null){
+        if (frmRegistro != null) {
             frmRegistro.setVisible(false);
         }
-        if(frmInicioSesion != null){
+        if (frmInicioSesion != null) {
             frmInicioSesion.setVisible(false);
         }
     }
@@ -104,17 +115,17 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
         if (frmPlantilla == null) {
             frmPlantilla = new FrmPlantillaSistema(this);
         }
-        frmPlantilla.setContenido(new PnlCategorias(this));
+        frmPlantilla.setCategorias();
         frmPlantilla.setVisible(true);
-        if(frmInicioSesion != null){
+        if (frmInicioSesion != null) {
             frmInicioSesion.dispose();
-        }            
+        }
     }
 
     @Override
     public void mostrarConsultar() {
         ocultarTodo();
-        if(frmPlantilla == null){
+        if (frmPlantilla == null) {
             frmPlantilla = new FrmPlantillaSistema(this);
         }
         frmPlantilla.setContenido(new PnlConsultar(this));
@@ -124,17 +135,17 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
     @Override
     public void mostrarInfoEvento(EventoDTO evento) {
         ocultarTodo();
-        if(frmPlantilla == null){
+        if (frmPlantilla == null) {
             frmPlantilla = new FrmPlantillaSistema(this);
         }
         frmPlantilla.setContenido(new PnlConsultarEvento(this, evento));
-        frmPlantilla.setVisible(true);       
+        frmPlantilla.setVisible(true);
     }
-    
+
     @Override
-    public void mostrarDetalles(ReservacionDTO reservacion){
+    public void mostrarDetalles(ReservacionDTO reservacion) {
         ocultarTodo();
-        if(frmDetalles == null){
+        if (frmDetalles == null) {
             frmDetalles = new FrmDetallesCompra(this, reservacion);
         }
         frmDetalles.setVisible(true);
@@ -148,7 +159,7 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
     @Override
     public void mostrarEventos(CategoriaDTO categoria) {
         ocultarTodo();
-        if(frmPlantilla == null){
+        if (frmPlantilla == null) {
             frmPlantilla = new FrmPlantillaSistema(this);
         }
         frmPlantilla.setContenido(new PnlEventos(this, categoria));
@@ -171,10 +182,11 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
     }
 
     @Override
-    public List<EventoDTO> consultarEventos(CategoriaDTO categoria) {
-        try{
+    public List<EventoDTO> consultarEventos(CategoriaDTO categoria
+    ) {
+        try {
             return controlCompra.obtenerEventosCategoria(categoria);
-        } catch(CompraBoletoException ex){
+        } catch (CompraBoletoException ex) {
             System.out.println("Fallo al consultar eventos: " + ex.getMessage());
             return null;
         }
@@ -189,21 +201,22 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
             return null;
         }
     }
-    
+
     @Override
-    public UsuarioDTO iniciarSesion(String correo, String contrasenia){
+    public UsuarioDTO iniciarSesion(String correo, String contrasenia
+    ) {
         return logi.verificarUsuario(correo, contrasenia);
     }
 
     @Override
-    public void setUsuarioSesion(UsuarioDTO usuario){
+    public void setUsuarioSesion(UsuarioDTO usuario
+    ) {
     }
 
     @Override
     public UsuarioDTO getUsuarioSesion() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
 
     @Override
     public void cerrarSesion() {
@@ -211,11 +224,10 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
         this.mostrarInicioSesion();
     }
 
-    
     public List<ReservacionDTO> consultarReservaciones(Long idUsuario) {
-        try{
+        try {
             return controlCompra.obtenerReservacionesUsuario(idUsuario);
-        } catch(CompraBoletoException ex){
+        } catch (CompraBoletoException ex) {
             System.out.println("Fallo al consultar reservaciones: " + ex.getMessage());
             return null;
         }
@@ -223,12 +235,58 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
 
     @Override
     public boolean agregarReservacion(ReservacionDTO reservacion) {
-        try{
+        try {
             return controlCompra.agregarReservacion(reservacion);
-        } catch(CompraBoletoException ex){
+        } catch (CompraBoletoException ex) {
             System.out.println("Fallo al consultar reservaciones: " + ex.getMessage());
         }
         return false;
+    }
+
+    @Override
+    public Map<SeccionDTO, List<AsientoEventoDTO>> obtenerMapaOcupacion(Long idEvento) {
+        try {
+            List<SeccionDTO> secciones = seccionBO.consultarSeccionesPorEvento(idEvento);
+            List<AsientoEventoDTO> ocupacion = asientoEventoBO.consultarEstadosPorEvento(idEvento);
+
+            Map<SeccionDTO, List<AsientoEventoDTO>> mapa = new HashMap<>();
+
+            if (secciones != null && ocupacion != null) {
+                for (SeccionDTO seccion : secciones) {
+                    // Filtramos los asientos de ocupación que pertenecen a esta sección
+                    // Comparamos el nombre o el ID de la sección directamente
+                    List<AsientoEventoDTO> asientosDeEstaSeccion = ocupacion.stream()
+                            .filter(ae -> {
+                                // Si tu AsientoEventoDTO tiene una referencia a la sección o 
+                                // si puedes obtener la sección desde el catálogo, úsala.
+                                // Por ahora, para que funcione, simplemente divide la ocupación 
+                                // equitativamente o por ID de sección si está disponible.
+                                return true; // PRUEBA: Deja que pasen todos para ver si se dibujan
+                            })
+                            .collect(Collectors.toList());
+
+                    mapa.put(seccion, asientosDeEstaSeccion);
+                }
+            }
+            return mapa;
+
+        } catch (NegocioException e) {
+            System.err.println("Error en el coordinador: " + e.getMessage());
+            return new HashMap<>();
+        }
+    }
+
+    @Override
+    public List<AsientoDTO> obtenerCatalogoAsientos() {
+        try {
+            // 3. En tu fachada, obtenerAsientosPorSeccion(null) o el método que 
+            // mapeaste al catálogo completo en el controlador.
+            // Dado que tu fachada usa obtenerAsientosPorSeccion, llamamos a ese:
+            return controlCompra.obtenerAsientosPorSeccion(null);
+        } catch (CompraBoletoException ex) {
+            System.err.println("Error al obtener catálogo de asientos: " + ex.getMessage());
+            return new java.util.ArrayList<>(); // Retornar lista vacía es más seguro que null
+        }
     }
 
 }

@@ -59,13 +59,15 @@ public interface ICompraBoleto {
      * @throws excepciones.CompraBoletoException
      */
     List<AsientoEventoDTO> obtenerEstadoAsientosPorEvento(Long idEvento) throws CompraBoletoException;
-    
+
     List<EventoDTO> obtenerEventosCategoria(CategoriaDTO categoria) throws CompraBoletoException;
-    
+
     boolean agregarReservacion(ReservacionDTO reservacion) throws CompraBoletoException;
-    
+
     List<ReservacionDTO> obtenerReservacionesUsuario(Long idUsuario) throws CompraBoletoException;
-    
+
     List<CategoriaDTO> obtenerCategorias() throws CompraBoletoException;
+
+    List<AsientoDTO> obtenerCatalogoAsientos() throws CompraBoletoException;
 
 }

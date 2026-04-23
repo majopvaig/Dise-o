@@ -5,9 +5,16 @@
 package Pantallas.vistas;
 
 import Controlador.interfaz.ICoordinadorAplicacion;
+import dtos.AsientoDTO;
+import dtos.AsientoEventoDTO;
 import dtos.EventoDTO;
+import dtos.SeccionDTO;
+import java.awt.BorderLayout;
 import java.awt.Image;
+import java.util.List;
+import java.util.Map;
 import javax.swing.ImageIcon;
+import javax.swing.JScrollPane;
 import utilerias.BotonUtileria;
 
 /**
@@ -20,34 +27,74 @@ import utilerias.BotonUtileria;
 public class PnlConsultarEvento extends javax.swing.JPanel {
 
     private ICoordinadorAplicacion coordinador;
-    
     private EventoDTO evento;
 
-    /**
-     * Creates new form PnlConsultarEvento
-     */
     public PnlConsultarEvento(ICoordinadorAplicacion coordinador, EventoDTO evento) {
         this.coordinador = coordinador;
+        this.evento = evento;
+
         initComponents();
-        cargarDatos();
+
+        // Estilización y Carga inicial
         BotonUtileria.estilizarBoton(btnVolver);
+        cargarEstadio();
+        cargarDatos();
     }
-    
-    public void cargarDatos(){
-        ImageIcon icono = new ImageIcon(evento.getUrlImagen());
-        int ancho = getWidth();
-        int alto = getHeight();
-        if (ancho <= 0) {
-            ancho = 270;
+
+    private void cargarEstadio() {
+        try {
+            // 1. Obtener datos
+            Map<SeccionDTO, List<AsientoEventoDTO>> mapa = coordinador.obtenerMapaOcupacion(evento.getIdEvento());
+            List<AsientoDTO> catalogo = coordinador.obtenerCatalogoAsientos();
+
+            // VALIDACIÓN: Si los datos fallan, no intentamos dibujar
+            if (mapa == null || catalogo == null) {
+                System.err.println("Datos del estadio nulos");
+                return;
+            }
+
+            // 2. Crear instancia
+            Pantallas.vistas.PnlEstadio estadioVisual = new Pantallas.vistas.PnlEstadio(mapa, catalogo);
+
+            // 3. Configurar Scroll
+            JScrollPane scroll = new JScrollPane(estadioVisual);
+            scroll.setBorder(null);
+            scroll.setPreferredSize(new java.awt.Dimension(400, 400));
+            scroll.getViewport().setBackground(new java.awt.Color(20, 20, 20));
+
+            // 4. Inyectar
+            PnlEstadio.removeAll();
+            PnlEstadio.setLayout(new java.awt.BorderLayout());
+            PnlEstadio.add(scroll, java.awt.BorderLayout.CENTER);
+
+            // 5. Forzar renderizado
+            PnlEstadio.revalidate();
+            PnlEstadio.repaint();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        if (alto <= 0) {
-            alto = 188;
+    }
+
+    public void cargarDatos() {
+        if (evento == null) {
+            return;
         }
-        Image img = icono.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
-        iconEvento.setIcon(new ImageIcon(img));
-        iconEvento.setText("");
+
+        // Configuración de imagen con respaldo si el panel no ha renderizado dimensiones
+        if (evento.getUrlImagen() != null && !evento.getUrlImagen().isEmpty()) {
+            ImageIcon icono = new ImageIcon(evento.getUrlImagen());
+            int ancho = getWidth() > 0 ? getWidth() : 306;
+            int alto = getHeight() > 0 ? getHeight() : 202;
+
+            Image img = icono.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+            iconEvento.setIcon(new ImageIcon(img));
+            iconEvento.setText("");
+        }
+
         this.lblNombre.setText(evento.getNombreEvento());
-        this.txtInfo.setText(evento.getInformacionEvento());
+        // Uso de HTML para permitir saltos de línea automáticos en el JLabel
+        this.txtInfo.setText("<html><body style='width: 250px'>" + evento.getInformacionEvento() + "</body></html>");
         this.lblFechaHora.setText(String.valueOf(evento.getFechaHora()));
         this.lblUbicacion.setText(evento.getUbicacion());
     }
@@ -85,6 +132,7 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
         jLabel15 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
+        PnlEstadio = new javax.swing.JPanel();
 
         setOpaque(false);
 
@@ -242,7 +290,20 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(9, Short.MAX_VALUE))
+        );
+
+        PnlEstadio.setBackground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout PnlEstadioLayout = new javax.swing.GroupLayout(PnlEstadio);
+        PnlEstadio.setLayout(PnlEstadioLayout);
+        PnlEstadioLayout.setHorizontalGroup(
+            PnlEstadioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 327, Short.MAX_VALUE)
+        );
+        PnlEstadioLayout.setVerticalGroup(
+            PnlEstadioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -262,14 +323,14 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
                             .addComponent(lblUbicacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(btnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(497, 497, 497)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(PnlEstadio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(69, 69, 69)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(55, 55, 55)
                         .addComponent(jLabel6))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, 0)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0))
         );
         jPanel1Layout.setVerticalGroup(
@@ -296,9 +357,10 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
                                 .addComponent(lblFechaHora)
                                 .addGap(18, 18, 18)
                                 .addComponent(lblUbicacion)
-                                .addGap(0, 262, Short.MAX_VALUE))
-                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 0, 0))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(PnlEstadio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(12, 12, 12))
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -324,6 +386,7 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel PnlEstadio;
     private javax.swing.JButton btnVolver;
     private javax.swing.JLabel iconEvento;
     private javax.swing.JButton jButton2;

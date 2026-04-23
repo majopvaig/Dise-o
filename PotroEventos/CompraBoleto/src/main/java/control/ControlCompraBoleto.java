@@ -1,10 +1,6 @@
 package control;
 
 import dtos.*;
-import dtos.ENUMS.EstadoAsientoDTO;
-import dtos.ENUMS.EstadoEventoDTO;
-import Entitys.*;
-import dtos.ENUMS.CategoriaEventoDTO;
 import objetosNegocio.*;
 import excepciones.CompraBoletoException;
 import interfaces.IAsientoBO;
@@ -13,7 +9,7 @@ import interfaces.ICategoriaBO;
 import interfaces.IEventoBO;
 import interfaces.IReservacionBO;
 import interfaces.ISeccionBO;
-import java.util.ArrayList;
+import interfaz.IControlCompraBoleto;
 import java.util.List;
 import java.util.stream.Collectors;
 //import objetosNegocio.EventoBO;
@@ -24,7 +20,7 @@ import java.util.stream.Collectors;
  *
  * * @author Kaleb
  */
-public class ControlCompraBoleto {
+public class ControlCompraBoleto implements IControlCompraBoleto {
 
     // Dependencias a la capa de Negocio (BOs)
     private final IEventoBO eventoBO;
@@ -46,6 +42,7 @@ public class ControlCompraBoleto {
     /**
      * Obtiene el evento desde el BO y lo convierte a EventoDTO.
      */
+    @Override
     public EventoDTO obtenerInformacionEvento(Long idEvento) throws CompraBoletoException {
         try {
             EventoDTO e = eventoBO.obtenerEventoPorId(idEvento);
@@ -53,20 +50,6 @@ public class ControlCompraBoleto {
                 throw new CompraBoletoException("El evento con ID " + idEvento + " no fue encontrado.");
             }
             return e;
-
-            // Conversión de Entidad a DTO usando tu constructor
-//            CategoriaDTO catDTO = new CategoriaDTO(e.getCategoriaDTO().getIdCategoria(), e.getCategoriaDTO().getUrlImagen(), CategoriaEventoDTO.valueOf(e.getCategoriaDTO().getNombreCategoria().name()));
-//
-//            return new EventoDTO(
-//                    e.getIdEvento(),
-//                    catDTO,
-//                    e.getNombreEvento(),
-//                    e.getInformacionEvento(),
-//                    e.getFechaHora(),
-//                    e.getUbicacion(),
-//                    EstadoEventoDTO.valueOf(e.getEstadoEvento().name()), // Asumiendo mapeo de Enum
-//                    e.getUrlImagen()
-//            );
 
         } catch (Exception ex) {
             throw new CompraBoletoException("Error al obtener la información del evento: " + ex.getMessage());
@@ -76,19 +59,10 @@ public class ControlCompraBoleto {
     /**
      * Obtiene las secciones de un evento y las convierte a SeccionDTO.
      */
+    @Override
     public List<SeccionDTO> obtenerSeccionesEvento(Long idEvento) throws CompraBoletoException {
         try {
             List<SeccionDTO> secciones = seccionBO.consultarSeccionesPorEvento(idEvento);
-//            List<SeccionDTO> seccionesDTO = new ArrayList<>();
-//
-//            for (Seccion s : secciones) {
-//                seccionesDTO.add(new SeccionDTO(
-//                        s.getIdSeccion(),
-//                        s.getNombre(),
-//                        s.getCapacidad(),
-//                        s.getPrecioBase()
-//                ));
-//            }
             return secciones;
         } catch (Exception ex) {
             throw new CompraBoletoException("Error al cargar las secciones: " + ex.getMessage());
@@ -99,16 +73,11 @@ public class ControlCompraBoleto {
      * Obtiene los estados de los asientos (ocupados/disponibles) y los
      * convierte a AsientoEventoDTO.
      */
+    @Override
     public List<AsientoEventoDTO> obtenerOcupacionEvento(Long idEvento) throws CompraBoletoException {
         try {
             List<AsientoEventoDTO> estados = asientoEventoBO.consultarEstadosPorEvento(idEvento);
             return estados;
-//            return estados.stream().map(ae -> new AsientoEventoDTO(
-//                    ae.getReservacion() != null ? ae.getReservacion().getIdReservacion() : null,
-//                    EstadoAsientoDTO.valueOf(ae.getEstado().name()),
-//                    ae.getAsiento().getIdAsiento(),
-//                    ae.getEvento().getIdEvento()
-//            )).collect(Collectors.toList());
 
         } catch (Exception ex) {
             throw new CompraBoletoException("Error al cargar la ocupación del evento: " + ex.getMessage());
@@ -118,6 +87,7 @@ public class ControlCompraBoleto {
     /**
      * Obtiene el catálogo físico de asientos y lo convierte a AsientoDTO.
      */
+    @Override
     public List<AsientoDTO> obtenerCatalogoAsientos() throws CompraBoletoException {
         try {
             List<AsientoDTO> asientos = asientoBO.consultarTodosLosAsientos();
@@ -133,35 +103,39 @@ public class ControlCompraBoleto {
             throw new CompraBoletoException("Error al cargar el catálogo de asientos: " + ex.getMessage());
         }
     }
-    
+
+    @Override
     public List<EventoDTO> obtenerEventosCategoria(CategoriaDTO categoria) throws CompraBoletoException {
-        try{
+        try {
             return eventoBO.obtenerEventosPorCategoria(categoria);
-        } catch(Exception ex){
+        } catch (Exception ex) {
             throw new CompraBoletoException("Error al cargar eventos por categoría: " + ex.getMessage());
         }
     }
-    
+
+    @Override
     public boolean agregarReservacion(ReservacionDTO reservacion) throws CompraBoletoException {
-        try{
+        try {
             return reservacionBO.agregarReservacion(reservacion);
-        } catch(Exception ex){
+        } catch (Exception ex) {
             throw new CompraBoletoException("Error al agregar la reservación: " + ex.getMessage());
         }
     }
-    
+
+    @Override
     public List<ReservacionDTO> consultarReservacionUsuario(Long idUsuario) throws CompraBoletoException {
         try {
             return reservacionBO.obtenerReservacionesUsuario(idUsuario);
-        } catch(Exception ex){
+        } catch (Exception ex) {
             throw new CompraBoletoException("Error al consultar las reservaciones: " + ex.getMessage());
         }
     }
-    
+
+    @Override
     public List<CategoriaDTO> consultarCategorias() throws CompraBoletoException {
-        try{
+        try {
             return categoriaBO.consultarCategorias();
-        } catch(Exception ex){
+        } catch (Exception ex) {
             throw new CompraBoletoException("Error al consultar las reservaciones: " + ex.getMessage());
         }
     }

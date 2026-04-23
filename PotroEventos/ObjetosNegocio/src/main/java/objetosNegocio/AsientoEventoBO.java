@@ -4,9 +4,14 @@
  */
 package objetosNegocio;
 
+import Entitys.AsientoEvento;
+import adapters.AsientoEventoAdapter;
+import daos.AsientoDAO;
+import daos.AsientoEventoDAO;
 import dtos.AsientoEventoDTO;
 import excepciones.NegocioException;
 import interfaces.IAsientoEventoBO;
+import interfaces.IAsientoEventoDAO;
 import java.util.List;
 
 /**
@@ -16,19 +21,38 @@ import java.util.List;
 public class AsientoEventoBO implements IAsientoEventoBO {
 
     private static AsientoEventoBO instancia;
-    
-    private AsientoEventoBO(){}
-    
-    public static AsientoEventoBO getInstance(){
-        if(instancia == null){
+
+    private IAsientoEventoDAO asientoEventoDAO = AsientoEventoDAO.getInstancia();
+
+    private AsientoEventoBO() {
+    }
+
+    public static AsientoEventoBO getInstance() {
+        if (instancia == null) {
             instancia = new AsientoEventoBO();
         }
         return instancia;
     }
-    
+
     @Override
     public List<AsientoEventoDTO> consultarEstadosPorEvento(Long idEvento) throws NegocioException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        // Validaciones de negocio previas
+        if (idEvento == null || idEvento <= 0) {
+            throw new NegocioException("ID de evento no válido.");
+        }
+
+        try {
+            // 1. Obtener entidades del DAO
+            List<AsientoEvento> entidades = asientoEventoDAO.buscarPorEvento(idEvento);
+
+            // 2. Convertir a DTOs usando el Adapter (Limpio y directo)
+            return AsientoEventoAdapter.listaEntidadADTO(entidades);
+
+        } catch (Exception e) {
+            // Log de error y relanzamiento como NegocioException
+            System.err.println("Error en AsientoEventoBO: " + e.getMessage());
+            throw new NegocioException("No se pudo cargar la ocupación del evento.");
+        }
     }
-    
+
 }

@@ -27,7 +27,7 @@ public class PnlCategorias extends javax.swing.JPanel {
         this.coordinador = coordinador;
         initComponents();
         for(CategoriaDTO categoria : coordinador.consultarCategorias()){
-            PnlCategoria panel = new PnlCategoria(categoria, this);
+            PnlCategoria panel = new PnlCategoria(categoria, this, coordinador);
             add(panel);
             revalidate();
             repaint();

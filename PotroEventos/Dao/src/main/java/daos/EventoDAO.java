@@ -22,7 +22,7 @@ public class EventoDAO implements IEventoDAO {
 
     // Bloque estático para inicializar con unos cuantos registros de prueba
     static {
-        eventos.add(new Evento(1L, new Categoria(1L, CategoriaEvento.FUTBOL, ""), "Itson vs Itesca", "Potritos vs pichones", LocalDateTime.now(), "Cancha de futbol rápido ITSON", EstadoEvento.ACTIVO, ""));
+        eventos.add(new Evento(1L, new Categoria(1L, CategoriaEvento.FUTBOL, ""), "Itson vs Itesca", "Potritos vs pichones", LocalDateTime.now(), "Cancha de futbol rápido ITSON", EstadoEvento.ACTIVO, "/imgCate/futbol.png"));
         eventos.add(new Evento(2L, new Categoria(2L, CategoriaEvento.ARTE, ""), "Exposición de arte", "Exposiciones de pinturas y dibujos del alumnado ITSON", LocalDateTime.now(), "Potropasillo", EstadoEvento.ACTIVO, ""));
         eventos.add(new Evento(3L, new Categoria(3L, CategoriaEvento.BASQUETBOL, ""), "Itson vs Unison", "Potritos vs buhos", LocalDateTime.now(), "Arena ITSON", EstadoEvento.ACTIVO, ""));
     }

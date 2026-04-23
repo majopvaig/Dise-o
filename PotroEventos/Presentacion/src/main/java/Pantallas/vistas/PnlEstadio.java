@@ -3,93 +3,156 @@ package Pantallas.vistas;
 import dtos.*;
 import dtos.ENUMS.EstadoAsientoDTO;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 
 public class PnlEstadio extends JPanel {
 
-    // Datos recibidos de la Fachada
     private final Map<SeccionDTO, List<AsientoEventoDTO>> mapaOcupacion;
     private final List<AsientoDTO> catalogoAsientos;
-
-    // Asiento que el usuario tiene seleccionado actualmente
-    private AsientoEventoDTO asientoSeleccionadoDTO;
+    private Long idAsientoSeleccionado = null;
 
     public PnlEstadio(Map<SeccionDTO, List<AsientoEventoDTO>> mapa, List<AsientoDTO> catalogo) {
         this.mapaOcupacion = mapa;
         this.catalogoAsientos = catalogo;
-        initComponents();
-    }
 
-    private void initComponents() {
-        // Layout principal: una cuadrícula para las secciones
-        this.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
-        this.setBackground(Color.WHITE);
+        this.setBackground(new Color(0x1e1f20));
+        this.setPreferredSize(new Dimension(900, 700));
 
-        // Por cada Sección en el Mapa, creamos un "Bloque" visual
-        mapaOcupacion.forEach((seccionDTO, listaAsientosEvento) -> {
-            JPanel panelSeccion = crearBloqueSeccion(seccionDTO, listaAsientosEvento);
-            this.add(panelSeccion);
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                detectarClick(e.getX(), e.getY());
+            }
         });
     }
 
-    private JPanel crearBloqueSeccion(SeccionDTO seccion, List<AsientoEventoDTO> asientosEvento) {
-        JPanel bloque = new JPanel();
-        bloque.setBorder(new TitledBorder(seccion.getNombre() + " ($" + seccion.getPrecioBase() + ")"));
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // Ajustamos la cuadrícula del bloque (ejemplo 5 columnas)
-        int filas = (int) Math.ceil(asientosEvento.size() / 5.0);
-        bloque.setLayout(new GridLayout(filas, 5, 5, 5));
+        int centroX = getWidth() / 2;
+        int centroY = getHeight() / 2;
 
-        for (AsientoEventoDTO aeDTO : asientosEvento) {
-            // Buscamos el detalle físico (Fila/Número) usando el ID del asiento
-            AsientoDTO asiento = buscarDetalleAsiento(aeDTO.getIdAsiento());
+        // Cancha
+        g2.setColor(new Color(0x2d5a27));
+        g2.fillRoundRect(centroX - 70, centroY - 45, 140, 90, 15, 15);
+        g2.setColor(new Color(0x4e8a46));
+        g2.setStroke(new BasicStroke(2));
+        g2.drawRoundRect(centroX - 70, centroY - 45, 140, 90, 15, 15);
 
-            JButton btnAsiento = new JButton(String.valueOf(asiento.getNumero()));
-            configurarBoton(btnAsiento, aeDTO, asiento, seccion);
-
-            bloque.add(btnAsiento);
+        if (mapaOcupacion == null || mapaOcupacion.isEmpty()) {
+            return;
         }
-        return bloque;
-    }
 
-    private void configurarBoton(JButton btn, AsientoEventoDTO ae, AsientoDTO info, SeccionDTO sec) {
-        btn.setPreferredSize(new Dimension(50, 50));
-        btn.setFont(new Font("Arial", Font.PLAIN, 10));
+        List<SeccionDTO> secciones = new ArrayList<>(mapaOcupacion.keySet());
 
-        if (ae.getEstadoAsiento() == EstadoAsientoDTO.VENDIDO) {
-            btn.setBackground(Color.LIGHT_GRAY);
-            btn.setToolTipText("Ocupado");
-            btn.setEnabled(false);
-        } else {
-            btn.setBackground(Color.WHITE);
-            btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        for (int i = 0; i < secciones.size(); i++) {
+            SeccionDTO sec = secciones.get(i);
+            List<AsientoEventoDTO> asientosSeccion = mapaOcupacion.get(sec);
+            String nombre = sec.getNombre().toUpperCase();
 
-            // Evento al hacer clic
-            btn.addActionListener(e -> {
-                this.asientoSeleccionadoDTO = ae;
-                actualizarPanelSeleccion(info, sec);
-            });
+            int x = 0, y = 0;
+            if (nombre.contains("VIP")) {
+                x = centroX - 110;
+                y = centroY - 200;
+            } else if (nombre.contains("PLATEA")) {
+                x = centroX - 110;
+                y = centroY + 80;
+            } else {
+                x = centroX + 100;
+                y = centroY - 60;
+            }
+
+            dibujarBloque(g2, x, y, asientosSeccion);
         }
     }
 
-    private void actualizarPanelSeleccion(AsientoDTO info, SeccionDTO sec) {
-        // Aquí conectas con tu panel derecho ("Tu Selección")
-        // Podrías usar un Observer o pasar la referencia del Frame
-        System.out.println("Asiento Seleccionado: Fila " + info.getFila() + " Num " + info.getNumero());
-        System.out.println("Precio a cobrar: " + sec.getPrecioBase());
+    private void dibujarBloque(Graphics2D g2, int x, int y, List<AsientoEventoDTO> asientos) {
+        int size = 18;
+        int esp = 4;
+        int cols = 10;
+
+        for (int i = 0; i < asientos.size(); i++) {
+            AsientoEventoDTO ae = asientos.get(i);
+            AsientoDTO info = buscarDetalle(ae.getIdAsiento());
+
+            int px = x + (i % cols) * (size + esp);
+            int py = y + (i / cols) * (size + esp);
+
+            if (info != null) {
+                if (ae.getIdAsiento().equals(idAsientoSeleccionado)) {
+                    g2.setColor(new Color(0x32FF6A)); // Verde selección
+                } else if (ae.getEstadoAsiento() == EstadoAsientoDTO.VENDIDO) {
+                    g2.setColor(new Color(60, 60, 60));
+                } else {
+                    g2.setColor(new Color(0x1F5CCC)); // Azul pedido
+                }
+
+                g2.fillRoundRect(px, py, size, size, 4, 4);
+                g2.setColor(Color.WHITE);
+                g2.setFont(new Font("Arial", Font.BOLD, 9));
+                g2.drawString(info.getFila() + info.getNumero(), px + 2, py + 13);
+            } else {
+                g2.setColor(new Color(100, 0, 0));
+                g2.drawRect(px, py, size, size);
+            }
+        }
     }
 
-    private AsientoDTO buscarDetalleAsiento(Long idAsiento) {
-        return catalogoAsientos.stream()
-                .filter(a -> a.getIdAsiento().equals(idAsiento))
-                .findFirst()
-                .orElse(null);
+    private void detectarClick(int mX, int mY) {
+        int centroX = getWidth() / 2;
+        int centroY = getHeight() / 2;
+        int size = 18, esp = 4, cols = 10;
+
+        for (Map.Entry<SeccionDTO, List<AsientoEventoDTO>> entry : mapaOcupacion.entrySet()) {
+            String nombre = entry.getKey().getNombre().toUpperCase();
+            int x = 0, y = 0;
+
+            if (nombre.contains("VIP")) {
+                x = centroX - 110;
+                y = centroY - 200;
+            } else if (nombre.contains("PLATEA")) {
+                x = centroX - 110;
+                y = centroY + 80;
+            } else {
+                x = centroX + 100;
+                y = centroY - 60;
+            }
+
+            List<AsientoEventoDTO> asientos = entry.getValue();
+            for (int i = 0; i < asientos.size(); i++) {
+                int px = x + (i % cols) * (size + esp);
+                int py = y + (i / cols) * (size + esp);
+
+                if (mX >= px && mX <= px + size && mY >= py && mY <= py + size) {
+                    AsientoEventoDTO ae = asientos.get(i);
+                    if (ae.getEstadoAsiento() != EstadoAsientoDTO.VENDIDO) {
+                        idAsientoSeleccionado = ae.getIdAsiento();
+                        repaint();
+                        return;
+                    }
+                }
+            }
+        }
     }
 
-    public AsientoEventoDTO getAsientoSeleccionado() {
-        return asientoSeleccionadoDTO;
+    private AsientoDTO buscarDetalle(Object idBuscado) {
+        if (catalogoAsientos == null || idBuscado == null) {
+            return null;
+        }
+        String idStr = String.valueOf(idBuscado);
+        for (AsientoDTO a : catalogoAsientos) {
+            if (String.valueOf(a.getIdAsiento()).equals(idStr)) {
+                return a;
+            }
+        }
+        return null;
     }
 }

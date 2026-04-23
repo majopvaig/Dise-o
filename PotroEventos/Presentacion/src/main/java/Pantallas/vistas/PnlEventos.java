@@ -27,17 +27,46 @@ public class PnlEventos extends javax.swing.JPanel {
         this.categoria = categoria;
         this.coordinador = coordinador;
         initComponents();
+
+        // 1. Configurar el panel principal (this) para que ocupe todo el espacio
+        this.removeAll();
+        this.setLayout(new java.awt.BorderLayout());
+
+        // 2. Configurar el botón en la parte inferior 
+        javax.swing.JPanel pnlBotonAbajo = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        pnlBotonAbajo.setBackground(java.awt.Color.WHITE); // O el color de tu fondo
+        pnlBotonAbajo.add(btnVolver);
+        this.add(pnlBotonAbajo, java.awt.BorderLayout.SOUTH);
+
+        // Este panel estará dentro del Scroll y evitará que el GridLayout se estire verticalmente
+        javax.swing.JPanel pnlNorte = new javax.swing.JPanel(new java.awt.BorderLayout());
+        pnlNorte.setBackground(java.awt.Color.WHITE);
+        pnlNorte.add(PnlContenedor, java.awt.BorderLayout.NORTH); // <--- ESTO evita que se estiren
+
+        // 4. Configurar el Scroll y añadirlo al centro
+        jScrollPane1.setViewportView(pnlNorte);
+        jScrollPane1.setBorder(null);
+        jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
+        this.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        // 5. Configurar el grid de los eventos
+        PnlContenedor.setLayout(new java.awt.GridLayout(0, 2, 20, 20)); // 2 columnas, espacios de 20px
+
+        cargarDatos();
     }
 
-    public void cargarDatos(){
-        for(EventoDTO evento : coordinador.consultarEventos(categoria)){
-            PnlEvento panel = PnlEvento.crearParaVista(evento, this);
-            add(panel);
-            revalidate();
-            repaint();
+    public void cargarDatos() {
+        PnlContenedor.removeAll();
+
+        for (EventoDTO evento : coordinador.consultarEventos(categoria)) {
+            PnlEvento panel = PnlEvento.crearParaVista(evento, this, coordinador);
+            PnlContenedor.add(panel);
         }
+
+        PnlContenedor.revalidate();
+        PnlContenedor.repaint();
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -47,43 +76,12 @@ public class PnlEventos extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        evento1 = new javax.swing.JPanel();
-        evento2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         btnVolver = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        PnlContenedor = new javax.swing.JPanel();
 
         setOpaque(false);
-
-        evento1.setBackground(new java.awt.Color(153, 153, 153));
-        evento1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                evento1MouseClicked(evt);
-            }
-        });
-
-        javax.swing.GroupLayout evento1Layout = new javax.swing.GroupLayout(evento1);
-        evento1.setLayout(evento1Layout);
-        evento1Layout.setHorizontalGroup(
-            evento1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 250, Short.MAX_VALUE)
-        );
-        evento1Layout.setVerticalGroup(
-            evento1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-
-        evento2.setBackground(new java.awt.Color(153, 153, 153));
-
-        javax.swing.GroupLayout evento2Layout = new javax.swing.GroupLayout(evento2);
-        evento2.setLayout(evento2Layout);
-        evento2Layout.setHorizontalGroup(
-            evento2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 250, Short.MAX_VALUE)
-        );
-        evento2Layout.setVerticalGroup(
-            evento2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -96,6 +94,28 @@ public class PnlEventos extends javax.swing.JPanel {
                 btnVolverMouseClicked(evt);
             }
         });
+        btnVolver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVolverActionPerformed(evt);
+            }
+        });
+
+        jScrollPane1.setBorder(null);
+
+        PnlContenedor.setBackground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout PnlContenedorLayout = new javax.swing.GroupLayout(PnlContenedor);
+        PnlContenedor.setLayout(PnlContenedorLayout);
+        PnlContenedorLayout.setHorizontalGroup(
+            PnlContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 932, Short.MAX_VALUE)
+        );
+        PnlContenedorLayout.setVerticalGroup(
+            PnlContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 497, Short.MAX_VALUE)
+        );
+
+        jScrollPane1.setViewportView(PnlContenedor);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -105,11 +125,13 @@ public class PnlEventos extends javax.swing.JPanel {
                 .addGap(16, 16, 16)
                 .addComponent(btnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jScrollPane1)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(503, Short.MAX_VALUE)
+                .addComponent(jScrollPane1)
+                .addGap(0, 0, 0)
                 .addComponent(btnVolver)
                 .addGap(16, 16, 16))
         );
@@ -118,42 +140,33 @@ public class PnlEventos extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(evento1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(evento2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(408, Short.MAX_VALUE))
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(evento1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(evento2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void evento1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_evento1MouseClicked
-
-    }//GEN-LAST:event_evento1MouseClicked
 
     private void btnVolverMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnVolverMouseClicked
         // TODO add your handling code here:
         coordinador.mostrarInicio();
     }//GEN-LAST:event_btnVolverMouseClicked
 
-    public void mostrarEvento(EventoDTO evento){
+    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnVolverActionPerformed
+
+    public void mostrarEvento(EventoDTO evento) {
         coordinador.mostrarInfoEvento(evento);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel PnlContenedor;
     private javax.swing.JButton btnVolver;
-    private javax.swing.JPanel evento1;
-    private javax.swing.JPanel evento2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }

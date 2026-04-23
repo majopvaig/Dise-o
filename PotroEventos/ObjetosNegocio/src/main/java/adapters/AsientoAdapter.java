@@ -3,6 +3,8 @@ package adapters;
 import Entitys.Asiento;
 import Entitys.Seccion;
 import dtos.AsientoDTO;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -13,7 +15,7 @@ import dtos.AsientoDTO;
  */
 public class AsientoAdapter {
 
-    public AsientoDTO entidadADTO(Asiento asientoEntidad) {
+    public static AsientoDTO entidadADTO(Asiento asientoEntidad) {
 
         if (asientoEntidad == null) {
             return null;
@@ -33,7 +35,7 @@ public class AsientoAdapter {
         );
     }
 
-    public Asiento dtoAEntidad(AsientoDTO asientoDTO) {
+    public static Asiento dtoAEntidad(AsientoDTO asientoDTO) {
 
         if (asientoDTO == null) {
             return null;
@@ -52,5 +54,33 @@ public class AsientoAdapter {
         }
 
         return asiento;
+    }
+
+    public static List<AsientoDTO> entidadesADTO(List<Asiento> entidades) {
+        if (entidades == null) {
+            return new ArrayList<>();
+        }
+
+        List<AsientoDTO> listaDTO = new ArrayList<>();
+
+        for (Asiento asiento : entidades) {
+            listaDTO.add(entidadADTO(asiento));
+        }
+
+        return listaDTO;
+    }
+
+    public static List<Asiento> dtosAEntidad(List<AsientoDTO> dtos) {
+        if (dtos == null) {
+            return new ArrayList<>();
+        }
+
+        List<Asiento> listaEntidad = new ArrayList<>();
+
+        for (AsientoDTO dto : dtos) {
+            listaEntidad.add(dtoAEntidad(dto));
+        }
+
+        return listaEntidad;
     }
 }

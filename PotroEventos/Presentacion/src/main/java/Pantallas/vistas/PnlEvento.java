@@ -4,6 +4,7 @@
  */
 package Pantallas.vistas;
 
+import Controlador.interfaz.ICoordinadorAplicacion;
 import dtos.EventoDTO;
 import dtos.ReservacionDTO;
 import java.awt.Component;
@@ -25,33 +26,36 @@ public class PnlEvento extends Panel {
     private EventoDTO evento;
     private ReservacionDTO reservacion;
     private Component padre;
-    
+    private ICoordinadorAplicacion coordinador;
+
     /**
-     * Constructor PRIVADO. Solo puede ser llamado por los métodos estáticos de abajo.
+     * Constructor PRIVADO. Solo puede ser llamado por los métodos estáticos de
+     * abajo.
      */
-    private PnlEvento(EventoDTO evento, ReservacionDTO reservacion, Component padre, boolean modoConsulta) {
+    private PnlEvento(EventoDTO evento, ReservacionDTO reservacion, Component padre, boolean modoConsulta, ICoordinadorAplicacion coordinador) {
         this.evento = evento;
         this.reservacion = reservacion;
         this.padre = padre;
         this.modoConsulta = modoConsulta;
         this.modoVista = !modoConsulta;
+        this.coordinador = coordinador;
         
         initComponents();
         cargarEvento();
         configurarModo();
     }
-
-    public static PnlEvento crearParaVista(EventoDTO evento, Component padre) {
+    
+    public static PnlEvento crearParaVista(EventoDTO evento, Component padre, ICoordinadorAplicacion coordinador) {
         // Le pasamos null a la reservación y false al modoConsulta
-        return new PnlEvento(evento, null, padre, false); 
+        return new PnlEvento(evento, null, padre, false, coordinador);
     }
-
-    public static PnlEvento crearParaConsulta(ReservacionDTO reservacion, Component padre) {
+    
+    public static PnlEvento crearParaConsulta(ReservacionDTO reservacion, Component padre, ICoordinadorAplicacion coordinador) {
         // Le pasamos la reservación y true al modoConsulta
-        return new PnlEvento(reservacion.getBoleto().getEvento(), reservacion, padre, true);
+        return new PnlEvento(reservacion.getBoleto().getEvento(), reservacion, padre, true, coordinador);
     }
-
-    private void cargarEvento(){
+    
+    private void cargarEvento() {
         ImageIcon icono = new ImageIcon(evento.getUrlImagen());
         int ancho = getWidth();
         int alto = getHeight();
@@ -68,7 +72,7 @@ public class PnlEvento extends Panel {
         this.lblFechaHora.setText(String.valueOf(evento.getFechaHora()));
         this.lblUbicacion.setText(evento.getUbicacion());
     }
-
+    
     private void configurarModo() {
         if (modoConsulta) {
             btnMostrar.setText("Ver mis boletos");
@@ -151,13 +155,7 @@ public class PnlEvento extends Panel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnMostrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarActionPerformed
-        // TODO add your handling code here:
-        if(padre instanceof PnlConsultar c){
-            c.mostrarDetalles(reservacion);
-        }
-        if(padre instanceof PnlEventos e){
-            e.mostrarEvento(evento);
-        }
+        coordinador.mostrarInfoEvento(evento);
     }//GEN-LAST:event_btnMostrarActionPerformed
 
 

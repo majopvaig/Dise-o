@@ -4,6 +4,8 @@
  */
 package Pantallas.vistas;
 
+import Controlador.coordinador.CoordinadorAplicacion;
+import Controlador.interfaz.ICoordinadorAplicacion;
 import dtos.CategoriaDTO;
 import java.awt.Component;
 import java.awt.Image;
@@ -16,36 +18,57 @@ import javax.swing.ImageIcon;
  * @author maria
  */
 public class PnlCategoria extends javax.swing.JPanel {
-    
+
     private CategoriaDTO categoria;
     private Component padre;
+    private ICoordinadorAplicacion coordinador;
 
     /**
      * Creates new form PnlCategoria
      */
-    public PnlCategoria(CategoriaDTO categoria, Component padre) {
+    public PnlCategoria(CategoriaDTO categoria, Component padre, ICoordinadorAplicacion coordinador) {
         this.categoria = categoria;
         this.padre = padre;
+        this.coordinador = coordinador;
         initComponents();
         setImagen();
+
     }
-    
+
     public void setImagen() {
         if (categoria == null) {
             return;
         }
-        ImageIcon icono = new ImageIcon(categoria.getUrlImagen());
-        int ancho = getWidth();
-        int alto = getHeight();
-        if (ancho <= 0) {
-            ancho = 250;
+
+        java.net.URL url = getClass().getResource(categoria.getUrlImagen());
+        if (url == null) {
+            return;
         }
-        if (alto <= 0) {
-            alto = 187;
+
+        ImageIcon icono = new ImageIcon(url);
+
+        int lblW = iconCategoria.getWidth();
+        int lblH = iconCategoria.getHeight();
+
+        if (lblW == 0 || lblH == 0) {
+            lblW = 250;
+            lblH = 187;
         }
-        Image img = icono.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+
+        int imgW = icono.getIconWidth();
+        int imgH = icono.getIconHeight();
+
+        double escala = Math.min((double) lblW / imgW, (double) lblH / imgH);
+
+        int newW = (int) (imgW * escala);
+        int newH = (int) (imgH * escala);
+
+        Image img = icono.getImage().getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
+
+        iconCategoria.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        iconCategoria.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
+
         iconCategoria.setIcon(new ImageIcon(img));
-        iconCategoria.setText("");
     }
 
     /**
@@ -59,7 +82,12 @@ public class PnlCategoria extends javax.swing.JPanel {
 
         iconCategoria = new javax.swing.JLabel();
 
-        iconCategoria.setText("iconCategoria");
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                formMouseClicked(evt);
+            }
+        });
+
         iconCategoria.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 iconCategoriaMouseClicked(evt);
@@ -80,9 +108,12 @@ public class PnlCategoria extends javax.swing.JPanel {
 
     private void iconCategoriaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_iconCategoriaMouseClicked
         // TODO add your handling code here:
-        if(padre instanceof PnlCategorias c)
-        c.mostrarEventosCategoria(categoria);
+        coordinador.mostrarEventos(categoria);
     }//GEN-LAST:event_iconCategoriaMouseClicked
+
+    private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
+        
+    }//GEN-LAST:event_formMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -60,4 +60,9 @@ public class CompraBoletoFachada implements ICompraBoleto {
         return controlCompra.consultarCategorias();
     }
 
+    @Override
+    public List<AsientoDTO> obtenerCatalogoAsientos() throws CompraBoletoException {
+        return controlCompra.obtenerCatalogoAsientos();
+    }
+
 }

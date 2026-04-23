@@ -23,7 +23,7 @@ import java.util.List;
 public class PnlConsultar extends javax.swing.JPanel {
 
     private ICoordinadorAplicacion coordinador;
-    
+
     private UsuarioDTO usuario;
 
     /**
@@ -35,36 +35,36 @@ public class PnlConsultar extends javax.swing.JPanel {
         List<ReservacionDTO> proximos = new ArrayList<>();
         List<ReservacionDTO> pasados = new ArrayList<>();
         List<ReservacionDTO> cancelados = new ArrayList<>();
-        for(ReservacionDTO r : coordinador.consultarReservaciones(usuario.getIdUsuario())){
-            if(r.getEstado() == ReservacionEstadoDTO.CANCELADA){
+        for (ReservacionDTO r : coordinador.consultarReservaciones(usuario.getIdUsuario())) {
+            if (r.getEstado() == ReservacionEstadoDTO.CANCELADA) {
                 cancelados.add(r);
-            } else if(r.getEstado() == ReservacionEstadoDTO.ACTIVA && r.getFechaHora().isAfter(LocalDateTime.now())){
+            } else if (r.getEstado() == ReservacionEstadoDTO.ACTIVA && r.getFechaHora().isAfter(LocalDateTime.now())) {
                 proximos.add(r);
             } else {
                 pasados.add(r);
             }
-        } 
-        for(ReservacionDTO proximo : proximos){
-            PnlEvento panel = PnlEvento.crearParaConsulta(proximo, this);
+        }
+        for (ReservacionDTO proximo : proximos) {
+            PnlEvento panel = PnlEvento.crearParaConsulta(proximo, this, coordinador);
             add(panel);
             revalidate();
             repaint();
         }
-        for(ReservacionDTO pasado : pasados){
-            PnlEvento panel = PnlEvento.crearParaConsulta(pasado, this);
+        for (ReservacionDTO pasado : pasados) {
+            PnlEvento panel = PnlEvento.crearParaConsulta(pasado, this, coordinador);
             add(panel);
             revalidate();
             repaint();
         }
-        for(ReservacionDTO cancelado : cancelados){
-            PnlEvento panel = PnlEvento.crearParaConsulta(cancelado, this);
+        for (ReservacionDTO cancelado : cancelados) {
+            PnlEvento panel = PnlEvento.crearParaConsulta(cancelado, this, coordinador);
             add(panel);
             revalidate();
             repaint();
         }
     }
-    
-    public void mostrarDetalles(ReservacionDTO reservacion){
+
+    public void mostrarDetalles(ReservacionDTO reservacion) {
         coordinador.mostrarDetalles(reservacion);
     }
 

@@ -1,11 +1,14 @@
 package Controlador.interfaz;
 
+import dtos.AsientoDTO;
+import dtos.AsientoEventoDTO;
 import dtos.CategoriaDTO;
 import dtos.EventoDTO;
 import dtos.ReservacionDTO;
+import dtos.SeccionDTO;
 import dtos.UsuarioDTO;
 import java.util.List;
-
+import java.util.Map;
 
 /**
  *
@@ -27,7 +30,7 @@ public interface ICoordinadorAplicacion {
     public void mostrarConsultar();
 
     public void mostrarInfoEvento(EventoDTO evento);
-    
+
     public void mostrarDetalles(ReservacionDTO reservacion);
 
     public void finalizarCompra();
@@ -39,20 +42,24 @@ public interface ICoordinadorAplicacion {
     public void mostrarConsultarEvento();
 
     public void volverAConsultar();
-    
+
     public List<EventoDTO> consultarEventos(CategoriaDTO categoria);
-    
+
     public List<CategoriaDTO> consultarCategorias();
-    
+
     public List<ReservacionDTO> consultarReservaciones(Long idUsuario);
-    
+
+    public Map<SeccionDTO, List<AsientoEventoDTO>> obtenerMapaOcupacion(Long idEvento);
+
+    public List<AsientoDTO> obtenerCatalogoAsientos();  
+
     public boolean agregarReservacion(ReservacionDTO reservacion);
-    
+
     public UsuarioDTO iniciarSesion(String correo, String contrasenia);
-    
+
     public void setUsuarioSesion(UsuarioDTO usuario);
-    
+
     public UsuarioDTO getUsuarioSesion();
-    
+
     public void cerrarSesion();
 }
