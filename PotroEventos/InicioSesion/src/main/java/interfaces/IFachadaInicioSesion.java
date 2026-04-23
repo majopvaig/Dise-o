@@ -15,7 +15,7 @@ import dtos.UsuarioDTO;
  * @author María Valdez - 262775
  */
 public interface IFachadaInicioSesion {
-        //inicia sesion
+    //inicia sesion
     public UsuarioDTO iniciarSesion(LoginDTO login);
     
     public UsuarioDTO verificarUsuario(String correo, String contrasenia);

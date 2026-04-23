@@ -6,6 +6,8 @@ package adapters;
 
 import Entitys.Usuario;
 import dtos.UsuarioDTO;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -40,5 +42,15 @@ public class UsuarioAdapter {
         usuario.setContrasenia(dto.getContrasenia());
         
         return usuario;
+    }
+    
+    
+    
+    public static List<UsuarioDTO> listaDTO(List<Usuario> lista){
+        List<UsuarioDTO> usuarios = new ArrayList<>();
+        for (Usuario user: lista){
+            usuarios.add(entidadADTO(user));
+        }
+        return usuarios;
     }
 }

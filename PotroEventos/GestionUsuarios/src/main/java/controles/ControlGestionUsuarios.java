@@ -65,4 +65,13 @@ public class ControlGestionUsuarios {
             throw new GestionUsuarioException("Error al obtener la información del usuario: " + ex.getMessage());
         }
     }
+
+    /**
+     * Auxiliar que regresa el usuario activo
+     * @return el usuario actico
+     */
+    public UsuarioDTO getUsuarioActivo() {
+        return usuarioActivo;
+    }
+    
 }

@@ -4,8 +4,13 @@
  */
 package objetosNegocio;
 
+import adapters.UsuarioAdapter;
+import daos.CategoriaDAO;
+import dtos.LoginDTO;
 import dtos.UsuarioDTO;
 import interfaces.IUsuarioBO;
+import daos.UsuarioDAO;
+import interfaces.IUsuarioDAO;
 
 /**
  *
@@ -14,6 +19,8 @@ import interfaces.IUsuarioBO;
 public class UsuarioBO implements IUsuarioBO{
 
     private static UsuarioBO instance;
+    
+    private IUsuarioDAO usuarioDAO = UsuarioDAO.getInstance();
     
     private UsuarioBO(){
         
@@ -29,10 +36,27 @@ public class UsuarioBO implements IUsuarioBO{
     @Override
     public UsuarioDTO asociarUsuario(UsuarioDTO usuario) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
     }
 
     @Override
     public void desAsociarUsuario() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public UsuarioDTO iniciarSesion(LoginDTO login) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public UsuarioDTO verificarUsuario(String correo, String contrasenia) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
+    }
+
+    @Override
+    public void cerrarSesion() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     

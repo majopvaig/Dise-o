@@ -47,4 +47,10 @@ public class GestionUsuarioFachada implements IGestionUsuariosFachada{
     public void desvincularUsuario()throws GestionUsuarioException{
         control.limpiarSesion();
     }
+    
+    // --- Método que regresa el usuario con la sesion activa --- 
+    @Override
+    public UsuarioDTO obtenerUsuarioActivo(){
+        return control.getUsuarioActivo();
+    }
 }

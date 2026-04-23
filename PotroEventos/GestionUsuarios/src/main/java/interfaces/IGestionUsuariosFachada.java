@@ -26,4 +26,8 @@ public interface IGestionUsuariosFachada {
     // --- Metodo para deslindar un usuario de una sesion ---
     
     public void desvincularUsuario()throws GestionUsuarioException;
+    
+    // --- Método que regresa el usuario con la sesion activa --- 
+    
+    public UsuarioDTO obtenerUsuarioActivo();
 }

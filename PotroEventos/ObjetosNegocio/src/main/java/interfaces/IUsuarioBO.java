@@ -4,6 +4,7 @@
  */
 package interfaces;
 
+import dtos.LoginDTO;
 import dtos.UsuarioDTO;
 import excepciones.NegocioException;
 
@@ -20,4 +21,10 @@ public interface IUsuarioBO {
     // --- Metodo para deslindar un usuario de una sesion ---
     
     public void desAsociarUsuario() throws NegocioException;
+            
+    public UsuarioDTO iniciarSesion(LoginDTO login);
+    
+    public UsuarioDTO verificarUsuario(String correo, String contrasenia);
+    
+    public void cerrarSesion();
 }
