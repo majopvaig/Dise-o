@@ -10,6 +10,7 @@ import daos.AsientoDAO;
 import daos.AsientoEventoDAO;
 import dtos.AsientoEventoDTO;
 import excepciones.NegocioException;
+import excepciones.PersistenciaException;
 import interfaces.IAsientoEventoBO;
 import interfaces.IAsientoEventoDAO;
 import java.util.List;
@@ -48,11 +49,36 @@ public class AsientoEventoBO implements IAsientoEventoBO {
             // 2. Convertir a DTOs usando el Adapter (Limpio y directo)
             return AsientoEventoAdapter.listaEntidadADTO(entidades);
 
-        } catch (Exception e) {
+        } catch (PersistenciaException e) {
             // Log de error y relanzamiento como NegocioException
             System.err.println("Error en AsientoEventoBO: " + e.getMessage());
             throw new NegocioException("No se pudo cargar la ocupación del evento.");
         }
     }
 
+    @Override
+    public boolean reservarAsiento(Long idAsiento) throws NegocioException {
+        if (idAsiento == null || idAsiento <= 0) {
+            throw new NegocioException("ID de asientoEvento no válido.");
+        }
+
+        try {
+            return asientoEventoDAO.reservarAsiento(idAsiento);
+        } catch (PersistenciaException e) {
+            throw new NegocioException("No fue posible reservar el asiento");
+        }
+    }
+
+    @Override
+    public boolean liberarAsiento(Long idAsiento) throws NegocioException {
+        if (idAsiento == null || idAsiento <= 0) {
+            throw new NegocioException("ID de asientoEvento no válido.");
+        }
+
+        try {
+            return asientoEventoDAO.liberarAsiento(idAsiento);
+        } catch (PersistenciaException e) {
+            throw new NegocioException("No fue posible liberar el asiento");
+        }
+    }
 }

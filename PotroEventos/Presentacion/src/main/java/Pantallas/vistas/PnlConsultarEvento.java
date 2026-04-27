@@ -5,6 +5,7 @@
 package Pantallas.vistas;
 
 import Controlador.interfaz.ICoordinadorAplicacion;
+import Observer.IAsientosSeleccionadosListener;
 import dtos.AsientoDTO;
 import dtos.AsientoEventoDTO;
 import dtos.EventoDTO;
@@ -56,7 +57,7 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
 
         BotonUtileria.estilizarBoton(btnVolver);
         lblTemporizador.setText(String.format(formatoTemporizador(tiempoRestante)));
-        
+
         modoPantalla();
         cargarDatos();
         if (!evento.isGratuito()) {
@@ -65,12 +66,12 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
         }
         iniciarTemporizador();
     }
-    
-    public void modoPantalla(){
+
+    public void modoPantalla() {
         if (evento.isGratuito()) {
             lblTuSeccion.setText("Tus Boletos");
             lblPrecio.setText("Cantidad:");
-            txtTotal.setText("Total: GRATIS");           
+            txtTotal.setText("Total: GRATIS");
             lblSecc.setText("");
             lblSeccion.setText("");
             jLabel10.setText("");
@@ -82,12 +83,12 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
             btnCant.setEditable(false);
             btnCant.setVisible(true);
             btnMenos.setVisible(true);
-            btnMas.setVisible(true);   
+            btnMas.setVisible(true);
             btnMenos.setEnabled(true);
             btnMas.setEnabled(true);
             btnCant.setEnabled(true);
             btnComprar.setText("Adquirir Boleto(s)");
-            PnlEstadio.setVisible(false); 
+            PnlEstadio.setVisible(false);
             jSeparator1.setVisible(false);
             jSeparator2.setVisible(false);
             jSeparator3.setVisible(false);
@@ -181,21 +182,16 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
                 return;
             }
 
-            estadioVisual = new PnlEstadio(mapa, catalogo, new PnlEstadio.IAsientosSeleccionadosListener() {
-                @Override
-                public void onSeleccionCambiada(List<SeccionDTO> secciones, List<AsientoDTO> asientosInfo, List<AsientoEventoDTO> asientosEventos) {
-                    actualizarEtiquetasAsientos(secciones, asientosInfo, asientosEventos);
-                }
-            });
+            estadioVisual = new PnlEstadio(mapa, catalogo, (List<SeccionDTO> secciones, List<AsientoDTO> asientosInfo, List<AsientoEventoDTO> asientosEventos) -> {
+                actualizarEtiquetasAsientos(secciones, asientosInfo, asientosEventos);
+            }, coordinador);
 
-            JScrollPane scroll = new JScrollPane(estadioVisual);
-            scroll.setBorder(null);
-            scroll.setPreferredSize(new java.awt.Dimension(400, 400));
-            scroll.getViewport().setBackground(new java.awt.Color(20, 20, 20));
+            estadioVisual.setPreferredSize(new java.awt.Dimension(400, 400));
 
             PnlEstadio.removeAll();
             PnlEstadio.setLayout(new java.awt.BorderLayout());
-            PnlEstadio.add(scroll, java.awt.BorderLayout.CENTER);
+
+            PnlEstadio.add(estadioVisual, java.awt.BorderLayout.CENTER);
 
             PnlEstadio.revalidate();
             PnlEstadio.repaint();
@@ -212,8 +208,8 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
     private void actualizarEtiquetasAsientos(List<SeccionDTO> secciones, List<AsientoDTO> asientosInfo, List<AsientoEventoDTO> asientosEventos) {
         // guardar los asientos
         this.asientosSeleccionados = asientosEventos;
-        
-        if(evento == null  || evento.isGratuito()){
+
+        if (evento == null || evento.isGratuito()) {
             return;
         }
 
@@ -303,13 +299,13 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
         esta línea es pendejo no hace nada xq lit no acomoda un orto el texto de
         la descripción, pero en fin
         
-        */
+         */
         this.txtInfo.setText("<html><div style='width: 350px; text-align: justify;'>" + evento.getInformacionEvento() + "</div></html>");
         /*
         para que la fecha se vea kawaii
         1. ocupamos el formateador de fechas
         2. aplicarselo a la fecha
-        */
+         */
         DateTimeFormatter formateadorFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         DateTimeFormatter formateadorHora = DateTimeFormatter.ofPattern("HH:mm");
         this.lblFechaHora.setText(String.valueOf(evento.getFechaHora().format(formateadorFecha)) + " - " + String.valueOf(evento.getFechaHora().format(formateadorHora)));
@@ -662,7 +658,7 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
                 return;
             }
         } else {
-            if(asientosSeleccionados == null || asientosSeleccionados.isEmpty()){
+            if (asientosSeleccionados == null || asientosSeleccionados.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Selecciona al menos un asiento en el mapa.");
                 return;
             }
@@ -680,17 +676,17 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
                 btnCant.setText(String.valueOf(cantidadActual));
             }
         } catch (NumberFormatException ex) {
-            btnCant.setText("0"); 
+            btnCant.setText("0");
         }
-        
-        
+
+
     }//GEN-LAST:event_btnMenosMouseClicked
 
     private void btnMasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMasMouseClicked
         // TODO add your handling code here:
         try {
             int cantidadActual = Integer.parseInt(btnCant.getText());
-            int limiteBoletos = evento.getDisponibilidad(); 
+            int limiteBoletos = evento.getDisponibilidad();
 
             if (cantidadActual < limiteBoletos) {
                 cantidadActual++;

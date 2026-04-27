@@ -187,14 +187,8 @@
                                       <Group type="103" groupAlignment="1" attributes="0">
                                           <Group type="102" attributes="0">
                                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                                  <Group type="102" attributes="0">
-                                                      <EmptySpace min="14" max="32767" attributes="0"/>
-                                                      <Component id="lblSeccion" min="-2" pref="61" max="-2" attributes="0"/>
-                                                  </Group>
-                                                  <Group type="102" attributes="0">
-                                                      <EmptySpace min="8" max="32767" attributes="0"/>
-                                                      <Component id="lblSecc" min="-2" pref="73" max="-2" attributes="0"/>
-                                                  </Group>
+                                                  <Component id="lblSeccion" min="-2" pref="61" max="-2" attributes="0"/>
+                                                  <Component id="lblSecc" min="-2" pref="73" max="-2" attributes="0"/>
                                               </Group>
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Component id="jSeparator2" min="-2" max="-2" attributes="0"/>

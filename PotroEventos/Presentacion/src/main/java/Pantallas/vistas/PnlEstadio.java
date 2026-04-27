@@ -1,5 +1,8 @@
 package Pantallas.vistas;
 
+import Controlador.coordinador.CoordinadorAplicacion;
+import Controlador.interfaz.ICoordinadorAplicacion;
+import Observer.IAsientosSeleccionadosListener;
 import dtos.*;
 import dtos.ENUMS.EstadoAsientoDTO;
 import java.awt.*;
@@ -18,21 +21,6 @@ import javax.swing.*;
  */
 public class PnlEstadio extends JPanel {
 
-    /**
-     * Interfaz para escuchar la selección de múltiples asientos.
-     */
-    public interface IAsientosSeleccionadosListener {
-
-        /**
-         * Método invocado cuando la lista de asientos seleccionados cambia.
-         *
-         * @param secciones Lista de secciones correspondientes a los asientos.
-         * @param asientosInfo Lista de información técnica (fila, número).
-         * @param asientosEventos Lista de datos del asiento (estado, precio).
-         */
-        void onSeleccionCambiada(List<SeccionDTO> secciones, List<AsientoDTO> asientosInfo, List<AsientoEventoDTO> asientosEventos);
-    }
-
     private final Map<SeccionDTO, List<AsientoEventoDTO>> mapaOcupacion;
     private final List<AsientoDTO> catalogoAsientos;
     private final IAsientosSeleccionadosListener listenerSeleccion;
@@ -46,6 +34,37 @@ public class PnlEstadio extends JPanel {
     private final double ESCALA_MINIMA = 0.5;
     private final double ESCALA_MAXIMA = 3.0;
     private final int MAX_ASIENTOS = 3;
+    private final ICoordinadorAplicacion coodinador;
+
+    /**
+     * Desplazamiento horizontal aplicado al panel para permitir mover
+     * manualmente la vista del estadio mediante arrastre.
+     */
+    private int offsetX = 0;
+
+    /**
+     * Desplazamiento vertical aplicado al panel para permitir mover manualmente
+     * la vista del estadio mediante arrastre.
+     */
+    private int offsetY = 0;
+
+    /**
+     * Última posición horizontal registrada del mouse durante el arrastre.
+     */
+    private int ultimoMouseX;
+
+    /**
+     * Última posición vertical registrada del mouse durante el arrastre.
+     */
+    private int ultimoMouseY;
+
+    /**
+     * Indica si el usuario está arrastrando el estadio.
+     *
+     * Si es false, se interpreta como click normal sobre un asiento. Si es
+     * true, se interpreta como movimiento de la vista.
+     */
+    private boolean arrastrando = false;
 
     /**
      * Constructor del panel de estadio.
@@ -54,19 +73,49 @@ public class PnlEstadio extends JPanel {
      * @param catalogo Catálogo técnico de asientos.
      * @param listener El escuchador de eventos de selección.
      */
-    public PnlEstadio(Map<SeccionDTO, List<AsientoEventoDTO>> mapa, List<AsientoDTO> catalogo, IAsientosSeleccionadosListener listener) {
+    public PnlEstadio(Map<SeccionDTO, List<AsientoEventoDTO>> mapa, List<AsientoDTO> catalogo, IAsientosSeleccionadosListener listener, ICoordinadorAplicacion coordinador) {
         this.mapaOcupacion = mapa;
         this.catalogoAsientos = catalogo;
         this.listenerSeleccion = listener;
         this.asientosSeleccionados = new ArrayList<>();
+        this.coodinador = coordinador;
 
         this.setBackground(new Color(0x1e1f20));
         this.setPreferredSize(new Dimension(900, 700));
 
+        // REEMPLAZAR TODO el MouseAdapter actual por este
         MouseAdapter mouseHandler = new MouseAdapter() {
+
             @Override
-            public void mouseClicked(MouseEvent e) {
-                detectarClick((int) (e.getX() / escala), (int) (e.getY() / escala));
+            public void mousePressed(MouseEvent e) {
+                ultimoMouseX = e.getX();
+                ultimoMouseY = e.getY();
+                arrastrando = false;
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                int dx = e.getX() - ultimoMouseX;
+                int dy = e.getY() - ultimoMouseY;
+
+                offsetX += dx;
+                offsetY += dy;
+
+                ultimoMouseX = e.getX();
+                ultimoMouseY = e.getY();
+
+                arrastrando = true;
+                repaint();
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (!arrastrando) {
+                    detectarClick(
+                            (int) ((e.getX() - offsetX) / escala),
+                            (int) ((e.getY() - offsetY) / escala)
+                    );
+                }
             }
 
             @Override
@@ -76,11 +125,13 @@ public class PnlEstadio extends JPanel {
                 } else {
                     escala = Math.max(ESCALA_MINIMA, escala - 0.1);
                 }
+
                 repaint();
             }
         };
 
         this.addMouseListener(mouseHandler);
+        this.addMouseMotionListener(mouseHandler);
         this.addMouseWheelListener(mouseHandler);
     }
 
@@ -100,6 +151,7 @@ public class PnlEstadio extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
 
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.translate(offsetX, offsetY);
         g2.scale(escala, escala);
 
         int centroX = getWidth() / 2;
@@ -159,7 +211,8 @@ public class PnlEstadio extends JPanel {
     }
 
     private void detectarClick(int mX, int mY) {
-        int centroX = getWidth() / 2, centroY = getHeight() / 2;
+        int centroX = getWidth() / 2;
+        int centroY = getHeight() / 2;
         int size = 18, esp = 4, cols = 10, radio = 180;
 
         List<SeccionDTO> secciones = new ArrayList<>(mapaOcupacion.keySet());
@@ -179,20 +232,55 @@ public class PnlEstadio extends JPanel {
                 if (mX >= px && mX <= px + size && mY >= py && mY <= py + size) {
                     AsientoEventoDTO ae = asientos.get(j);
 
-                    if (ae.getEstadoAsiento() != EstadoAsientoDTO.VENDIDO) {
-                        if (asientosSeleccionados.contains(ae)) {
-                            // Si ya está seleccionado, siempre permitimos quitarlo
-                            asientosSeleccionados.remove(ae);
-                        } else {
-                            // Si NO está seleccionado, validamos el límite antes de agregar
-                            if (asientosSeleccionados.size() < MAX_ASIENTOS) {
-                                asientosSeleccionados.add(ae);
-                            }
+                    // Buscar si ya está seleccionado por ID
+                    AsientoEventoDTO seleccionado = null;
+
+                    for (AsientoEventoDTO item : asientosSeleccionados) {
+                        if (item.getIdAsiento().equals(ae.getIdAsiento())) {
+                            seleccionado = item;
+                            break;
                         }
+                    }
+
+                    // Si ya estaba seleccionado → quitar selección
+                    if (seleccionado != null) {
+                        boolean liberado = coodinador.liberarAsiento(
+                                ae.getIdAsiento()
+                        );
+
+                        if (liberado) {
+                            asientosSeleccionados.remove(seleccionado);
+                            ae.setEstadoAsiento(EstadoAsientoDTO.DISPONIBLE);
+                        }
+
                         repaint();
                         notificarCambioSeleccion();
                         return;
                     }
+
+                    // Si ya fue vendido → no permitir
+                    if (ae.getEstadoAsiento() == EstadoAsientoDTO.VENDIDO) {
+                        return;
+                    }
+
+                    // Límite máximo
+                    if (asientosSeleccionados.size() >= MAX_ASIENTOS) {
+                        return;
+                    }
+
+                    // Intentar reservar
+                    boolean reservado = coodinador.reservarAsiento(
+                            ae.getIdAsiento()
+                    );
+
+                    if (reservado) {
+                        ae.setEstadoAsiento(EstadoAsientoDTO.RESERVADO);
+                        asientosSeleccionados.add(ae);
+                    }
+
+                    repaint();
+                    notificarCambioSeleccion();
+                    return;
                 }
             }
         }

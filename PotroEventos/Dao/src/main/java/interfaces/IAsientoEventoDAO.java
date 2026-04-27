@@ -5,6 +5,7 @@
 package interfaces;
 
 import Entitys.AsientoEvento;
+import excepciones.PersistenciaException;
 import java.util.List;
 
 /**
@@ -13,5 +14,9 @@ import java.util.List;
  */
 public interface IAsientoEventoDAO {
 
-    List<AsientoEvento> buscarPorEvento(Long idEvento);
+    List<AsientoEvento> buscarPorEvento(Long idEvento) throws PersistenciaException;
+
+    boolean reservarAsiento(Long idAsiento) throws PersistenciaException;
+
+    boolean liberarAsiento(Long idAsiento) throws PersistenciaException;
 }

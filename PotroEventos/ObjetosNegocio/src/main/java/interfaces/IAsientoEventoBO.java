@@ -15,4 +15,8 @@ import java.util.List;
 public interface IAsientoEventoBO {
     
     List<AsientoEventoDTO> consultarEstadosPorEvento(Long idEvento) throws NegocioException;
+    
+    boolean reservarAsiento(Long idAsiento)throws NegocioException;
+    
+    boolean liberarAsiento(Long idAsiento)throws NegocioException;
 }

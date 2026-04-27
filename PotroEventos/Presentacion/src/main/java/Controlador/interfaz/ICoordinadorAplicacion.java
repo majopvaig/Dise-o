@@ -62,4 +62,8 @@ public interface ICoordinadorAplicacion {
     public UsuarioDTO getUsuarioSesion();
 
     public void cerrarSesion();
+    
+    boolean reservarAsiento(Long idAsientoEvento);
+    
+    boolean liberarAsiento(Long idAsientoEvento);
 }

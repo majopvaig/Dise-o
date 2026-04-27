@@ -312,4 +312,22 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
         }
     }
 
+    @Override
+    public boolean reservarAsiento(Long idAsientoEvento) {
+        try {
+            return asientoEventoBO.reservarAsiento(idAsientoEvento);
+        } catch (NegocioException e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean liberarAsiento(Long idAsientoEvento) {
+        try {
+            return asientoEventoBO.liberarAsiento(idAsientoEvento);
+        } catch (NegocioException e) {
+            return false;
+        }
+    }
+
 }
