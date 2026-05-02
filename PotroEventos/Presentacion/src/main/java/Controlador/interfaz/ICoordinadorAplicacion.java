@@ -2,6 +2,7 @@ package Controlador.interfaz;
 
 import dtos.AsientoDTO;
 import dtos.AsientoEventoDTO;
+import dtos.BoletoDTO;
 import dtos.CategoriaDTO;
 import dtos.CobroDTO;
 import dtos.EventoDTO;
@@ -71,9 +72,11 @@ public interface ICoordinadorAplicacion {
 
     boolean liberarAsiento(Long idAsientoEvento);
 
-    public boolean venderAsientos(List<AsientoEventoDTO> asientosSeleccionados, Long totalCompra, boolean gratuito);
+    public boolean venderAsientos(List<AsientoEventoDTO> asientosSeleccionados, Long totalCompra, boolean gratuito, ReservacionDTO reservacion);
 
     boolean realizarCompra(TarjetaDTO noTarjeta, CobroDTO cobro);
     
     Long getTotalPendiente();
+    
+    String generarQR(EventoDTO evento, AsientoEventoDTO asiento);
 }

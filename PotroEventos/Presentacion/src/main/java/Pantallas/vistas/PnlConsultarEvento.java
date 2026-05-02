@@ -7,11 +7,19 @@ package Pantallas.vistas;
 import Controlador.interfaz.ICoordinadorAplicacion;
 import dtos.AsientoDTO;
 import dtos.AsientoEventoDTO;
+import dtos.BoletoDTO;
+import dtos.CobroDTO;
+import dtos.ENUMS.EstadoAsientoDTO;
+import dtos.ENUMS.EstadoBoletoDTO;
+import dtos.ENUMS.ReservacionEstadoDTO;
 import dtos.EventoDTO;
+import dtos.ReservacionDTO;
 import dtos.SeccionDTO;
+import dtos.UsuarioDTO;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +43,7 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
     private ICoordinadorAplicacion coordinador;
     private EventoDTO evento;
     private PnlEstadio estadioVisual;
+    private ReservacionDTO reservacionParcial;
     private List<AsientoEventoDTO> asientosSeleccionados = new ArrayList<>();
 
     //Variables para el Temporizador
@@ -307,6 +316,8 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
         if (evento == null) {
             return;
         }
+        
+        reservacionParcial = new ReservacionDTO();
 
         if (evento.getUrlImagen() != null && !evento.getUrlImagen().isEmpty()) {
             ImageIcon icono = new ImageIcon(evento.getUrlImagen());
@@ -677,19 +688,59 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
     private void btnComprarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnComprarMouseClicked
         // TODO add your handling code here:
         if (evento.isGratuito()) {
-            int boletosAAdquirir = Integer.parseInt(btnCant.getText());
-            if (boletosAAdquirir == 0) {
-                JOptionPane.showMessageDialog(this, "Selecciona al menos 1 boleto.");
+            int boletoAdquirir = Integer.parseInt(btnCant.getText());
+            if (boletoAdquirir == 0) {
+                JOptionPane.showMessageDialog(this, "Selecciona un 1 boleto.");
                 return;
             }
+            if(boletoAdquirir > 1){
+                JOptionPane.showMessageDialog(this, "Solo puede adquirir un boleto por compra.");
+                return;
+            }
+            BoletoDTO boletoGratis = new BoletoDTO("", 0.0, EstadoBoletoDTO.ACTIVO, evento, null);
+            boletoGratis.setCodigoQR(coordinador.generarQR(evento, null));
+            reservacionParcial.setBoleto(boletoGratis);
+            reservacionParcial.setCobro(null);
+            reservacionParcial.setTotal(0.0);
+            reservacionParcial.setEstado(ReservacionEstadoDTO.ACTIVA);
+            reservacionParcial.setUsuario(coordinador.getUsuarioSesion());
+            reservacionParcial.setFechaHora(LocalDateTime.now());
+            coordinador.venderAsientos(asientosSeleccionados, totalCompra, evento.isGratuito(), reservacionParcial);
         } else {
             if (asientosSeleccionados == null || asientosSeleccionados.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Selecciona al menos un asiento en el mapa.");
+                JOptionPane.showMessageDialog(this, "Selecciona un asiento en el mapa.");
                 return;
             }
-
+            if(asientosSeleccionados.size() != 1){
+               JOptionPane.showMessageDialog(this, "Solo puede adquirir un boleto por compra.");
+                return; 
+            }
+            reservacionParcial.setBoleto(new BoletoDTO(
+                    null, 
+                    coordinador.generarQR(evento, new AsientoEventoDTO(EstadoAsientoDTO.RESERVADO, asientosSeleccionados.get(0).getIdAsiento(), evento.getIdEvento())), 
+                    100d, // -> aquí debe ser el valor del boleto pero pienso si es mejor agregarle un precio fijo a todos los boletos O,
+                    // and hear me out, las categorias tenga precio y ese sea el valor del evento cuando este no es gratis
+                    EstadoBoletoDTO.ACTIVO, 
+                    evento,
+                    new AsientoEventoDTO(EstadoAsientoDTO.RESERVADO, asientosSeleccionados.get(0).getIdAsiento(), evento.getIdEvento())));
+            int opcion = JOptionPane.showConfirmDialog(this, "¿Desea pagar con créditos de la aplicación?");
+            if(opcion == JOptionPane.OK_OPTION){
+                if(coordinador.getUsuarioSesion().getCreditos() >= totalCompra.intValue()*2){
+                    coordinador.getUsuarioSesion().setCreditos(coordinador.getUsuarioSesion().getCreditos() - totalCompra.intValue()*2);
+                    reservacionParcial.setCobro(new CobroDTO(totalCompra*2, "CRÉDITO APP", "Pago del evento con créditos de la aplicación"));
+                    coordinador.venderAsientos(asientosSeleccionados, totalCompra, true, reservacionParcial);
+                } else {
+                    JOptionPane.showMessageDialog(this, "No cuenta con el crédito suficiente para realizar esta operación.");
+                    return;
+                }
+            } else {
+                reservacionParcial.setFechaHora(LocalDateTime.now());
+                reservacionParcial.setTotal(Double.valueOf(totalCompra.doubleValue())); 
+                reservacionParcial.setEstado(ReservacionEstadoDTO.ACTIVA);
+                reservacionParcial.setUsuario(coordinador.getUsuarioSesion());
+                coordinador.venderAsientos(asientosSeleccionados, totalCompra, evento.isGratuito(), reservacionParcial);
+            }
         }
-        // -> tengo q ver qp para crear las reservaciones y mandarlas al método de pago (en caso de ocuparse)
     }//GEN-LAST:event_btnComprarMouseClicked
 
     private void btnMenosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMenosMouseClicked
@@ -728,7 +779,15 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
     }//GEN-LAST:event_btnMasMouseClicked
 
     private void btnComprarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprarActionPerformed
-        coordinador.venderAsientos(asientosSeleccionados, totalCompra, evento.isGratuito());
+//        reservacionParcial.setFechaHora(LocalDateTime.now());
+//        if(evento.isGratuito()){
+//            reservacionParcial.setTotal(0.0);
+//        } else {
+//            reservacionParcial.setTotal(Double.valueOf(totalCompra.doubleValue())); 
+//        }
+//        reservacionParcial.setEstado(ReservacionEstadoDTO.ACTIVA);
+//        reservacionParcial.setUsuario(coordinador.getUsuarioSesion());
+//        coordinador.venderAsientos(asientosSeleccionados, totalCompra, evento.isGratuito(), reservacionParcial);
     }//GEN-LAST:event_btnComprarActionPerformed
 
 

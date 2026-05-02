@@ -40,22 +40,8 @@ public interface IControlCompraBoleto {
     List<AsientoDTO> obtenerCatalogoAsientos() throws CompraBoletoException;
 
     /**
-     * Filtra y obtiene eventos según una categoría específica.
-     */
-    List<EventoDTO> obtenerEventosCategoria(CategoriaDTO categoria) throws CompraBoletoException;
-
-    /**
      * Registra una nueva reservación en el sistema.
      */
     boolean agregarReservacion(ReservacionDTO reservacion) throws CompraBoletoException;
 
-    /**
-     * Consulta el historial de reservaciones de un usuario.
-     */
-    List<ReservacionDTO> consultarReservacionUsuario(Long idUsuario) throws CompraBoletoException;
-
-    /**
-     * Obtiene el catálogo de categorías de eventos disponibles.
-     */
-    List<CategoriaDTO> consultarCategorias() throws CompraBoletoException;
 }

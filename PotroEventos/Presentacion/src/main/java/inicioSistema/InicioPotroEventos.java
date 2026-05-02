@@ -6,6 +6,10 @@ package inicioSistema;
 
 import Controlador.coordinador.CoordinadorAplicacion;
 import Controlador.interfaz.ICoordinadorAplicacion;
+import dtos.UsuarioDTO;
+import excepciones.NegocioException;
+import interfaces.IUsuarioBO;
+import objetosNegocio.UsuarioBO;
 
 /**
  *
@@ -18,6 +22,12 @@ public class InicioPotroEventos {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+//        IUsuarioBO bo = UsuarioBO.getInstance();
+//        try{
+//            bo.asociarUsuario(new UsuarioDTO(1L, "Aslan Jade", "Callenreese", "", "eijimypookie@gmail.com", "eiji4ever", 0));
+//        } catch(NegocioException ne){
+//            System.out.println("falló agregar el usuario.");
+//        }
         ICoordinadorAplicacion inicio = new CoordinadorAplicacion();
         inicio.mostrarInicio();
     }

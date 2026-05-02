@@ -6,6 +6,7 @@ package Pantallas;
 
 import Controlador.interfaz.ICoordinadorAplicacion;
 import dtos.CobroDTO;
+import dtos.ReservacionDTO;
 import dtos.TarjetaDTO;
 import javax.swing.JOptionPane;
 import utilerias.BotonUtileria;
@@ -20,6 +21,7 @@ import utilerias.BotonUtileria;
 public class FrmPago extends javax.swing.JFrame {
 
     private ICoordinadorAplicacion coordinador;
+    private ReservacionDTO reservacion;
 
     public FrmPago(ICoordinadorAplicacion coordinador) {
         this.coordinador = coordinador;
@@ -27,6 +29,10 @@ public class FrmPago extends javax.swing.JFrame {
 
         BotonUtileria.estilizarBoton(btnPagar);
         BotonUtileria.estilizarBoton(btnVolver);
+    }
+    
+    public void setReservacion(ReservacionDTO reservacion){
+        this.reservacion = reservacion;
     }
 
     /**
@@ -323,6 +329,10 @@ public class FrmPago extends javax.swing.JFrame {
         CobroDTO cobro = new CobroDTO(coordinador.getTotalPendiente(), "MXN", "Compra Boleto");
         if (coordinador.realizarCompra(tarjeta, cobro)) {
             JOptionPane.showMessageDialog(null, "Pago realizado exitosamente", "Pago realizado", JOptionPane.INFORMATION_MESSAGE);
+            reservacion.setCobro(cobro);
+            coordinador.agregarReservacion(reservacion);
+            // -> aquí debe abrir el frame de resumen compra
+            coordinador.mostrarDetalles(reservacion);
         } else {
             JOptionPane.showMessageDialog(null, "Pago no realizado", "No fue posible realizar el pago", JOptionPane.ERROR_MESSAGE);
             coordinador.volverAConsultarEvento();

@@ -17,23 +17,26 @@ public class Boleto {
     private Double precio;
     private EstadoBoleto estadoBoleto;
     private Evento evento;
+    private AsientoEvento asiento;
 
     public Boleto() {
     }
 
-    public Boleto(Long idBoleto, String codigoQR, Double precio, EstadoBoleto estadoBoleto, Evento evento) {
+    public Boleto(String codigoQR, Double precio, EstadoBoleto estadoBoleto, Evento evento, AsientoEvento asiento) {
+        this.codigoQR = codigoQR;
+        this.precio = precio;
+        this.estadoBoleto = estadoBoleto;
+        this.evento = evento;
+        this.asiento = asiento;
+    }
+
+    public Boleto(Long idBoleto, String codigoQR, Double precio, EstadoBoleto estadoBoleto, Evento evento, AsientoEvento asiento) {
         this.idBoleto = idBoleto;
         this.codigoQR = codigoQR;
         this.precio = precio;
         this.estadoBoleto = estadoBoleto;
         this.evento = evento;
-    }
-
-    public Boleto(String codigoQR, Double precio, EstadoBoleto estadoBoleto, Evento evento) {
-        this.codigoQR = codigoQR;
-        this.precio = precio;
-        this.estadoBoleto = estadoBoleto;
-        this.evento = evento;
+        this.asiento = asiento;
     }
 
     public Long getIdBoleto() {
@@ -74,6 +77,14 @@ public class Boleto {
 
     public void setEvento(Evento evento) {
         this.evento = evento;
+    }
+
+    public AsientoEvento getAsiento() {
+        return asiento;
+    }
+
+    public void setAsiento(AsientoEvento asiento) {
+        this.asiento = asiento;
     }
 
 }

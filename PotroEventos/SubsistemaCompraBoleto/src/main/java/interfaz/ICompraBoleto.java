@@ -4,8 +4,11 @@ import dtos.EventoDTO;
 import dtos.SeccionDTO;
 import dtos.AsientoEventoDTO;
 import dtos.AsientoDTO;
+import dtos.BoletoDTO;
 import dtos.CategoriaDTO;
+import dtos.CobroDTO;
 import dtos.ReservacionDTO;
+import dtos.TarjetaDTO;
 import excepciones.CompraBoletoException;
 import java.util.List;
 
@@ -60,23 +63,20 @@ public interface ICompraBoleto {
      */
     List<AsientoEventoDTO> obtenerEstadoAsientosPorEvento(Long idEvento) throws CompraBoletoException;
 
-    /*
-    esto se va al subsistema d gestion eventos
-    */
-    List<EventoDTO> obtenerEventosCategoria(CategoriaDTO categoria) throws CompraBoletoException;
-
     boolean agregarReservacion(ReservacionDTO reservacion) throws CompraBoletoException;
 
-    /*
-    esto debería estar en el subsistema de usuarios (porque de reservas no hay)
-    */
-    List<ReservacionDTO> obtenerReservacionesUsuario(Long idUsuario) throws CompraBoletoException;
-
-    /*
-    debería irse a eventos?
-    */
-    List<CategoriaDTO> obtenerCategorias() throws CompraBoletoException;
-
     List<AsientoDTO> obtenerCatalogoAsientos() throws CompraBoletoException;
+    
+    String generarCodigoQR(EventoDTO evento, AsientoEventoDTO asiento) throws CompraBoletoException;
+    
+    boolean reservarAsiento(Long idAsientoEvento) throws CompraBoletoException;
+
+    boolean liberarAsiento(Long idAsientoEvento) throws CompraBoletoException;
+
+    public boolean venderAsientos(List<AsientoEventoDTO> asientosSeleccionados, Long totalCompra, boolean gratuito, ReservacionDTO reservacion) throws CompraBoletoException;
+
+    boolean realizarCompra(TarjetaDTO noTarjeta, CobroDTO cobro) throws CompraBoletoException;
+    
+    Long getTotalPendiente();
 
 }

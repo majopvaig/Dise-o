@@ -12,6 +12,7 @@ import Pantallas.vistas.PnlConsultarEvento;
 import Pantallas.vistas.PnlEventos;
 import dtos.AsientoDTO;
 import dtos.AsientoEventoDTO;
+import dtos.BoletoDTO;
 import dtos.CategoriaDTO;
 import dtos.CobroDTO;
 import dtos.EventoDTO;
@@ -22,10 +23,17 @@ import dtos.UsuarioDTO;
 import fachada.InicioSesionFachada;
 import interfaces.IFachadaInicioSesion;
 import excepciones.CompraBoletoException;
+import excepciones.GestionEventoException;
+import excepciones.GestionUsuarioException;
 import excepciones.NegocioException;
 import excepciones.PagoException;
 import fachada.CompraBoletoFachada;
+import fachada.GestionEventoFachada;
+import fachada.GestionUsuarioFachada;
 import fachada.PagoFachada;
+import interfaces.IFachadaGestionEvento;
+import interfaces.IGestionUsuariosFachada;
+import interfaces.IReservacionBO;
 import interfaz.ICompraBoleto;
 import interfaz.IPago;
 import java.util.ArrayList;
@@ -35,6 +43,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import objetosNegocio.AsientoBO;
 import objetosNegocio.AsientoEventoBO;
+import objetosNegocio.ReservacionBO;
 import objetosNegocio.SeccionBO;
 
 /**
@@ -51,11 +60,12 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
 
     private IFachadaInicioSesion logi = InicioSesionFachada.getInstance();
     private ICompraBoleto controlCompra = new CompraBoletoFachada();
-    private IPago controlPago = new PagoFachada();
+    private IFachadaGestionEvento controlEvento = new GestionEventoFachada();
+    private IGestionUsuariosFachada controlUsuarios = new GestionUsuarioFachada();
     private SeccionBO seccionBO = SeccionBO.getInstance();
-    private AsientoBO asientoBO = AsientoBO.getInstance();
     private AsientoEventoBO asientoEventoBO = AsientoEventoBO.getInstance();
 
+    private UsuarioDTO usuario;
     private FrmInicioSesion frmInicioSesion;
     private FrmRegistrarse frmRegistrarse;
     private FrmPago frmPago;
@@ -63,8 +73,6 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
     private FrmDetallesCompra frmDetalles;
     private FrmRegistroItson frmRegistro;
 
-    private List<AsientoEventoDTO> asientosPendientesCompra;
-    private Long totalPendienteCompra;
 
     /**
      * Oculta todas las ventanas instanciadas actualmente en el sistema. Es
@@ -87,6 +95,13 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
         if (frmRegistro != null) {
             frmRegistro.setVisible(false);
         }
+    }
+    
+    public UsuarioDTO getUsuario(){
+        if(usuario == null){
+            return null;
+        }
+        return usuario;
     }
 
     @Override
@@ -128,6 +143,7 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
         ocultarTodo();
         if (frmPlantilla == null) {
             frmPlantilla = new FrmPlantillaSistema(this);
+            frmPlantilla.setUsuario(usuario);
         }
         frmPlantilla.setCategorias();
         frmPlantilla.setVisible(true);
@@ -197,19 +213,14 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
 
     @Override
     public List<EventoDTO> consultarEventos(CategoriaDTO categoria) {
-        try {
-            return controlCompra.obtenerEventosCategoria(categoria);
-        } catch (CompraBoletoException ex) {
-            System.out.println("Fallo al consultar eventos: " + ex.getMessage());
-            return null;
-        }
+        return controlEvento.consultarEventosPorCategoria(categoria);
     }
 
     @Override
     public List<CategoriaDTO> consultarCategorias() {
         try {
-            return controlCompra.obtenerCategorias();
-        } catch (CompraBoletoException ex) {
+            return controlEvento.consultarCategorias();
+        } catch (GestionEventoException ex) {
             System.out.println("Fallo al consultar categorías: " + ex.getMessage());
             return null;
         }
@@ -222,23 +233,26 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
 
     @Override
     public void setUsuarioSesion(UsuarioDTO usuario) {
+        this.usuario = usuario;
     }
 
     @Override
     public UsuarioDTO getUsuarioSesion() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return usuario;
     }
 
     @Override
     public void cerrarSesion() {
         logi.cerrarSesion();
+        usuario = null;
         this.mostrarInicioSesion();
     }
 
+    @Override
     public List<ReservacionDTO> consultarReservaciones(Long idUsuario) {
         try {
-            return controlCompra.obtenerReservacionesUsuario(idUsuario);
-        } catch (CompraBoletoException ex) {
+            return controlUsuarios.obtenerReservacionesUsuario(idUsuario);
+        } catch (GestionUsuarioException ex) {
             System.out.println("Fallo al consultar reservaciones: " + ex.getMessage());
             return null;
         }
@@ -249,7 +263,7 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
         try {
             return controlCompra.agregarReservacion(reservacion);
         } catch (CompraBoletoException ex) {
-            System.out.println("Fallo al consultar reservaciones: " + ex.getMessage());
+            System.out.println("Falló al consultar reservaciones: " + ex.getMessage());
         }
         return false;
     }
@@ -324,9 +338,9 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
 
     @Override
     public boolean reservarAsiento(Long idAsientoEvento) {
-        try {
-            return asientoEventoBO.reservarAsiento(idAsientoEvento);
-        } catch (NegocioException e) {
+        try{
+            return controlCompra.reservarAsiento(idAsientoEvento);
+        } catch(CompraBoletoException ex){
             return false;
         }
     }
@@ -334,75 +348,48 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
     @Override
     public boolean liberarAsiento(Long idAsientoEvento) {
         try {
-            return asientoEventoBO.liberarAsiento(idAsientoEvento);
-        } catch (NegocioException e) {
+            return controlCompra.liberarAsiento(idAsientoEvento);
+        } catch (CompraBoletoException ex) {
             return false;
         }
     }
 
     @Override
-    public boolean venderAsientos(List<AsientoEventoDTO> asientosSeleccionados, Long totalCompra, boolean gratuito) {
-
-        if (gratuito) {
-            for (AsientoEventoDTO asiento : asientosSeleccionados) {
-                try {
-                    asientoEventoBO.venderAsiento(asiento.getIdAsiento());
-                } catch (NegocioException ex) {
-                    System.getLogger(CoordinadorAplicacion.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-                }
-            }
-
-            return true;
-
-        } else {
-            this.asientosPendientesCompra = new ArrayList<>(asientosSeleccionados);
-            this.totalPendienteCompra = totalCompra;
-
-            if (frmPago == null) {
-                frmPago = new FrmPago(this);
-            }
-
-            frmPago.setVisible(true);
-            frmPlantilla.setVisible(false);
-
-            return true;
+    public boolean venderAsientos(List<AsientoEventoDTO> asientosSeleccionados, Long totalCompra, boolean gratuito, ReservacionDTO reservacion) {
+        try{
+            return controlCompra.venderAsientos(asientosSeleccionados, totalCompra, gratuito, reservacion);
+        } catch(CompraBoletoException ex){
+            return false;
         }
     }
 
     @Override
     public boolean realizarCompra(TarjetaDTO tarjeta, CobroDTO cobro) {
-        try {
-
-            boolean pagado = controlPago.procesarPago(tarjeta, cobro);
-
-            if (pagado) {
-
-                for (AsientoEventoDTO asiento : asientosPendientesCompra) {
-                    asientoEventoBO.venderAsiento(asiento.getIdAsiento());
-                }
-
-                asientosPendientesCompra.clear();
-                totalPendienteCompra = 0L;
-
-                return true;
-            }
-
-        } catch (NegocioException | PagoException ex) {
-            System.getLogger(CoordinadorAplicacion.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        try{
+            return controlCompra.realizarCompra(tarjeta, cobro);
+        } catch(CompraBoletoException ex){
+            return false;
         }
-
-        return false;
     }
 
     @Override
     public Long getTotalPendiente() {
-        return totalPendienteCompra;
+        return controlCompra.getTotalPendiente();
     }
 
     @Override
     public void volverAConsultarEvento() {
         frmPago.dispose();
         frmPlantilla.setVisible(true);
+    }
+    
+    @Override
+    public String generarQR(EventoDTO evento, AsientoEventoDTO asiento) {
+        try {
+            return controlCompra.generarCodigoQR(evento, asiento);
+        } catch (CompraBoletoException ex) {
+            return null;
+        }
     }
 
 }

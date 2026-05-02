@@ -65,7 +65,12 @@ public class FrmDetallesCompra extends javax.swing.JFrame {
         /*
         no le movi nada a asientos, por eso marca algo x por el momento
         */
-        this.txtAsientos.setText("10, 11, 12");
+        if(reservacion.getBoleto().getEvento().isGratuito()){
+            txtAsientos.setText("LIBRE");
+        } else {
+            txtAsientos.setText(reservacion.getBoleto().getAsiento().getIdAsiento().toString());
+        }
+        //this.txtAsientos.setText("10, 11, 12");
         this.txtFechaHora.setText(String.valueOf(reservacion.getBoleto().getEvento().getFechaHora()));
         this.txtUbicacion.setText(reservacion.getBoleto().getEvento().getUbicacion().getNombre());
         this.txtHorasAntes.setText(String.valueOf(reservacion.getBoleto().getEvento().getFechaHora().minusHours(48)));
@@ -143,6 +148,7 @@ public class FrmDetallesCompra extends javax.swing.JFrame {
                 btnInicioMouseClicked(evt);
             }
         });
+        btnInicio.addActionListener(this::btnInicioActionPerformed);
 
         btnConsultar.setBackground(new java.awt.Color(0, 49, 141));
         btnConsultar.setFont(new java.awt.Font("Segoe UI Black", 1, 24)); // NOI18N
@@ -155,6 +161,7 @@ public class FrmDetallesCompra extends javax.swing.JFrame {
                 btnConsultarMouseClicked(evt);
             }
         });
+        btnConsultar.addActionListener(this::btnConsultarActionPerformed);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -376,6 +383,16 @@ public class FrmDetallesCompra extends javax.swing.JFrame {
         coordinador.mostrarConsultar();
         this.dispose();
     }//GEN-LAST:event_btnConsultarMouseClicked
+
+    private void btnInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInicioActionPerformed
+        // TODO add your handling code here:
+        coordinador.mostrarInicio();
+    }//GEN-LAST:event_btnInicioActionPerformed
+
+    private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
+        // TODO add your handling code here:
+        coordinador.mostrarConsultar();
+    }//GEN-LAST:event_btnConsultarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;

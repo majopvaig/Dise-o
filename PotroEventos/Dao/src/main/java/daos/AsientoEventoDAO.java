@@ -164,7 +164,7 @@ public class AsientoEventoDAO implements IAsientoEventoDAO {
         AsientoEvento ae = new AsientoEvento();
         ae.setAsiento(a);
         ae.setEstadoAsiento(estado);
-        ae.setIdReservacion(id + 10000);
+        ae.setIdAsientoEvento(id + 1000);
 
         return ae;
     }

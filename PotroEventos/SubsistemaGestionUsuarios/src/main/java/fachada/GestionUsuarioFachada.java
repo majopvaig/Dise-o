@@ -7,7 +7,9 @@ package fachada;
 import dtos.UsuarioDTO;
 import interfaces.IGestionUsuariosFachada;
 import controles.ControlGestionUsuarios;
+import dtos.ReservacionDTO;
 import excepciones.GestionUsuarioException;
+import java.util.List;
 /**
  * Fachada del subsistema, se encarga de comunicarse con el controlador.
  * 
@@ -52,5 +54,15 @@ public class GestionUsuarioFachada implements IGestionUsuariosFachada{
     @Override
     public UsuarioDTO obtenerUsuarioActivo(){
         return control.getUsuarioActivo();
+    }
+    
+    @Override
+    public boolean restarCreditos(Integer cantidad, Long idUsuario){
+        return control.restarCreditos(cantidad, idUsuario);
+    }
+
+    @Override
+    public List<ReservacionDTO> obtenerReservacionesUsuario(Long idUsuario) throws GestionUsuarioException {
+        return control.obtenerReservacionUsuario(idUsuario);
     }
 }

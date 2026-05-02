@@ -4,11 +4,15 @@
  */
 package controles;
 
+import dtos.ReservacionDTO;
 import dtos.UsuarioDTO;
 import excepciones.GestionUsuarioException;
 import excepciones.NegocioException;
+import interfaces.IReservacionBO;
 
 import interfaces.IUsuarioBO;
+import java.util.List;
+import objetosNegocio.ReservacionBO;
 import objetosNegocio.UsuarioBO;
 /**
  * Controlador internod e la clase de gestion de usuarios. Dedicado a mantener activo y desvincular un usuario
@@ -22,6 +26,7 @@ import objetosNegocio.UsuarioBO;
 public class ControlGestionUsuarios {
     // guardar el usuario que inicia sesion;
     private UsuarioDTO usuarioActivo;
+    private IReservacionBO reservacionBO;
     
     // comunicacion con bo
     private IUsuarioBO usuarioBO;
@@ -31,6 +36,7 @@ public class ControlGestionUsuarios {
             
     public ControlGestionUsuarios() {
         this.usuarioBO = UsuarioBO.getInstance();
+        this.reservacionBO = ReservacionBO.getInstance();
     }
     
     public UsuarioDTO asociarUsuario(UsuarioDTO usuario){
@@ -72,6 +78,18 @@ public class ControlGestionUsuarios {
      */
     public UsuarioDTO getUsuarioActivo() {
         return usuarioActivo;
+    }
+    
+    public boolean restarCreditos(Integer cantidad, Long idUsuario){
+        return usuarioBO.restarCreditos(cantidad, idUsuario);
+    }
+    
+    public List<ReservacionDTO> obtenerReservacionUsuario(Long idUsuario) throws GestionUsuarioException {
+        try{
+        return reservacionBO.obtenerReservacionesUsuario(idUsuario);
+        } catch(NegocioException ex){
+            throw new GestionUsuarioException(ex.getMessage());
+        }
     }
     
 }

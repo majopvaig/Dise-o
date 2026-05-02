@@ -6,6 +6,7 @@ package interfaces;
 
 import dtos.CategoriaDTO;
 import dtos.EventoDTO;
+import excepciones.GestionEventoException;
 import java.util.List;
 
 /**
@@ -14,16 +15,11 @@ import java.util.List;
  */
 public interface IFachadaGestionEvento {
     
-    boolean agregarEvento(EventoDTO evento);
-    
-    boolean cancelarEvento(Long idEvento);
-    
-    boolean actualizarEvento(EventoDTO evento);
-    
     EventoDTO consultarEvento(Long idEvento);
     
     List<EventoDTO> consultarEventos();
     
     List<EventoDTO> consultarEventosPorCategoria(CategoriaDTO categoria);
     
+    List<CategoriaDTO> consultarCategorias() throws GestionEventoException;
 }

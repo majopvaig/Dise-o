@@ -5,6 +5,7 @@
 package interfaces;
 
 import dtos.BoletoDTO;
+import dtos.ReservacionDTO;
 import dtos.UsuarioDTO;
 import excepciones.GestionUsuarioException;
 import java.util.List;
@@ -30,4 +31,8 @@ public interface IGestionUsuariosFachada {
     // --- Método que regresa el usuario con la sesion activa --- 
     
     public UsuarioDTO obtenerUsuarioActivo();
+    
+    public boolean restarCreditos(Integer cantidad, Long idUsuario);
+    
+    public List<ReservacionDTO> obtenerReservacionesUsuario(Long idUsuario) throws GestionUsuarioException;
 }

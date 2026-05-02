@@ -9,8 +9,12 @@ import dtos.CategoriaDTO;
 import dtos.ENUMS.CategoriaEventoDTO;
 import dtos.ENUMS.EstadoEventoDTO;
 import dtos.EventoDTO;
+import excepciones.GestionEventoException;
+import excepciones.NegocioException;
+import interfaces.ICategoriaBO;
 import java.util.List;
 import java.util.ArrayList;
+import objetosNegocio.CategoriaBO;
 
 /**
  *
@@ -23,6 +27,8 @@ public class ControlGestionEvento {
     
     private static ControlGestionEvento instance;
     
+    private ICategoriaBO categoriaBO = CategoriaBO.getInstance();
+    
     private ControlGestionEvento(){}
     
     public static ControlGestionEvento getInstance(){
@@ -30,38 +36,6 @@ public class ControlGestionEvento {
             instance = new ControlGestionEvento();
         }
         return instance;
-    }
-    
-    public boolean agregarEvento(EventoDTO evento){
-        int contador = listaEventos.size();
-        evento.setIdEvento(contador+1L);
-        listaEventos.add(evento);
-        if(contador != listaEventos.size()){
-            return true;
-        }
-        return false;
-    }
-    
-    public boolean cancelarEvento(Long idEvento){
-        for(EventoDTO evento : listaEventos){
-            if(evento.getIdEvento() == idEvento){
-                evento.setEstadoEvento(EstadoEventoDTO.CANCELADO);
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    public boolean actualizarEvento(EventoDTO evento){
-        int posicion = 0;
-        for(EventoDTO e : listaEventos){
-            if(evento.getIdEvento() == e.getIdEvento()){
-                listaEventos.add(posicion, evento);
-                return true;
-            }
-            posicion++;
-        }
-        return false;
     }
     
     public EventoDTO consultarEvento(Long idEvento){
@@ -85,5 +59,13 @@ public class ControlGestionEvento {
             }
         }
         return eventosCategoria;
+    }
+    
+    public List<CategoriaDTO> consultarCategorias() throws GestionEventoException {
+        try{
+            return categoriaBO.consultarCategorias();
+        } catch(NegocioException ex){
+            throw new GestionEventoException(ex.getMessage());
+        }
     }
 }

@@ -47,6 +47,7 @@ public class ReservacionBO implements IReservacionBO {
     }
     
     private boolean validarDatos(ReservacionDTO r){
+        
         if(r == null){
             return false;
         }

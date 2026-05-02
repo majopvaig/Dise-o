@@ -1,3 +1,4 @@
-controladores\ControlGestionEvento.class
+excepciones\GestionEventoException.class
 fachada\GestionEventoFachada.class
 interfaces\IFachadaGestionEvento.class
+controladores\ControlGestionEvento.class

@@ -28,6 +28,20 @@ public class UsuarioDAO implements IUsuarioDAO{
     }
     
     @Override
+    public boolean restarCreditos(Integer cantidad, Long idUsuario){
+        if(idUsuario == null){
+            return false;
+        }
+        for(Usuario u : obtenerUsuarios()){
+            if(u.getIdUsuario().equals(idUsuario)){
+                u.setCreditos(u.getCreditos() - cantidad);
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    @Override
     public List<Usuario> obtenerUsuarios() {
         // craecion de lista manual para que el sistema pueda cargar informacion
         List<Usuario> usuarios = new ArrayList<>();

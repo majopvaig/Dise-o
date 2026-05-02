@@ -15,40 +15,28 @@ public class Usuario {
     private String apellidoMaterno;
     private String correo;
     private String contrasenia;
+    private Integer creditos;
 
     public Usuario() {
     }
 
-    public Usuario(Long idUsuario, String nombre, String apellidoPaterno, String apellidoMaterno, String correo) {
-        this.idUsuario = idUsuario;
+    public Usuario(String nombre, String apellidoPaterno, String apellidoMaterno, String correo, String contrasenia, Integer creditos) {
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.correo = correo;
+        this.contrasenia = contrasenia;
+        this.creditos = creditos;
     }
 
-    public Usuario(Long idUsuario, String nombre, String apellidoPaterno, String apellidoMaterno, String correo, String contrasenia) {
+    public Usuario(Long idUsuario, String nombre, String apellidoPaterno, String apellidoMaterno, String correo, String contrasenia, Integer creditos) {
         this.idUsuario = idUsuario;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.correo = correo;
         this.contrasenia = contrasenia;
-    }
-
-    public Usuario(String nombre, String apellidoPaterno, String apellidoMaterno, String correo) {
-        this.nombre = nombre;
-        this.apellidoPaterno = apellidoPaterno;
-        this.apellidoMaterno = apellidoMaterno;
-        this.correo = correo;
-    }
-
-    public Usuario(String nombre, String apellidoPaterno, String apellidoMaterno, String correo, String contrasenia) {
-        this.nombre = nombre;
-        this.apellidoPaterno = apellidoPaterno;
-        this.apellidoMaterno = apellidoMaterno;
-        this.correo = correo;
-        this.contrasenia = contrasenia;
+        this.creditos = creditos;
     }
 
     public Long getIdUsuario() {
@@ -95,13 +83,16 @@ public class Usuario {
         return contrasenia;
     }
 
-    public void setContrasenia(String contraseña) {
-        this.contrasenia = contraseña;
+    public void setContrasenia(String contrasenia) {
+        this.contrasenia = contrasenia;
     }
 
-    @Override
-    public String toString() {
-        return "Usuario{" + "idUsuario=" + idUsuario + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", correo=" + correo + '}';
+    public Integer getCreditos() {
+        return creditos;
+    }
+
+    public void setCreditos(Integer creditos) {
+        this.creditos = creditos;
     }
 
 }

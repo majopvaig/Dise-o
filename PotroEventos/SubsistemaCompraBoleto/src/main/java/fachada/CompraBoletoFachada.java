@@ -3,10 +3,13 @@ package fachada;
 import control.ControlCompraBoleto;
 import dtos.AsientoDTO;
 import dtos.AsientoEventoDTO;
+import dtos.BoletoDTO;
 import dtos.CategoriaDTO;
+import dtos.CobroDTO;
 import dtos.EventoDTO;
 import dtos.ReservacionDTO;
 import dtos.SeccionDTO;
+import dtos.TarjetaDTO;
 import excepciones.CompraBoletoException;
 import interfaz.ICompraBoleto;
 import java.util.List;
@@ -41,23 +44,8 @@ public class CompraBoletoFachada implements ICompraBoleto {
     }
 
     @Override
-    public List<EventoDTO> obtenerEventosCategoria(CategoriaDTO categoria) throws CompraBoletoException {
-        return controlCompra.obtenerEventosCategoria(categoria);
-    }
-
-    @Override
     public boolean agregarReservacion(ReservacionDTO reservacion) throws CompraBoletoException {
         return controlCompra.agregarReservacion(reservacion);
-    }
-
-    @Override
-    public List<ReservacionDTO> obtenerReservacionesUsuario(Long idUsuario) throws CompraBoletoException {
-        return controlCompra.consultarReservacionUsuario(idUsuario);
-    }
-
-    @Override
-    public List<CategoriaDTO> obtenerCategorias() throws CompraBoletoException {
-        return controlCompra.consultarCategorias();
     }
 
     @Override
@@ -65,4 +53,33 @@ public class CompraBoletoFachada implements ICompraBoleto {
         return controlCompra.obtenerCatalogoAsientos();
     }
 
+    @Override
+    public String generarCodigoQR(EventoDTO evento, AsientoEventoDTO asiento) throws CompraBoletoException {
+        return controlCompra.generarCodigoQR(evento, asiento);
+    }
+    
+    @Override
+    public boolean reservarAsiento(Long idAsientoEvento) throws CompraBoletoException {
+        return controlCompra.reservarAsiento(idAsientoEvento);
+    }
+
+    @Override
+    public boolean liberarAsiento(Long idAsientoEvento) throws CompraBoletoException {
+        return controlCompra.liberarAsiento(idAsientoEvento);
+    }
+
+    @Override
+    public boolean venderAsientos(List<AsientoEventoDTO> asientosSeleccionados, Long totalCompra, boolean gratuito, ReservacionDTO reservacion) throws CompraBoletoException {
+        return controlCompra.venderAsientos(asientosSeleccionados, totalCompra, gratuito, reservacion);
+    }
+
+    @Override
+    public boolean realizarCompra(TarjetaDTO noTarjeta, CobroDTO cobro) throws CompraBoletoException {
+        return controlCompra.realizarCompra(noTarjeta, cobro);
+    }
+    
+    @Override
+    public Long getTotalPendiente(){
+        return controlCompra.getTotalPendiente();
+    }
 }

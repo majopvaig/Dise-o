@@ -60,4 +60,9 @@ public class UsuarioBO implements IUsuarioBO{
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
+    @Override
+    public boolean restarCreditos(Integer cantidad, Long idUsuario){
+        return usuarioDAO.restarCreditos(cantidad, idUsuario);
+    }
+    
 }

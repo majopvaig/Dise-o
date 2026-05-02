@@ -3,15 +3,27 @@ package control;
 import dtos.*;
 import objetosNegocio.*;
 import excepciones.CompraBoletoException;
+import excepciones.NegocioException;
+import excepciones.PagoException;
+import fachada.PagoFachada;
 import interfaces.IAsientoBO;
 import interfaces.IAsientoEventoBO;
 import interfaces.ICategoriaBO;
 import interfaces.IEventoBO;
 import interfaces.IReservacionBO;
 import interfaces.ISeccionBO;
+import interfaces.IUsuarioBO;
 import interfaz.IControlCompraBoleto;
+import interfaz.IPago;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import net.glxn.qrgen.core.image.ImageType;
+import net.glxn.qrgen.javase.QRCode;
 //import objetosNegocio.EventoBO;
 
 /**
@@ -29,6 +41,10 @@ public class ControlCompraBoleto implements IControlCompraBoleto {
     private final IAsientoEventoBO asientoEventoBO;
     private final IReservacionBO reservacionBO;
     private final ICategoriaBO categoriaBO;
+    private final IUsuarioBO usuarioBO;
+    private final IPago controlPago;
+    private List<AsientoEventoDTO> asientosPendientesCompra;
+    private Long totalPendienteCompra;
 
     public ControlCompraBoleto() {
         this.eventoBO = EventoBO.getInstance();
@@ -37,6 +53,8 @@ public class ControlCompraBoleto implements IControlCompraBoleto {
         this.asientoEventoBO = AsientoEventoBO.getInstance();
         this.reservacionBO = ReservacionBO.getInstance();
         this.categoriaBO = CategoriaBO.getInstance();
+        this.usuarioBO = UsuarioBO.getInstance();
+        this.controlPago = new PagoFachada();
     }
 
     /**
@@ -105,15 +123,6 @@ public class ControlCompraBoleto implements IControlCompraBoleto {
     }
 
     @Override
-    public List<EventoDTO> obtenerEventosCategoria(CategoriaDTO categoria) throws CompraBoletoException {
-        try {
-            return eventoBO.obtenerEventosPorCategoria(categoria);
-        } catch (Exception ex) {
-            throw new CompraBoletoException("Error al cargar eventos por categoría: " + ex.getMessage());
-        }
-    }
-
-    @Override
     public boolean agregarReservacion(ReservacionDTO reservacion) throws CompraBoletoException {
         try {
             return reservacionBO.agregarReservacion(reservacion);
@@ -121,22 +130,111 @@ public class ControlCompraBoleto implements IControlCompraBoleto {
             throw new CompraBoletoException("Error al agregar la reservación: " + ex.getMessage());
         }
     }
-
-    @Override
-    public List<ReservacionDTO> consultarReservacionUsuario(Long idUsuario) throws CompraBoletoException {
+    
+    public String generarCodigoQR(EventoDTO evento, AsientoEventoDTO asiento) throws CompraBoletoException {
         try {
-            return reservacionBO.obtenerReservacionesUsuario(idUsuario);
-        } catch (Exception ex) {
-            throw new CompraBoletoException("Error al consultar las reservaciones: " + ex.getMessage());
+            int asientoID = 0;
+            int identificador = 0;
+            if(asiento == null){
+                asientoID = 0;
+                identificador = LocalDateTime.now().getNano();
+            } else {
+                asientoID = asiento.getIdAsiento().intValue();
+                identificador = asiento.getIdAsiento().intValue();
+            }
+            String datosBoleto = "Evento: " + evento.getNombreEvento()
+                    + ", Fecha y Hora: " + evento.getFechaHora()
+                    + ", Ubicación: " + evento.getUbicacion().getNombre()
+                    + ", Asiento: " + asientoID;
+
+            String nombreCarpeta = "qrs-boletos";
+            File archivoQRTemporal = QRCode.from(datosBoleto)
+                    .to(ImageType.PNG)
+                    .withSize(300, 300)
+                    .file();       
+            String nombreArchivo = "Boleto_" + identificador + evento.getIdEvento() + ".png";
+            File archivoFinal = new File("qrs-boletos", nombreArchivo);
+            Files.copy(archivoQRTemporal.toPath(), archivoFinal.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+            return archivoFinal.getAbsolutePath();
+        } catch (Exception e) {
+            throw new CompraBoletoException("Fallos para generar QR: " + e.getMessage());
+        }
+    }
+    
+    public boolean reservarAsiento(Long idAsientoEvento) throws CompraBoletoException {
+        try {
+            return asientoEventoBO.reservarAsiento(idAsientoEvento);
+        } catch (NegocioException e) {
+            throw new CompraBoletoException(e.getMessage());
         }
     }
 
-    @Override
-    public List<CategoriaDTO> consultarCategorias() throws CompraBoletoException {
-        try {
-            return categoriaBO.consultarCategorias();
-        } catch (Exception ex) {
-            throw new CompraBoletoException("Error al consultar las reservaciones: " + ex.getMessage());
+    public boolean liberarAsiento(Long idAsientoEvento) throws CompraBoletoException {
+        try{
+            return asientoEventoBO.liberarAsiento(idAsientoEvento);
+        } catch(NegocioException e) {
+            throw new CompraBoletoException(e.getMessage());
         }
+    }
+
+    public boolean venderAsientos(List<AsientoEventoDTO> asientosSeleccionados, Long totalCompra, boolean gratuito, ReservacionDTO reservacion) throws CompraBoletoException {
+        try {
+            if (reservacion == null) {
+                return false;
+            }
+            if (gratuito) {
+                try {
+                    reservacionBO.agregarReservacion(reservacion);
+                } catch (NegocioException ex) {
+                    throw new CompraBoletoException(ex.getMessage());
+                }
+
+                return true;
+
+            } else {
+                if (reservacion.getCobro() != null) {
+                    if(usuarioBO.restarCreditos(totalCompra.intValue()*2, reservacion.getUsuario().getIdUsuario())){
+                        asientoEventoBO.venderAsiento(reservacion.getBoleto().getAsiento().getIdAsiento());
+                        reservacionBO.agregarReservacion(reservacion);
+                        return true;
+                    } 
+                    return false;
+                }
+                this.asientosPendientesCompra = new ArrayList<>(asientosSeleccionados);
+                this.totalPendienteCompra = totalCompra;
+                return true;
+            }
+        } catch (NegocioException e) {
+            return false;
+        }
+    }
+
+    public boolean realizarCompra(TarjetaDTO noTarjeta, CobroDTO cobro) throws CompraBoletoException {
+        try {
+
+            boolean pagado = controlPago.procesarPago(noTarjeta, cobro);
+
+            if (pagado) {
+
+                for (AsientoEventoDTO asiento : asientosPendientesCompra) {
+                    asientoEventoBO.venderAsiento(asiento.getIdAsiento());
+                }
+
+                asientosPendientesCompra.clear();
+                totalPendienteCompra = 0L;
+
+                return true;
+            }
+
+        } catch (NegocioException | PagoException ex) {
+            throw new CompraBoletoException(ex.getMessage());
+        }
+
+        return false;
+    }
+    
+    public Long getTotalPendiente(){
+        return totalPendienteCompra;
     }
 }

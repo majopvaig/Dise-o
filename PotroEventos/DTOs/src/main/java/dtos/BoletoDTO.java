@@ -17,16 +17,26 @@ public class BoletoDTO {
     private Double precio;
     private EstadoBoletoDTO estadoBoleto;
     private EventoDTO evento;
+    private AsientoEventoDTO asiento;
 
     public BoletoDTO() {
     }
 
-    public BoletoDTO(Long idBoleto, String codigoQR, Double precio, EstadoBoletoDTO estadoBoleto, EventoDTO evento) {
+    public BoletoDTO(String codigoQR, Double precio, EstadoBoletoDTO estadoBoleto, EventoDTO evento, AsientoEventoDTO asiento) {
+        this.codigoQR = codigoQR;
+        this.precio = precio;
+        this.estadoBoleto = estadoBoleto;
+        this.evento = evento;
+        this.asiento = asiento;
+    }
+
+    public BoletoDTO(Long idBoleto, String codigoQR, Double precio, EstadoBoletoDTO estadoBoleto, EventoDTO evento, AsientoEventoDTO asiento) {
         this.idBoleto = idBoleto;
         this.codigoQR = codigoQR;
         this.precio = precio;
         this.estadoBoleto = estadoBoleto;
         this.evento = evento;
+        this.asiento = asiento;
     }
 
     public Long getIdBoleto() {
@@ -67,6 +77,14 @@ public class BoletoDTO {
 
     public void setEvento(EventoDTO evento) {
         this.evento = evento;
+    }
+
+    public AsientoEventoDTO getAsiento() {
+        return asiento;
+    }
+
+    public void setAsiento(AsientoEventoDTO asiento) {
+        this.asiento = asiento;
     }
 
 }

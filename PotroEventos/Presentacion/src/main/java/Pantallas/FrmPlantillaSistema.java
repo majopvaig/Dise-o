@@ -8,6 +8,7 @@ import Controlador.interfaz.ICoordinadorAplicacion;
 import Pantallas.vistas.PnlCategoria;
 import Pantallas.vistas.PnlEventos;
 import dtos.CategoriaDTO;
+import dtos.UsuarioDTO;
 import java.awt.GridLayout;
 import java.util.List;
 import javax.swing.BoxLayout;
@@ -53,6 +54,8 @@ public class FrmPlantillaSistema extends javax.swing.JFrame {
     modo para mostrar detalles de compra
      */
     private boolean detallesCompra;
+    
+    private UsuarioDTO usuario;
 
     /**
      * Creates new form FrmPlantillaSistema
@@ -64,6 +67,10 @@ public class FrmPlantillaSistema extends javax.swing.JFrame {
         jpnlContenedor.setLayout(new GridLayout(0, 3, 10, 10));
 
     }
+    
+    public void setUsuario(UsuarioDTO usuario){
+        this.usuario = usuario;
+    }
 
     public void setContenido(JPanel panel) {
         jpnlContenedor.removeAll();
@@ -74,6 +81,7 @@ public class FrmPlantillaSistema extends javax.swing.JFrame {
 
         jpnlContenedor.revalidate();
         jpnlContenedor.repaint();
+        creditos.setText(usuario.getCreditos().toString());
     }
 
     public void setCategorias() {
@@ -115,6 +123,8 @@ public class FrmPlantillaSistema extends javax.swing.JFrame {
         btnConsultar = new javax.swing.JButton();
         botonInicio1 = new javax.swing.JButton();
         btnCerrarSesion = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        creditos = new javax.swing.JLabel();
         jpnlContenedor = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -181,6 +191,14 @@ public class FrmPlantillaSistema extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Créditos:");
+
+        creditos.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        creditos.setForeground(new java.awt.Color(255, 255, 255));
+        creditos.setText("-");
+
         javax.swing.GroupLayout jPanelAzulOscuroLayout = new javax.swing.GroupLayout(jPanelAzulOscuro);
         jPanelAzulOscuro.setLayout(jPanelAzulOscuroLayout);
         jPanelAzulOscuroLayout.setHorizontalGroup(
@@ -192,7 +210,11 @@ public class FrmPlantillaSistema extends javax.swing.JFrame {
                 .addComponent(btnConsultar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(botonInicio1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 762, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addComponent(creditos, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(88, 88, 88)
                 .addComponent(btnCerrarSesion)
                 .addGap(18, 18, 18))
         );
@@ -201,10 +223,12 @@ public class FrmPlantillaSistema extends javax.swing.JFrame {
             .addGroup(jPanelAzulOscuroLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelAzulOscuroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(busqueda, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)
+                    .addComponent(busqueda)
                     .addComponent(btnConsultar)
                     .addComponent(botonInicio1)
-                    .addComponent(btnCerrarSesion))
+                    .addComponent(btnCerrarSesion)
+                    .addComponent(jLabel1)
+                    .addComponent(creditos))
                 .addContainerGap())
         );
 
@@ -297,6 +321,8 @@ public class FrmPlantillaSistema extends javax.swing.JFrame {
     private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JButton btnConsultar;
     private javax.swing.JTextField busqueda;
+    private javax.swing.JLabel creditos;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanelAzul;
     private javax.swing.JPanel jPanelAzulOscuro;
     private javax.swing.JPanel jPanelBase;

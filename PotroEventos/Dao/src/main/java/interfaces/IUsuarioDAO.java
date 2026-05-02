@@ -14,4 +14,6 @@ import java.util.List;
 public interface IUsuarioDAO {
     
     List<Usuario> obtenerUsuarios();
+    
+    boolean restarCreditos(Integer cantidad, Long idUsuario);
 }

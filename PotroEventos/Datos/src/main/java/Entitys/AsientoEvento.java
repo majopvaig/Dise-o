@@ -12,6 +12,7 @@ import Entitys.ENUMS.EstadoAsiento;
 public class AsientoEvento {
 
     private Long idAsientoEvento;
+    private Reservacion reservacion;
     private EstadoAsiento estadoAsiento;
     private Asiento asiento;
     private Evento evento;
@@ -19,25 +20,35 @@ public class AsientoEvento {
     public AsientoEvento() {
     }
 
-    public AsientoEvento(Long idReservacion, EstadoAsiento estadoAsiento, Asiento asiento, Evento evento) {
-        this.idAsientoEvento = idReservacion;
+    public AsientoEvento(Reservacion reservacion, EstadoAsiento estadoAsiento, Asiento asiento, Evento evento) {
+        this.reservacion = reservacion;
         this.estadoAsiento = estadoAsiento;
         this.asiento = asiento;
         this.evento = evento;
     }
 
-    public AsientoEvento(EstadoAsiento estadoAsiento, Asiento asiento, Evento evento) {
+    public AsientoEvento(Long idAsientoEvento, Reservacion reservacion, EstadoAsiento estadoAsiento, Asiento asiento, Evento evento) {
+        this.idAsientoEvento = idAsientoEvento;
+        this.reservacion = reservacion;
         this.estadoAsiento = estadoAsiento;
         this.asiento = asiento;
         this.evento = evento;
     }
 
-    public Long getIdReservacion() {
+    public Long getIdAsientoEvento() {
         return idAsientoEvento;
     }
 
-    public void setIdReservacion(Long idReservacion) {
-        this.idAsientoEvento = idReservacion;
+    public void setIdAsientoEvento(Long idAsientoEvento) {
+        this.idAsientoEvento = idAsientoEvento;
+    }
+
+    public Reservacion getReservacion() {
+        return reservacion;
+    }
+
+    public void setReservacion(Reservacion reservacion) {
+        this.reservacion = reservacion;
     }
 
     public EstadoAsiento getEstadoAsiento() {
@@ -63,10 +74,5 @@ public class AsientoEvento {
     public void setEvento(Evento evento) {
         this.evento = evento;
     }
-
-    @Override
-    public String toString() {
-        return "AsientoEvento{" + "idAsientoEvento=" + idAsientoEvento + ", estadoAsiento=" + estadoAsiento + ", asiento=" + asiento + ", evento=" + evento + '}';
-    }
-
+    
 }

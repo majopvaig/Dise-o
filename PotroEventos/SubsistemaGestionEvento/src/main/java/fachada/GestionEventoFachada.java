@@ -9,6 +9,7 @@ import dtos.CategoriaDTO;
 import interfaces.IFachadaGestionEvento;
 import java.util.List;
 import dtos.EventoDTO;
+import excepciones.GestionEventoException;
 
 /**
  *
@@ -17,21 +18,6 @@ import dtos.EventoDTO;
 public class GestionEventoFachada implements IFachadaGestionEvento {
     
     private ControlGestionEvento control = ControlGestionEvento.getInstance();
-
-    @Override
-    public boolean agregarEvento(EventoDTO evento) {
-        return control.agregarEvento(evento);
-    }
-
-    @Override
-    public boolean cancelarEvento(Long idEvento) {
-        return control.cancelarEvento(idEvento);
-    }
-
-    @Override
-    public boolean actualizarEvento(EventoDTO evento) {
-        return control.actualizarEvento(evento);
-    }
 
     @Override
     public EventoDTO consultarEvento(Long idEvento) {
@@ -46,6 +32,11 @@ public class GestionEventoFachada implements IFachadaGestionEvento {
     @Override
     public List<EventoDTO> consultarEventosPorCategoria(CategoriaDTO categoria) {
         return control.consultarEventosPorCategoria(categoria);
+    }
+    
+    @Override
+    public List<CategoriaDTO> consultarCategorias() throws GestionEventoException {       
+        return control.consultarCategorias();
     }
     
 }

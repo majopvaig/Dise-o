@@ -15,36 +15,29 @@ public class UsuarioDTO {
     private String apellidoMaterno;
     private String correo;
     private String contrasenia;
+    private Integer creditos;
 
     public UsuarioDTO() {
     }
 
-    public UsuarioDTO(Long idUsuario, String nombre, String apellidoPaterno, String apellidoMaterno, String correo, String contrasenia) {
+    public UsuarioDTO(String nombre, String apellidoPaterno, String apellidoMaterno, String correo, String contrasenia, Integer creditos) {
+        this.nombre = nombre;
+        this.apellidoPaterno = apellidoPaterno;
+        this.apellidoMaterno = apellidoMaterno;
+        this.correo = correo;
+        this.contrasenia = contrasenia;
+        this.creditos = creditos;
+    }
+
+    public UsuarioDTO(Long idUsuario, String nombre, String apellidoPaterno, String apellidoMaterno, String correo, String contrasenia, Integer creditos) {
         this.idUsuario = idUsuario;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.correo = correo;
         this.contrasenia = contrasenia;
+        this.creditos = creditos;
     }
-
-    public UsuarioDTO(String nombre, String apellidoPaterno, String apellidoMaterno, String correo, String contrasenia) {
-        this.nombre = nombre;
-        this.apellidoPaterno = apellidoPaterno;
-        this.apellidoMaterno = apellidoMaterno;
-        this.correo = correo;
-        this.contrasenia = contrasenia;
-    }
-
-    public String getContrasenia() {
-        return contrasenia;
-    }
-
-    public void setContrasenia(String contrasenia) {
-        this.contrasenia = contrasenia;
-    }
-
-    
 
     public Long getIdUsuario() {
         return idUsuario;
@@ -86,9 +79,20 @@ public class UsuarioDTO {
         this.correo = correo;
     }
 
-    @Override
-    public String toString() {
-        return "UsuarioDTO{" + "idUsuario=" + idUsuario + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", correo=" + correo + '}';
+    public String getContrasenia() {
+        return contrasenia;
+    }
+
+    public void setContrasenia(String contrasenia) {
+        this.contrasenia = contrasenia;
+    }
+
+    public Integer getCreditos() {
+        return creditos;
+    }
+
+    public void setCreditos(Integer creditos) {
+        this.creditos = creditos;
     }
 
 }

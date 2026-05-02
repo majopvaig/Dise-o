@@ -26,7 +26,8 @@ public class BoletoAdapter {
                 boletoEntidad.getCodigoQR(),
                 boletoEntidad.getPrecio(),
                 convertirEstadoADTO(boletoEntidad.getEstadoBoleto()),
-                EventoAdapter.entidadADTO(boletoEntidad.getEvento())
+                EventoAdapter.entidadADTO(boletoEntidad.getEvento()),
+                AsientoEventoAdapter.entidadADTO(boletoEntidad.getAsiento())
         );
     }
 
@@ -43,6 +44,7 @@ public class BoletoAdapter {
         boleto.setPrecio(boletoDTO.getPrecio());
         boleto.setEstadoBoleto(convertirEstadoAEntidad(boletoDTO.getEstadoBoleto()));
         boleto.setEvento(EventoAdapter.dtoAEntidad(boletoDTO.getEvento()));
+        boleto.setAsiento(AsientoEventoAdapter.dtoAEntidad(boletoDTO.getAsiento()));
 
         return boleto;
     }

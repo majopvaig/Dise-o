@@ -27,4 +27,6 @@ public interface IUsuarioBO {
     public UsuarioDTO verificarUsuario(String correo, String contrasenia);
     
     public void cerrarSesion();
+    
+    public boolean restarCreditos(Integer cantidad, Long idUsuario);
 }
