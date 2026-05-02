@@ -33,7 +33,7 @@ public class PnlEstadio extends JPanel {
     private double escala = 1.0;
     private final double ESCALA_MINIMA = 0.5;
     private final double ESCALA_MAXIMA = 3.0;
-    private final int MAX_ASIENTOS = 3;
+    private final int MAX_ASIENTOS = 1;
     private final ICoordinadorAplicacion coodinador;
 
     /**

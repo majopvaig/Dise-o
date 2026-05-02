@@ -12,9 +12,11 @@ import dtos.EventoDTO;
 import excepciones.GestionEventoException;
 import excepciones.NegocioException;
 import interfaces.ICategoriaBO;
+import interfaces.IEventoBO;
 import java.util.List;
 import java.util.ArrayList;
 import objetosNegocio.CategoriaBO;
+import objetosNegocio.EventoBO;
 
 /**
  *
@@ -28,6 +30,8 @@ public class ControlGestionEvento {
     private static ControlGestionEvento instance;
     
     private ICategoriaBO categoriaBO = CategoriaBO.getInstance();
+    
+    private IEventoBO eventoBO = EventoBO.getInstance();
     
     private ControlGestionEvento(){}
     
@@ -52,13 +56,7 @@ public class ControlGestionEvento {
     }
     
     public List<EventoDTO> consultarEventosPorCategoria(CategoriaDTO categoria){
-        List<EventoDTO> eventosCategoria = new ArrayList<>();
-        for(EventoDTO e : listaEventos){
-            if(e.getCategoriaEvento().getNombreCategoria() == categoria.getNombreCategoria()){
-                eventosCategoria.add(e);
-            }
-        }
-        return eventosCategoria;
+        return eventoBO.obtenerEventosPorCategoria(categoria);
     }
     
     public List<CategoriaDTO> consultarCategorias() throws GestionEventoException {

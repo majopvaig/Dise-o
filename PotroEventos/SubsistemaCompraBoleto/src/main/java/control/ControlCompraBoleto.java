@@ -20,7 +20,9 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import net.glxn.qrgen.core.image.ImageType;
 import net.glxn.qrgen.javase.QRCode;
@@ -123,6 +125,42 @@ public class ControlCompraBoleto implements IControlCompraBoleto {
     }
 
     @Override
+    public Map<SeccionDTO, List<AsientoEventoDTO>> obtenerMapaOcupacion(Long idEvento) throws CompraBoletoException {
+        try {
+            List<SeccionDTO> secciones = seccionBO.consultarSeccionesPorEvento(idEvento);
+            List<AsientoEventoDTO> ocupacion = asientoEventoBO.consultarEstadosPorEvento(idEvento);
+
+            // Catálogo real desde asientoBO (NO desde coordinador)
+            List<AsientoDTO> catalogo = this.obtenerCatalogoAsientos();
+
+            Map<SeccionDTO, List<AsientoEventoDTO>> mapa = new HashMap<>();
+
+            if (secciones != null && ocupacion != null) {
+                for (SeccionDTO seccion : secciones) {
+
+                    List<AsientoEventoDTO> asientosDeSeccion = ocupacion.stream()
+                            .filter(ae -> {
+                                for (AsientoDTO asiento : catalogo) {
+                                    if (asiento.getIdAsiento().equals(ae.getIdAsiento())) {
+                                        return asiento.getIdSeccion().equals(seccion.getIdSeccion());
+                                    }
+                                }
+                                return false;
+                            })
+                            .collect(Collectors.toList());
+
+                    mapa.put(seccion, asientosDeSeccion);
+                }
+            }
+
+            return mapa;
+
+        } catch (Exception e) {
+            throw new CompraBoletoException("Error al construir mapa de ocupación: " + e.getMessage());
+        }
+    }
+
+    @Override
     public boolean agregarReservacion(ReservacionDTO reservacion) throws CompraBoletoException {
         try {
             return reservacionBO.agregarReservacion(reservacion);
@@ -130,12 +168,12 @@ public class ControlCompraBoleto implements IControlCompraBoleto {
             throw new CompraBoletoException("Error al agregar la reservación: " + ex.getMessage());
         }
     }
-    
+
     public String generarCodigoQR(EventoDTO evento, AsientoEventoDTO asiento) throws CompraBoletoException {
         try {
             int asientoID = 0;
             int identificador = 0;
-            if(asiento == null){
+            if (asiento == null) {
                 asientoID = 0;
                 identificador = LocalDateTime.now().getNano();
             } else {
@@ -151,7 +189,7 @@ public class ControlCompraBoleto implements IControlCompraBoleto {
             File archivoQRTemporal = QRCode.from(datosBoleto)
                     .to(ImageType.PNG)
                     .withSize(300, 300)
-                    .file();       
+                    .file();
             String nombreArchivo = "Boleto_" + identificador + evento.getIdEvento() + ".png";
             File archivoFinal = new File("qrs-boletos", nombreArchivo);
             Files.copy(archivoQRTemporal.toPath(), archivoFinal.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -161,7 +199,7 @@ public class ControlCompraBoleto implements IControlCompraBoleto {
             throw new CompraBoletoException("Fallos para generar QR: " + e.getMessage());
         }
     }
-    
+
     public boolean reservarAsiento(Long idAsientoEvento) throws CompraBoletoException {
         try {
             return asientoEventoBO.reservarAsiento(idAsientoEvento);
@@ -171,9 +209,9 @@ public class ControlCompraBoleto implements IControlCompraBoleto {
     }
 
     public boolean liberarAsiento(Long idAsientoEvento) throws CompraBoletoException {
-        try{
+        try {
             return asientoEventoBO.liberarAsiento(idAsientoEvento);
-        } catch(NegocioException e) {
+        } catch (NegocioException e) {
             throw new CompraBoletoException(e.getMessage());
         }
     }
@@ -194,11 +232,11 @@ public class ControlCompraBoleto implements IControlCompraBoleto {
 
             } else {
                 if (reservacion.getCobro() != null) {
-                    if(usuarioBO.restarCreditos(totalCompra.intValue()*2, reservacion.getUsuario().getIdUsuario())){
+                    if (usuarioBO.restarCreditos(totalCompra.intValue() * 2, reservacion.getUsuario().getIdUsuario())) {
                         asientoEventoBO.venderAsiento(reservacion.getBoleto().getAsiento().getIdAsiento());
                         reservacionBO.agregarReservacion(reservacion);
                         return true;
-                    } 
+                    }
                     return false;
                 }
                 this.asientosPendientesCompra = new ArrayList<>(asientosSeleccionados);
@@ -233,8 +271,8 @@ public class ControlCompraBoleto implements IControlCompraBoleto {
 
         return false;
     }
-    
-    public Long getTotalPendiente(){
+
+    public Long getTotalPendiente() {
         return totalPendienteCompra;
     }
 }

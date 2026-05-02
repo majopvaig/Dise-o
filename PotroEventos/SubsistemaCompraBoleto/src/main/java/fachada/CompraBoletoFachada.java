@@ -22,7 +22,7 @@ import java.util.Map;
 public class CompraBoletoFachada implements ICompraBoleto {
 
     private ControlCompraBoleto controlCompra = new ControlCompraBoleto();
-    
+
     @Override
     public EventoDTO obtenerEvento(Long idEvento) throws CompraBoletoException {
         return controlCompra.obtenerInformacionEvento(idEvento);
@@ -57,7 +57,7 @@ public class CompraBoletoFachada implements ICompraBoleto {
     public String generarCodigoQR(EventoDTO evento, AsientoEventoDTO asiento) throws CompraBoletoException {
         return controlCompra.generarCodigoQR(evento, asiento);
     }
-    
+
     @Override
     public boolean reservarAsiento(Long idAsientoEvento) throws CompraBoletoException {
         return controlCompra.reservarAsiento(idAsientoEvento);
@@ -77,9 +77,14 @@ public class CompraBoletoFachada implements ICompraBoleto {
     public boolean realizarCompra(TarjetaDTO noTarjeta, CobroDTO cobro) throws CompraBoletoException {
         return controlCompra.realizarCompra(noTarjeta, cobro);
     }
-    
+
     @Override
-    public Long getTotalPendiente(){
+    public Long getTotalPendiente() {
         return controlCompra.getTotalPendiente();
+    }
+
+    @Override
+    public Map<SeccionDTO, List<AsientoEventoDTO>> obtenerMapaOcupacion(Long idEvento) throws CompraBoletoException {
+        return controlCompra.obtenerMapaOcupacion(idEvento);
     }
 }

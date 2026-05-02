@@ -8,6 +8,7 @@ import dtos.ReservacionDTO;
 import dtos.SeccionDTO;
 import excepciones.CompraBoletoException;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -43,5 +44,7 @@ public interface IControlCompraBoleto {
      * Registra una nueva reservación en el sistema.
      */
     boolean agregarReservacion(ReservacionDTO reservacion) throws CompraBoletoException;
-
+    
+    
+    public Map<SeccionDTO, List<AsientoEventoDTO>> obtenerMapaOcupacion(Long idEvento) throws CompraBoletoException;
 }

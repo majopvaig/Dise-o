@@ -11,6 +11,7 @@ import dtos.ReservacionDTO;
 import dtos.TarjetaDTO;
 import excepciones.CompraBoletoException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Interfaz del subsistema (Fachada) para la Compra de Boletos. Permite a
@@ -66,9 +67,9 @@ public interface ICompraBoleto {
     boolean agregarReservacion(ReservacionDTO reservacion) throws CompraBoletoException;
 
     List<AsientoDTO> obtenerCatalogoAsientos() throws CompraBoletoException;
-    
+
     String generarCodigoQR(EventoDTO evento, AsientoEventoDTO asiento) throws CompraBoletoException;
-    
+
     boolean reservarAsiento(Long idAsientoEvento) throws CompraBoletoException;
 
     boolean liberarAsiento(Long idAsientoEvento) throws CompraBoletoException;
@@ -76,7 +77,9 @@ public interface ICompraBoleto {
     public boolean venderAsientos(List<AsientoEventoDTO> asientosSeleccionados, Long totalCompra, boolean gratuito, ReservacionDTO reservacion) throws CompraBoletoException;
 
     boolean realizarCompra(TarjetaDTO noTarjeta, CobroDTO cobro) throws CompraBoletoException;
-    
+
     Long getTotalPendiente();
+
+    public Map<SeccionDTO, List<AsientoEventoDTO>> obtenerMapaOcupacion(Long idEvento) throws CompraBoletoException;
 
 }

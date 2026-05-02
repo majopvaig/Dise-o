@@ -282,39 +282,9 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
     @Override
     public Map<SeccionDTO, List<AsientoEventoDTO>> obtenerMapaOcupacion(Long idEvento) {
         try {
-            List<SeccionDTO> secciones = seccionBO.consultarSeccionesPorEvento(idEvento);
-            List<AsientoEventoDTO> ocupacion = asientoEventoBO.consultarEstadosPorEvento(idEvento);
-
-            // Obtenemos el catálogo general para verificar la pertenencia de los asientos
-            List<AsientoDTO> catalogo = obtenerCatalogoAsientos();
-
-            Map<SeccionDTO, List<AsientoEventoDTO>> mapa = new HashMap<>();
-
-            if (secciones != null && ocupacion != null) {
-                for (SeccionDTO seccion : secciones) {
-
-                    // Filtramos los asientos del evento asegurándonos de que solo pasen
-                    // los que realmente pertenecen a la sección iterada actualmente.
-                    List<AsientoEventoDTO> asientosDeEstaSeccion = ocupacion.stream()
-                            .filter(ae -> {
-                                for (AsientoDTO asientoInfo : catalogo) {
-                                    // Verificamos si el asiento del evento coincide con el del catálogo
-                                    if (asientoInfo.getIdAsiento().equals(ae.getIdAsiento())) {
-                                        // Comparamos el ID de la sección del asiento contra el de la sección actual
-                                        return asientoInfo.getIdSeccion().equals(seccion.getIdSeccion());
-                                    }
-                                }
-                                return false;
-                            })
-                            .collect(Collectors.toList());
-
-                    mapa.put(seccion, asientosDeEstaSeccion);
-                }
-            }
-            return mapa;
-
-        } catch (NegocioException e) {
-            System.err.println("Error en el coordinador: " + e.getMessage());
+            return controlCompra.obtenerMapaOcupacion(idEvento);
+        } catch (CompraBoletoException e) {
+            System.err.println(e.getMessage());
             return new HashMap<>();
         }
     }
