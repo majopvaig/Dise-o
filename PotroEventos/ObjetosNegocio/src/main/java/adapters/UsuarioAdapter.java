@@ -14,8 +14,9 @@ import java.util.List;
  * @author Dayanara Peralta G
  */
 public class UsuarioAdapter {
-    public static UsuarioDTO entidadADTO(Usuario usuario){
-        if(usuario == null){
+    
+    public static UsuarioDTO entidadADTO(Usuario usuario) {
+        if (usuario == null) {
             return null;
         }
         UsuarioDTO dto = new UsuarioDTO();
@@ -25,11 +26,12 @@ public class UsuarioAdapter {
         dto.setApellidoMaterno(usuario.getApellidoMaterno());
         dto.setCorreo(usuario.getCorreo());
         dto.setContrasenia(usuario.getContrasenia());
+        dto.setCreditos(usuario.getCreditos());
         return dto;
     }
     
-    public static Usuario dtoAEntidad(UsuarioDTO dto){
-        if(dto == null){
+    public static Usuario dtoAEntidad(UsuarioDTO dto) {
+        if (dto == null) {
             return null;
         }
         
@@ -40,15 +42,14 @@ public class UsuarioAdapter {
         usuario.setApellidoMaterno(dto.getApellidoMaterno());
         usuario.setCorreo(dto.getCorreo());
         usuario.setContrasenia(dto.getContrasenia());
+        usuario.setCreditos(dto.getCreditos());
         
         return usuario;
     }
     
-    
-    
-    public static List<UsuarioDTO> listaDTO(List<Usuario> lista){
+    public static List<UsuarioDTO> listaDTO(List<Usuario> lista) {
         List<UsuarioDTO> usuarios = new ArrayList<>();
-        for (Usuario user: lista){
+        for (Usuario user : lista) {
             usuarios.add(entidadADTO(user));
         }
         return usuarios;

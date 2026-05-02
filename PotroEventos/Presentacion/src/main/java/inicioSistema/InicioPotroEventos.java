@@ -6,10 +6,7 @@ package inicioSistema;
 
 import Controlador.coordinador.CoordinadorAplicacion;
 import Controlador.interfaz.ICoordinadorAplicacion;
-import dtos.UsuarioDTO;
-import excepciones.NegocioException;
-import interfaces.IUsuarioBO;
-import objetosNegocio.UsuarioBO;
+
 
 /**
  *
@@ -29,7 +26,7 @@ public class InicioPotroEventos {
 //            System.out.println("falló agregar el usuario.");
 //        }
         ICoordinadorAplicacion inicio = new CoordinadorAplicacion();
-        inicio.mostrarInicio();
+        inicio.mostrarInicioSesion();
     }
     
 }

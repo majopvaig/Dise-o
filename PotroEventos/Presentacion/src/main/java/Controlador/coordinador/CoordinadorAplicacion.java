@@ -73,7 +73,6 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
     private FrmDetallesCompra frmDetalles;
     private FrmRegistroItson frmRegistro;
 
-
     /**
      * Oculta todas las ventanas instanciadas actualmente en el sistema. Es
      * utilizado como un paso previo antes de mostrar una nueva pantalla para
@@ -96,9 +95,9 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
             frmRegistro.setVisible(false);
         }
     }
-    
-    public UsuarioDTO getUsuario(){
-        if(usuario == null){
+
+    public UsuarioDTO getUsuario() {
+        if (usuario == null) {
             return null;
         }
         return usuario;
@@ -198,7 +197,7 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
 
     @Override
     public void volverAEventos() {
-        
+
     }
 
     @Override
@@ -228,7 +227,9 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
 
     @Override
     public UsuarioDTO iniciarSesion(String correo, String contrasenia) {
-        return logi.verificarUsuario(correo, contrasenia);
+        UsuarioDTO usuarioDTO = logi.verificarUsuario(correo, contrasenia);
+        setUsuarioSesion(usuarioDTO);
+        return usuarioDTO;
     }
 
     @Override
@@ -338,9 +339,9 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
 
     @Override
     public boolean reservarAsiento(Long idAsientoEvento) {
-        try{
+        try {
             return controlCompra.reservarAsiento(idAsientoEvento);
-        } catch(CompraBoletoException ex){
+        } catch (CompraBoletoException ex) {
             return false;
         }
     }
@@ -356,18 +357,18 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
 
     @Override
     public boolean venderAsientos(List<AsientoEventoDTO> asientosSeleccionados, Long totalCompra, boolean gratuito, ReservacionDTO reservacion) {
-        try{
+        try {
             return controlCompra.venderAsientos(asientosSeleccionados, totalCompra, gratuito, reservacion);
-        } catch(CompraBoletoException ex){
+        } catch (CompraBoletoException ex) {
             return false;
         }
     }
 
     @Override
     public boolean realizarCompra(TarjetaDTO tarjeta, CobroDTO cobro) {
-        try{
+        try {
             return controlCompra.realizarCompra(tarjeta, cobro);
-        } catch(CompraBoletoException ex){
+        } catch (CompraBoletoException ex) {
             return false;
         }
     }
@@ -382,7 +383,7 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
         frmPago.dispose();
         frmPlantilla.setVisible(true);
     }
-    
+
     @Override
     public String generarQR(EventoDTO evento, AsientoEventoDTO asiento) {
         try {

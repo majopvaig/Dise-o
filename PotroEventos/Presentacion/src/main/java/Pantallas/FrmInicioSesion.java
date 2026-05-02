@@ -247,7 +247,7 @@ public class FrmInicioSesion extends javax.swing.JFrame {
     }//GEN-LAST:event_txtContraseniaFocusLost
 
     private void ingresarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ingresarMouseClicked
-        //coordinador.mostrarInicio();
+        
         String correo = txtCorreo.getText();
         String contrasenia = String.valueOf(txtContrasenia.getPassword());
         if(correo.equals("Ingrese un correo") || contrasenia.equals("********************")){

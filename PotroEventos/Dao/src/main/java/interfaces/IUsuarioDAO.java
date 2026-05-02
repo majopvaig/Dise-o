@@ -16,4 +16,6 @@ public interface IUsuarioDAO {
     List<Usuario> obtenerUsuarios();
     
     boolean restarCreditos(Integer cantidad, Long idUsuario);
+    
+    Usuario obtenerUsuario(Usuario usuario);    
 }
