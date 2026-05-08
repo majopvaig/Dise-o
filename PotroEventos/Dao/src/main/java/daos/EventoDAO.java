@@ -2,12 +2,14 @@ package daos;
 
 import Entitys.Categoria;
 import Entitys.Evento;
+import adaptadores.EventoPersistenciaAdapter;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
 import static com.mongodb.client.model.Filters.eq;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
 import conexion.ConexionMongo;
+import entidadesmongo.EventoMongoEntidad;
 import excepciones.PersistenciaException;
 import interfaces.IEventoDAO;
 import java.time.LocalDateTime;
@@ -23,12 +25,12 @@ import org.bson.types.ObjectId;
  */
 public class EventoDAO implements IEventoDAO {
 
-    private final MongoCollection<Evento> coleccionEventos;
+    private final MongoCollection<EventoMongoEntidad> coleccionEventos;
 
     private static EventoDAO instancia;
 
     public EventoDAO() {
-        this.coleccionEventos = ConexionMongo.obtenerBaseDatos().getCollection("eventos", Evento.class);
+        this.coleccionEventos = ConexionMongo.obtenerColeccionEventos();
     }
 
     public static EventoDAO getInstance() {
@@ -41,9 +43,9 @@ public class EventoDAO implements IEventoDAO {
     @Override
     public Evento buscarPorId(String idEvento) throws PersistenciaException {
         try {
-            Evento evento = this.coleccionEventos.find(eq("_id", new ObjectId(idEvento))).first();
+            EventoMongoEntidad evento = this.coleccionEventos.find(eq("_id", new ObjectId(idEvento))).first();
 
-            return evento;
+            return EventoPersistenciaAdapter.convertirADominio(evento);
 
         } catch (MongoException e) {
             throw new PersistenciaException("No fue posible buscar el evento");
@@ -53,9 +55,8 @@ public class EventoDAO implements IEventoDAO {
     @Override
     public List<Evento> buscarTodosCategoria(Categoria categoria) throws PersistenciaException {
         try {
-
-            return this.coleccionEventos.find(eq("categoria", categoria.getNombre())).into(new ArrayList<>());
-
+            List<EventoMongoEntidad> eventos = coleccionEventos.find(eq("categoria", categoria.getNombre())).into(new ArrayList<>());
+            return EventoPersistenciaAdapter.convetirListaADominio(eventos);
         } catch (MongoException e) {
             throw new PersistenciaException("No fue posible obtener los eventos");
         }
@@ -72,16 +73,18 @@ public class EventoDAO implements IEventoDAO {
         }
 
         try {
-            InsertOneResult resultado = this.coleccionEventos.insertOne(evento);
+            EventoMongoEntidad e = EventoPersistenciaAdapter.convertirAMongo(evento);
+            InsertOneResult resultado = this.coleccionEventos.insertOne(e);
 
             if (resultado.getInsertedId() == null) {
                 throw new PersistenciaException("Error al guardar.");
             }
-            String idGenerado = resultado.getInsertedId().asObjectId().getValue().toHexString();
+            ObjectId idGenerad = resultado.getInsertedId().asObjectId().getValue();
+            //String idGenerado = resultado.getInsertedId().asObjectId().getValue().toHexString();
 
-            evento.setIdEvento(idGenerado);
+            e.setId(idGenerad);
 
-            return evento;
+            return EventoPersistenciaAdapter.convertirADominio(e);
 
         } catch (MongoException e) {
             throw new PersistenciaException("No fue posible guardar el evento");
@@ -99,14 +102,15 @@ public class EventoDAO implements IEventoDAO {
         }
 
         try {
-
-            UpdateResult resultado = this.coleccionEventos.replaceOne(eq("_id", new ObjectId(evento.getIdEvento())), evento);
+            EventoMongoEntidad e = EventoPersistenciaAdapter.convertirAMongo(evento);
+            
+            UpdateResult resultado = this.coleccionEventos.replaceOne(eq("_id", new ObjectId(evento.getIdEvento())), e);
 
             if (resultado.getMatchedCount() == 0) {
                 throw new PersistenciaException("No se encontró el evento");
             }
 
-            return evento;
+            return EventoPersistenciaAdapter.convertirADominio(e);
 
         } catch (MongoException e) {
             throw new PersistenciaException("No fue posible actualizar el evento");

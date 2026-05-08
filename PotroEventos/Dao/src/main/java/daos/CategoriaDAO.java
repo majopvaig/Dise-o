@@ -5,9 +5,11 @@
 package daos;
 
 import Entitys.Categoria;
+import adaptadores.CategoriaPersistenciaAdapter;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
 import conexion.ConexionMongo;
+import entidadesmongo.CategoriaMongoEntidad;
 import excepciones.PersistenciaException;
 import interfaces.ICategoriaDAO;
 import java.util.ArrayList;
@@ -19,11 +21,11 @@ import java.util.List;
  */
 public class CategoriaDAO implements ICategoriaDAO {
 
-    private final MongoCollection<Categoria> coleccionCategorias;
+    private final MongoCollection<CategoriaMongoEntidad> coleccionCategorias;
     private static CategoriaDAO instance;
 
     private CategoriaDAO() {
-        this.coleccionCategorias = ConexionMongo.obtenerBaseDatos().getCollection("categorias", Categoria.class);
+        this.coleccionCategorias = ConexionMongo.obtenerColeccionCategorias();
     }
 
     public static CategoriaDAO getInstance() {
@@ -36,9 +38,8 @@ public class CategoriaDAO implements ICategoriaDAO {
     @Override
     public List<Categoria> consultarCategorias() throws PersistenciaException {
         try {
-
-            return this.coleccionCategorias.find().into(new ArrayList<>());
-
+            List<CategoriaMongoEntidad> categorias = coleccionCategorias.find().into(new ArrayList<>());
+            return CategoriaPersistenciaAdapter.convertirListaADominio(categorias);
         } catch (MongoException e) {
             throw new PersistenciaException("No fue posible obtener las categorías");
         }

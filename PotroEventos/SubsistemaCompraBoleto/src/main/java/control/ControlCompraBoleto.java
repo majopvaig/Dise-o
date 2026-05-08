@@ -168,7 +168,7 @@ public class ControlCompraBoleto implements IControlCompraBoleto {
      * @throws CompraBoletoException si ocurre un error
      */
     @Override
-    public ReservacionDTO agregarReservacion(ReservacionDTO reservacion) throws CompraBoletoException {
+    public boolean agregarReservacion(ReservacionDTO reservacion) throws CompraBoletoException {
         try {
             return reservacionBO.agregarReservacion(reservacion);
         } catch (Exception ex) {

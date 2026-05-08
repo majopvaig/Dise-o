@@ -53,7 +53,7 @@ public interface ICompraBoleto {
      */
     List<AsientoEventoDTO> obtenerEstadoAsientosPorEvento(String idEvento) throws CompraBoletoException;
 
-    ReservacionDTO agregarReservacion(ReservacionDTO reservacion) throws CompraBoletoException;
+    boolean agregarReservacion(ReservacionDTO reservacion) throws CompraBoletoException;
 
     List<AsientoDTO> obtenerCatalogoAsientos() throws CompraBoletoException;
 

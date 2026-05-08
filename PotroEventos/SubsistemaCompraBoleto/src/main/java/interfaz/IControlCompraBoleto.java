@@ -40,7 +40,7 @@ public interface IControlCompraBoleto {
     /**
      * Registra una nueva reservación en el sistema.
      */
-    ReservacionDTO agregarReservacion(ReservacionDTO reservacion) throws CompraBoletoException;
+    boolean agregarReservacion(ReservacionDTO reservacion) throws CompraBoletoException;
 
     public Map<SeccionDTO, List<AsientoEventoDTO>> obtenerMapaOcupacion(String idEvento) throws CompraBoletoException;
 

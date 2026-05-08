@@ -5,11 +5,13 @@
 package daos;
 
 import Entitys.Reservacion;
+import adaptadores.ReservacionPersistenciaAdapter;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
 import static com.mongodb.client.model.Filters.eq;
 import com.mongodb.client.result.InsertOneResult;
 import conexion.ConexionMongo;
+import entidadesmongo.ReservacionMongoEntidad;
 import excepciones.PersistenciaException;
 import interfaces.IReservacionDAO;
 import java.util.ArrayList;
@@ -22,7 +24,7 @@ import org.bson.types.ObjectId;
  */
 public class ReservacionDAO implements IReservacionDAO {
     
-    private MongoCollection<Reservacion> coleccionReservaciones = ConexionMongo.obtenerBaseDatos().getCollection("reservaciones", Reservacion.class);
+    private MongoCollection<ReservacionMongoEntidad> coleccionReservaciones = ConexionMongo.obtenerColeccionReservaciones();
     private static ReservacionDAO instance;
     
     private ReservacionDAO() {
@@ -42,17 +44,20 @@ public class ReservacionDAO implements IReservacionDAO {
         }
         
         try {
-            InsertOneResult resultado = this.coleccionReservaciones.insertOne(reservacion);
+            ReservacionMongoEntidad r = ReservacionPersistenciaAdapter.convertirAMongo(reservacion);
+            
+            InsertOneResult resultado = this.coleccionReservaciones.insertOne(r);
             
             if (resultado.getInsertedId() == null) {
                 throw new PersistenciaException("Error al guardar.");
             }
             
-            String idGenerado = resultado.getInsertedId().asObjectId().getValue().toHexString();
+            ObjectId idGenerado = resultado.getInsertedId().asObjectId().getValue();
+            //String idGenerado = resultado.getInsertedId().asObjectId().getValue().toHexString();
             
-            reservacion.setIdReservacion(idGenerado);
+            r.setId(idGenerado);
             
-            return reservacion;
+            return ReservacionPersistenciaAdapter.convertirADominio(r);
             
         } catch (MongoException e) {
             throw new PersistenciaException("No fue posible guardar la reservación.");
@@ -63,7 +68,8 @@ public class ReservacionDAO implements IReservacionDAO {
     @Override
     public List<Reservacion> obtenerReservacionesUsuario(String idUsuario) throws PersistenciaException {
         try {
-            return this.coleccionReservaciones.find(eq("idUsuario", new ObjectId(idUsuario))).into(new ArrayList<>());
+            List<ReservacionMongoEntidad> reservaciones = coleccionReservaciones.find(eq("idUsuario", new ObjectId(idUsuario))).into(new ArrayList<>());
+            return ReservacionPersistenciaAdapter.convertirListaADominio(reservaciones);
         } catch (Exception e) {
             throw new PersistenciaException("No fue posible obtener las reservaciones");
         }

@@ -1,10 +1,12 @@
 package daos;
 
 import Entitys.Asiento;
+import adaptadores.AsientoPersistenciaAdapter;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
 import static com.mongodb.client.model.Filters.eq;
 import conexion.ConexionMongo;
+import entidadesmongo.AsientoMongoEntidad;
 import excepciones.PersistenciaException;
 import interfaces.IAsientoDAO;
 import java.util.ArrayList;
@@ -16,12 +18,12 @@ import org.bson.types.ObjectId;
  */
 public class AsientoDAO implements IAsientoDAO {
 
-    private final MongoCollection<Asiento> coleccionAsientos;
+    private final MongoCollection<AsientoMongoEntidad> coleccionAsientos;
 
     private static AsientoDAO instancia;
 
     public AsientoDAO() {
-        this.coleccionAsientos = ConexionMongo.obtenerBaseDatos().getCollection("asientos", Asiento.class);
+        this.coleccionAsientos = ConexionMongo.obtenerColeccionAsientos();
     }
 
     public static AsientoDAO getInstance() {
@@ -34,7 +36,10 @@ public class AsientoDAO implements IAsientoDAO {
     @Override
     public List<Asiento> consultarAsientos() throws PersistenciaException {
         try {
-            return this.coleccionAsientos.find().into(new ArrayList<>());
+            List<AsientoMongoEntidad> asientos = coleccionAsientos
+                    .find()
+                    .into(new ArrayList<>());
+            return AsientoPersistenciaAdapter.convertirListaADominio(asientos);
         } catch (MongoException e) {
             throw new PersistenciaException("No fue posible obtener los asientos");
         }
