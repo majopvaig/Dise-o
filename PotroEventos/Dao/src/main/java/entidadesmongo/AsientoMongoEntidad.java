@@ -18,21 +18,23 @@ public class AsientoMongoEntidad {
     
     private String fila;
     private int numero;
-    private SeccionMongoEntidad seccion;
+    private ObjectId ubicacion;
+    private ObjectId seccion;
 
     public AsientoMongoEntidad() {
     }
 
-    public AsientoMongoEntidad(String fila, int numero, SeccionMongoEntidad seccion) {
+    public AsientoMongoEntidad(String fila, int numero, ObjectId seccion) {
         this.fila = fila;
         this.numero = numero;
         this.seccion = seccion;
     }
 
-    public AsientoMongoEntidad(ObjectId id, String fila, int numero, SeccionMongoEntidad seccion) {
+    public AsientoMongoEntidad(ObjectId id, String fila, int numero, ObjectId ubicacion, ObjectId seccion) {
         this.id = id;
         this.fila = fila;
         this.numero = numero;
+        this.ubicacion = ubicacion;
         this.seccion = seccion;
     }
 
@@ -66,22 +68,46 @@ public class AsientoMongoEntidad {
     public void setNumero(int numero) {
         this.numero = numero;
     }
+    
+    public ObjectId getUbicacion(){
+        return ubicacion;
+    }
+    
+    public void setUbicacion(ObjectId ubicacion){
+        this.ubicacion = ubicacion;
+    }
+    
+    public String getUbicacionComoTexto(){
+        if(ubicacion == null){
+            return null;
+        }
+        return ubicacion.toHexString();
+    }
 
-    public SeccionMongoEntidad getSeccion() {
+    public ObjectId getSeccion() {
         return seccion;
     }
 
-    public void setSeccion(SeccionMongoEntidad seccion) {
+    public void setSeccion(ObjectId seccion) {
         this.seccion = seccion;
+    }
+    
+    public String getSeccionComoTexto(){
+        if(seccion == null){
+            return null;
+        }
+        return seccion.toHexString();
     }
 
     @Override
     public String toString() {
         return "AsientoMongoEntidad{" 
-                + "id=" + id 
+                + "id=" + getIdComoTexto() 
                 + ", fila=" + fila 
                 + ", numero=" + numero 
-                + ", seccion=" + seccion + '}';
+                + ", ubicacion=" + getUbicacionComoTexto()
+                + ", seccion=" + getSeccionComoTexto() 
+                + '}';
     }
     
 }

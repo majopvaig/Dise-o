@@ -22,7 +22,7 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>Pago</artifactId>
+            <artifactId>SubsistemaPago</artifactId>
             <version>${project.version}</version>
         </dependency>
 

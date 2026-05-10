@@ -10,5 +10,5 @@ package dtos.ENUMS;
  */
 public enum TipoEventoN {
     ITSON,
-    PÚBLICO
+    PUBLICO
 }

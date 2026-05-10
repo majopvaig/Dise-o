@@ -50,12 +50,12 @@ public class PagoFachada implements IPago {
      * @throws PagoException si ocurre un error durante el proceso
      */
     @Override
-    public boolean procesarPago(TarjetaDTO tarjetaDTO, CobroDTO cobroDTO) throws PagoException {
+    public String procesarPago(TarjetaDTO tarjetaDTO, CobroDTO cobroDTO) throws PagoException {
         try {
-            boolean exito = control.realizarPago(tarjetaDTO, cobroDTO);
+            String cobro = control.realizarPago(tarjetaDTO, cobroDTO);
 
             LOG.log(Level.INFO, "Pago procesado correctamente.");
-            return exito;
+            return cobro;
 
         } catch (PagoException ex) {
             LOG.log(Level.SEVERE, "Error al procesar pago en fachada.", ex);

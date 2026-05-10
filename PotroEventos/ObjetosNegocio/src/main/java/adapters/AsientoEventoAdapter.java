@@ -2,6 +2,7 @@ package adapters;
 
 import Entitys.Asiento;
 import Entitys.AsientoEvento;
+import Entitys.ENUMS.EstadoAsiento;
 import Entitys.Evento;
 import Entitys.Reservacion;
 import dtos.AsientoEventoDTO;
@@ -17,30 +18,11 @@ public class AsientoEventoAdapter {
         }
 
         AsientoEventoDTO dto = new AsientoEventoDTO();
-        if (entidad.getReservacion() != null) {
-            dto.setIdReservacion(entidad.getReservacion().getIdReservacion());
-        } else {
-            dto.setIdReservacion(null);
-        }
-        //dto.setIdReservacion(entidad.getReservacion().getIdReservacion());
-
-        if (entidad.getAsiento() != null) {
-            dto.setIdAsiento(entidad.getAsiento().getIdAsiento());
-        }
-
-        if (entidad.getEvento() != null) {
-            dto.setIdEvento(entidad.getEvento().getIdEvento());
-        }
-
-        if (entidad.getEstadoAsiento() != null) {
-            try {
-
-                dto.setEstadoAsiento(EstadoAsientoDTO.valueOf(entidad.getEstadoAsiento().name()));
-            } catch (IllegalArgumentException e) {
-
-                dto.setEstadoAsiento(EstadoAsientoDTO.DISPONIBLE);
-            }
-        }
+        dto.setIdAsientoEvento(entidad.getIdAsientoEvento());
+        dto.setPrecio(entidad.getPrecio());
+        dto.setEstadoAsiento(EstadoAsientoDTO.valueOf(entidad.getEstadoAsiento().name()));
+        dto.setAsiento(AsientoAdapter.entidadADTO(entidad.getAsiento()));
+        dto.setEvento(EventoAdapter.entidadADTO(entidad.getEvento()));
 
         return dto;
     }
@@ -52,28 +34,11 @@ public class AsientoEventoAdapter {
 
         AsientoEvento entidad = new AsientoEvento();
 
-        entidad.setEstadoAsiento(Entitys.ENUMS.EstadoAsiento.valueOf(dto.getEstadoAsiento().name()));
-
-        /*
-        ponerle el asiento fake 
-         */
-        Asiento asiento = new Asiento();
-        asiento.setIdAsiento(dto.getIdAsiento());
-        entidad.setAsiento(asiento);
-
-        /*
-        ponerle el evento fake
-        */
-        Evento evento = new Evento();
-        evento.setIdEvento(dto.getIdEvento());
-        entidad.setEvento(evento);
-
-        /*
-        ponerle la reservacion fake
-        */
-        Reservacion reservacion = new Reservacion();
-        reservacion.setIdReservacion(dto.getIdReservacion());
-        entidad.setReservacion(reservacion);
+        entidad.setIdAsientoEvento(dto.getIdAsientoEvento());
+        entidad.setPrecio(dto.getPrecio());
+        entidad.setEstadoAsiento(EstadoAsiento.valueOf(dto.getEstadoAsiento().name()));
+        entidad.setAsiento(AsientoAdapter.dtoAEntidad(dto.getAsiento()));
+        entidad.setEvento(EventoAdapter.dtoAEntidad(dto.getEvento()));
 
         return entidad;
     }

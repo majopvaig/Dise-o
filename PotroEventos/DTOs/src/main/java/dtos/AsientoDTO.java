@@ -12,25 +12,29 @@ public class AsientoDTO {
     private String idAsiento;
     private String fila;
     private Integer numero;
+    private UbicacionDTO ubicacion;
+    private SeccionDTO seccion;
     /*
     igual, no le muevo pero es mejor que tenga su objeto completo
      */
-    private String idseccion;
+    //private String idseccion;
 
     public AsientoDTO() {
     }
 
-    public AsientoDTO(String idAsiento, String fila, Integer numero, String idseccion) {
+    public AsientoDTO(String fila, Integer numero, UbicacionDTO ubicacion, SeccionDTO seccion) {
+        this.fila = fila;
+        this.numero = numero;
+        this.ubicacion = ubicacion;
+        this.seccion = seccion;
+    }
+
+    public AsientoDTO(String idAsiento, String fila, Integer numero, UbicacionDTO ubicacion, SeccionDTO seccion) {
         this.idAsiento = idAsiento;
         this.fila = fila;
         this.numero = numero;
-        this.idseccion = idseccion;
-    }
-
-    public AsientoDTO(String fila, Integer numero, String idseccion) {
-        this.fila = fila;
-        this.numero = numero;
-        this.idseccion = idseccion;
+        this.ubicacion = ubicacion;
+        this.seccion = seccion;
     }
 
     public String getIdAsiento() {
@@ -57,21 +61,25 @@ public class AsientoDTO {
         this.numero = numero;
     }
 
-    public String getIdSeccion() {
-        return idseccion;
+    public UbicacionDTO getUbicacion() {
+        return ubicacion;
     }
 
-    public void setIdSeccion(String idseccion) {
-        this.idseccion = idseccion;
+    public void setUbicacion(UbicacionDTO ubicacion) {
+        this.ubicacion = ubicacion;
     }
 
-    public String getNombreCompleto() {
-        return this.fila + "-" + this.numero;
+    public SeccionDTO getSeccion() {
+        return seccion;
+    }
+
+    public void setSeccion(SeccionDTO seccion) {
+        this.seccion = seccion;
     }
 
     @Override
     public String toString() {
-        return "AsientoDTO{" + "idAsiento=" + idAsiento + ", fila=" + fila + ", numero=" + numero + ", idseccion=" + idseccion + '}';
+        return "AsientoDTO{" + "idAsiento=" + idAsiento + ", fila=" + fila + ", numero=" + numero + ", ubicacion=" + ubicacion + ", seccion=" + seccion + '}';
     }
-
+    
 }

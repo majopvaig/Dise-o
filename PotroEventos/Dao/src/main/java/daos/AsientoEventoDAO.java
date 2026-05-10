@@ -54,7 +54,9 @@ public class AsientoEventoDAO implements IAsientoEventoDAO {
     @Override
     public List<AsientoEvento> buscarPorEvento(String idEvento) throws PersistenciaException {
         try{
-            List<AsientoEventoMongoEntidad> asientos = coleccionAsientosEventos.find(eq("idEvento", new ObjectId(idEvento))).into(new ArrayList<>());
+            List<AsientoEventoMongoEntidad> asientos = coleccionAsientosEventos
+                    .find(eq("evento", new ObjectId(idEvento)))
+                    .into(new ArrayList<>());
             return AsientoEventoPersistenciaAdapter.convertirListaADominio(asientos);
         } catch(MongoException me){
             throw new PersistenciaException("No fue posible consultar los asientos del evento.");
@@ -65,14 +67,19 @@ public class AsientoEventoDAO implements IAsientoEventoDAO {
     @Override
     public boolean reservarAsiento(String idAsiento) throws PersistenciaException {
         try {
-            AsientoEventoMongoEntidad asiento = this.coleccionAsientosEventos.find(eq("_id", new ObjectId(idAsiento))).first();
+            AsientoEventoMongoEntidad asiento = this.coleccionAsientosEventos
+                    .find(eq("_id", new ObjectId(idAsiento)))
+                    .first();
+            
             if (asiento == null) {
                 throw new PersistenciaException("AsientoEvento no encontrado");
             }
 
             asiento.setEstado(EstadoAsiento.RESERVADO.name());
 
-            UpdateResult resultado = this.coleccionAsientosEventos.replaceOne(eq("_id", new ObjectId(asiento.getIdComoTexto())), asiento);
+            UpdateResult resultado = this.coleccionAsientosEventos
+                    .replaceOne(eq("_id", new ObjectId(asiento.getIdComoTexto())), asiento);
+            
             if (resultado.getMatchedCount() == 0) {
                 throw new PersistenciaException("No se encontró el asiento");
             }
@@ -86,14 +93,19 @@ public class AsientoEventoDAO implements IAsientoEventoDAO {
     @Override
     public boolean liberarAsiento(String idAsiento) throws PersistenciaException {
         try {
-            AsientoEventoMongoEntidad asiento = this.coleccionAsientosEventos.find(eq("_id", new ObjectId(idAsiento))).first();
+            AsientoEventoMongoEntidad asiento = this.coleccionAsientosEventos
+                    .find(eq("_id", new ObjectId(idAsiento)))
+                    .first();
+            
             if (asiento == null) {
                 throw new PersistenciaException("AsientoEvento no encontrado");
             }
 
             asiento.setEstado(EstadoAsiento.DISPONIBLE.name());
 
-            UpdateResult resultado = this.coleccionAsientosEventos.replaceOne(eq("_id", new ObjectId(asiento.getIdComoTexto())), asiento);
+            UpdateResult resultado = this.coleccionAsientosEventos.
+                    replaceOne(eq("_id", new ObjectId(asiento.getIdComoTexto())), asiento);
+            
             if (resultado.getMatchedCount() == 0) {
                 throw new PersistenciaException("No se encontró el asiento");
             }
@@ -107,14 +119,19 @@ public class AsientoEventoDAO implements IAsientoEventoDAO {
     @Override
     public boolean venderAsiento(String idAsiento) throws PersistenciaException {
         try {
-            AsientoEventoMongoEntidad asiento = this.coleccionAsientosEventos.find(eq("_id", new ObjectId(idAsiento))).first();
+            AsientoEventoMongoEntidad asiento = this.coleccionAsientosEventos
+                    .find(eq("_id", new ObjectId(idAsiento)))
+                    .first();
+            
             if (asiento == null) {
                 throw new PersistenciaException("AsientoEvento no encontrado");
             }
 
             asiento.setEstado(EstadoAsiento.VENDIDO.name());
 
-            UpdateResult resultado = this.coleccionAsientosEventos.replaceOne(eq("_id", new ObjectId(asiento.getIdComoTexto())), asiento);
+            UpdateResult resultado = this.coleccionAsientosEventos.
+                    replaceOne(eq("_id", new ObjectId(asiento.getIdComoTexto())), asiento);
+            
             if (resultado.getMatchedCount() == 0) {
                 throw new PersistenciaException("No se encontró el asiento");
             }
@@ -122,6 +139,18 @@ public class AsientoEventoDAO implements IAsientoEventoDAO {
 
         } catch (MongoException e) {
             throw new PersistenciaException("No fue posible vender el asiento");
+        }
+    }
+
+    @Override
+    public AsientoEvento consultarPorId(String idAsiento) throws PersistenciaException {
+        try{
+            AsientoEventoMongoEntidad seccion = coleccionAsientosEventos
+                    .find(eq("_id", new ObjectId(idAsiento)))
+                    .first();
+            return AsientoEventoPersistenciaAdapter.convertirADominio(seccion);
+        } catch(MongoException me){
+            throw new PersistenciaException("No fue posible obtener el asiento del evento.");
         }
     }
 

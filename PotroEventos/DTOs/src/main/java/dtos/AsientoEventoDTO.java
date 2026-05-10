@@ -11,33 +11,44 @@ import dtos.ENUMS.EstadoAsientoDTO;
  */
 public class AsientoEventoDTO {
 
-    private String idReservacion;
+    private String idAsientoEvento;
+    private Double precio;
     private EstadoAsientoDTO estadoAsiento;
-    private String idAsiento;
-    private String idEvento;
+    private AsientoDTO asiento;
+    private EventoDTO evento;
 
     public AsientoEventoDTO() {
     }
 
-    public AsientoEventoDTO(String idReservacion, EstadoAsientoDTO estadoAsiento, String idAsiento, String idEvento) {
-        this.idReservacion = idReservacion;
+    public AsientoEventoDTO(Double precio, EstadoAsientoDTO estadoAsiento, AsientoDTO asiento, EventoDTO evento) {
+        this.precio = precio;
         this.estadoAsiento = estadoAsiento;
-        this.idAsiento = idAsiento;
-        this.idEvento = idEvento;
+        this.asiento = asiento;
+        this.evento = evento;
     }
 
-    public AsientoEventoDTO(EstadoAsientoDTO estadoAsiento, String idAsiento, String idEvento) {
+    public AsientoEventoDTO(String idAsientoEvento, Double precio, EstadoAsientoDTO estadoAsiento, AsientoDTO asiento, EventoDTO evento) {
+        this.idAsientoEvento = idAsientoEvento;
+        this.precio = precio;
         this.estadoAsiento = estadoAsiento;
-        this.idAsiento = idAsiento;
-        this.idEvento = idEvento;
+        this.asiento = asiento;
+        this.evento = evento;
     }
 
-    public String getIdReservacion() {
-        return idReservacion;
+    public String getIdAsientoEvento() {
+        return idAsientoEvento;
     }
 
-    public void setIdReservacion(String idReservacion) {
-        this.idReservacion = idReservacion;
+    public void setIdAsientoEvento(String idAsientoEvento) {
+        this.idAsientoEvento = idAsientoEvento;
+    }
+
+    public Double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(Double precio) {
+        this.precio = precio;
     }
 
     public EstadoAsientoDTO getEstadoAsiento() {
@@ -48,25 +59,25 @@ public class AsientoEventoDTO {
         this.estadoAsiento = estadoAsiento;
     }
 
-    public String getIdAsiento() {
-        return idAsiento;
+    public AsientoDTO getAsiento() {
+        return asiento;
     }
 
-    public void setIdAsiento(String idAsiento) {
-        this.idAsiento = idAsiento;
+    public void setAsiento(AsientoDTO asiento) {
+        this.asiento = asiento;
     }
 
-    public String getIdEvento() {
-        return idEvento;
+    public EventoDTO getEvento() {
+        return evento;
     }
 
-    public void setIdEvento(String idEvento) {
-        this.idEvento = idEvento;
+    public void setEvento(EventoDTO evento) {
+        this.evento = evento;
     }
 
     @Override
     public String toString() {
-        return "AsientoEventoDTO{" + "idReservacion=" + idReservacion + ", estadoAsiento=" + estadoAsiento + ", idAsiento=" + idAsiento + ", idEvento=" + idEvento + '}';
+        return "AsientoEventoDTO{" + "idAsientoEvento=" + idAsientoEvento + ", precio=" + precio + ", estadoAsiento=" + estadoAsiento + ", asiento=" + asiento + ", evento=" + evento + '}';
     }
 
 }

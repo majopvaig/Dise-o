@@ -25,5 +25,5 @@ public interface IPago {
      * @return true si el pago fue exitoso, false en caso contrario
      * @throws PagoException si ocurre un error durante el proceso
      */
-    boolean procesarPago(TarjetaDTO tarjetaDTO, CobroDTO cobroDTO) throws PagoException;
+    String procesarPago(TarjetaDTO tarjetaDTO, CobroDTO cobroDTO) throws PagoException;
 }

@@ -12,21 +12,24 @@ public class Asiento {
     private String idAsiento;
     private String fila;
     private Integer numero;
+    private Ubicacion ubicacion;
     private Seccion seccion;
 
     public Asiento() {
     }
 
-    public Asiento(String idAsiento, String fila, Integer numero, Seccion seccion) {
-        this.idAsiento = idAsiento;
+    public Asiento(String fila, Integer numero, Ubicacion ubicacion, Seccion seccion) {
         this.fila = fila;
         this.numero = numero;
+        this.ubicacion = ubicacion;
         this.seccion = seccion;
     }
 
-    public Asiento(String fila, Integer numero, Seccion seccion) {
+    public Asiento(String idAsiento, String fila, Integer numero, Ubicacion ubicacion, Seccion seccion) {
+        this.idAsiento = idAsiento;
         this.fila = fila;
         this.numero = numero;
+        this.ubicacion = ubicacion;
         this.seccion = seccion;
     }
 
@@ -54,6 +57,14 @@ public class Asiento {
         this.numero = numero;
     }
 
+    public Ubicacion getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(Ubicacion ubicacion) {
+        this.ubicacion = ubicacion;
+    }
+
     public Seccion getSeccion() {
         return seccion;
     }
@@ -64,7 +75,7 @@ public class Asiento {
 
     @Override
     public String toString() {
-        return "Asiento{" + "idAsiento=" + idAsiento + ", fila=" + fila + ", numero=" + numero + ", seccion=" + seccion + '}';
+        return "Asiento{" + "idAsiento=" + idAsiento + ", fila=" + fila + ", numero=" + numero + ", ubicacion=" + ubicacion + ", seccion=" + seccion + '}';
     }
 
 }

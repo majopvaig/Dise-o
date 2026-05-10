@@ -8,14 +8,13 @@ import Controlador.interfaz.ICoordinadorAplicacion;
 import dtos.AsientoDTO;
 import dtos.AsientoEventoDTO;
 import dtos.BoletoDTO;
-import dtos.CobroDTO;
-import dtos.ENUMS.EstadoAsientoDTO;
 import dtos.ENUMS.EstadoBoletoDTO;
 import dtos.ENUMS.ReservacionEstadoDTO;
 import dtos.ENUMS.TipoEventoN;
 import dtos.EventoDTO;
 import dtos.ReservacionDTO;
 import dtos.SeccionDTO;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -67,6 +66,9 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
 
         initComponents();
 
+        txtInfo.setContentType("text/html");
+        txtInfo.setEditable(false);
+        txtInfo.setOpaque(false);
         BotonUtileria.estilizarBoton(btnVolver);
         BotonUtileria.estilizarBoton(btnComprar);
         lblTemporizador.setText(String.format(formatoTemporizador(tiempoRestante)));
@@ -82,8 +84,8 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
 
     public void modoPantalla() {
         if (evento.isGratuito()) {
-            lblTuSeccion.setText("Tus Boletos");
-            lblPrecio.setText("Cantidad:");
+            lblTuSeccion.setText("Tu Boleto");
+            lblPrecio.setText("");
             txtTotal.setText("Total: GRATIS");
             lblSecc.setText("");
             lblSeccion.setText("");
@@ -92,15 +94,7 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
             jLabel12.setText("");
             lblAsiento.setText("");
             jLabel14.setText("");
-            btnCant.setText("0");
-            btnCant.setEditable(false);
-            btnCant.setVisible(true);
-            btnMenos.setVisible(true);
-            btnMas.setVisible(true);
-            btnMenos.setEnabled(true);
-            btnMas.setEnabled(true);
-            btnCant.setEnabled(true);
-            btnComprar.setText("Adquirir Boleto(s)");
+            btnComprar.setText("Adquirir Boleto");
             PnlEstadio.setVisible(false);
             jSeparator1.setVisible(false);
             jSeparator2.setVisible(false);
@@ -112,14 +106,7 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
             jLabel10.setText("Fila");
             jLabel12.setText("Numero Asiento");
             jLabel14.setText("Precio Unitario");
-            btnMenos.setVisible(false);
-            btnMas.setVisible(false);
-            btnCant.setVisible(false);
-            btnMenos.setEnabled(false);
-            btnMas.setEnabled(false);
-            btnCant.setEnabled(false);
-            btnCant.setEditable(false);
-            btnComprar.setText("Comprar Boleto(s)");
+            btnComprar.setText("Comprar Boleto");
             PnlEstadio.setVisible(true);
             jSeparator1.setVisible(true);
             jSeparator2.setVisible(true);
@@ -186,7 +173,7 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
 
     private void cargarEstadio() {
         try {
-            Map<SeccionDTO, List<AsientoEventoDTO>> mapa = coordinador.obtenerMapaOcupacion(evento.getIdEvento());
+            Map<SeccionDTO, List<AsientoEventoDTO>> mapa = coordinador.obtenerMapaOcupacion(evento);
             List<AsientoDTO> catalogo = coordinador.obtenerCatalogoAsientos();
 
             if (mapa == null || catalogo == null) {
@@ -321,27 +308,37 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
         reservacionParcial = new ReservacionDTO();
 
         if (evento.getUrlImagen() != null && !evento.getUrlImagen().isEmpty()) {
-            ImageIcon icono = new ImageIcon(evento.getUrlImagen());
-            int ancho = getWidth() > 0 ? getWidth() : 306;
-            int alto = getHeight() > 0 ? getHeight() : 202;
 
-            Image img = icono.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
-            iconEvento.setIcon(new ImageIcon(img));
+            String rutaLimpia = evento.getUrlImagen().replace("/src/main/resources", "");
+            String rutaAlternativa = evento.getUrlImagen().replace("src/main/resources", "");
+
+            java.net.URL imgUrl = getClass().getResource(rutaLimpia);
+            if (imgUrl == null) {
+                imgUrl = getClass().getResource(rutaAlternativa);
+            }
+
+            if (imgUrl != null) {
+                ImageIcon icono = new ImageIcon(imgUrl);
+
+                int ancho = 306;
+                int alto = 202;
+
+                Image imagenEscalada = icono.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+                iconEvento.setIcon(new ImageIcon(imagenEscalada));
+            }
             iconEvento.setText("");
         }
 
         this.lblNombre.setText(evento.getNombreEvento());
-        /*
-        esta línea es pendejo no hace nada xq lit no acomoda un orto el texto de
-        la descripción, pero en fin
-        
-         */
-        this.txtInfo.setText("<html><div style='width: 350px; text-align: justify;'>" + evento.getInformacionEvento() + "</div></html>");
-        /*
-        para que la fecha se vea kawaii
-        1. ocupamos el formateador de fechas
-        2. aplicarselo a la fecha
-         */
+        txtInfo.setContentType("text/html");
+        txtInfo.setText("<html><div style='text-align: justify; font-family: sans-serif; font-size: 11px;'>"
+                + evento.getInformacionEvento() + "</div></html>");
+        txtInfo.setEditable(false);
+        txtInfo.setOpaque(false);
+        txtInfo.setBackground(new java.awt.Color(0, 0, 0, 0));
+        jScrollPane2.setOpaque(false);
+        jScrollPane2.getViewport().setOpaque(false);
+        jScrollPane2.setBorder(null);
         DateTimeFormatter formateadorFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         DateTimeFormatter formateadorHora = DateTimeFormatter.ofPattern("HH:mm");
         this.lblFechaHora.setText(String.valueOf(evento.getFechaHora().format(formateadorFecha)) + " - " + String.valueOf(evento.getFechaHora().format(formateadorHora)));
@@ -380,11 +377,9 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
         lblPrecio = new javax.swing.JLabel();
         txtTotal = new javax.swing.JTextField();
         btnComprar = new javax.swing.JButton();
-        btnCant = new javax.swing.JTextField();
-        btnMenos = new javax.swing.JButton();
-        btnMas = new javax.swing.JButton();
         PnlEstadio = new javax.swing.JPanel();
-        txtInfo = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        txtInfo = new javax.swing.JTextPane();
 
         setOpaque(false);
 
@@ -467,7 +462,7 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
         btnComprar.setBackground(new java.awt.Color(31, 92, 204));
         btnComprar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnComprar.setForeground(new java.awt.Color(255, 255, 255));
-        btnComprar.setText("Comprar Boleto(s)");
+        btnComprar.setText("Comprar Boleto");
         btnComprar.setBorderPainted(false);
         btnComprar.setFocusPainted(false);
         btnComprar.setOpaque(true);
@@ -479,24 +474,6 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
         btnComprar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnComprarActionPerformed(evt);
-            }
-        });
-
-        btnMenos.setBackground(new java.awt.Color(102, 204, 255));
-        btnMenos.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnMenos.setText("-");
-        btnMenos.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnMenosMouseClicked(evt);
-            }
-        });
-
-        btnMas.setBackground(new java.awt.Color(102, 204, 255));
-        btnMas.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnMas.setText("+");
-        btnMas.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnMasMouseClicked(evt);
             }
         });
 
@@ -540,15 +517,8 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
                         .addGap(6, 6, 6)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel14)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(lblPrecio)
-                                .addGap(38, 38, 38)
-                                .addComponent(btnMenos, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnCant, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnMas, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(89, Short.MAX_VALUE))))
+                            .addComponent(lblPrecio))
+                        .addContainerGap(182, Short.MAX_VALUE))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lblTuSeccion)
@@ -586,12 +556,8 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel14)
                 .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblPrecio)
-                    .addComponent(btnCant, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnMenos)
-                    .addComponent(btnMas))
-                .addGap(39, 39, 39)
+                .addComponent(lblPrecio)
+                .addGap(43, 43, 43)
                 .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnComprar)
@@ -604,15 +570,18 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
         PnlEstadio.setLayout(PnlEstadioLayout);
         PnlEstadioLayout.setHorizontalGroup(
             PnlEstadioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 307, Short.MAX_VALUE)
+            .addGap(0, 287, Short.MAX_VALUE)
         );
         PnlEstadioLayout.setVerticalGroup(
             PnlEstadioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 291, Short.MAX_VALUE)
+            .addGap(0, 288, Short.MAX_VALUE)
         );
 
+        txtInfo.setEditable(false);
+        txtInfo.setBorder(null);
         txtInfo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        txtInfo.setText("Información Evento");
+        txtInfo.setDisabledTextColor(new java.awt.Color(255, 255, 255));
+        jScrollPane2.setViewportView(txtInfo);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -623,27 +592,30 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(iconEvento, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(6, 6, 6)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblNombre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                                .addComponent(PnlEstadio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(69, 69, 69))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblFechaHora, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblUbicacion))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(PnlEstadio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(69, 69, 69)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblNombre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jScrollPane2))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lblUbicacion)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(55, 55, 55)
+                                .addComponent(lblTemporizador))
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(55, 55, 55)
-                        .addComponent(lblTemporizador))
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, 0))
+                        .addComponent(lblFechaHora, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -659,18 +631,18 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblTemporizador, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblNombre))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblFechaHora)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(26, 26, 26)
+                                .addGap(138, 138, 138)
                                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(lblUbicacion)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(12, 12, 12)
+                                .addComponent(lblFechaHora)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lblUbicacion)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(PnlEstadio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGap(12, 12, 12))))))
         );
@@ -706,18 +678,6 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
         }
         if (evento.isGratuito()) {
 
-            int boletoAdquirir = Integer.parseInt(btnCant.getText());
-
-            if (boletoAdquirir == 0) {
-                JOptionPane.showMessageDialog(this, "Selecciona un boleto.");
-                return;
-            }
-
-            if (boletoAdquirir > 1) {
-                JOptionPane.showMessageDialog(this, "Solo puede adquirir un boleto por compra.");
-                return;
-            }
-
             BoletoDTO boletoGratis = new BoletoDTO("", 0.0, EstadoBoletoDTO.ACTIVO, evento, null);
             boletoGratis.setCodigoQR(coordinador.generarQR(evento, null));
 
@@ -745,17 +705,18 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Solo puede adquirir un boleto por compra.");
             return;
         }
-
+        
         AsientoEventoDTO asientoDTO = new AsientoEventoDTO(
-                EstadoAsientoDTO.RESERVADO,
-                asientosSeleccionados.get(0).getIdAsiento(),
-                evento.getIdEvento()
+                asientosSeleccionados.get(0).getIdAsientoEvento(),
+                asientosSeleccionados.get(0).getPrecio(),
+                asientosSeleccionados.get(0).getEstadoAsiento(),
+                asientosSeleccionados.get(0).getAsiento(),
+                asientosSeleccionados.get(0).getEvento()
         );
 
         BoletoDTO boleto = new BoletoDTO(
-                null,
                 coordinador.generarQR(evento, asientoDTO),
-                0.0, // El backend maneja el precio real
+                0.0, 
                 EstadoBoletoDTO.ACTIVO,
                 evento,
                 asientoDTO
@@ -767,6 +728,10 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
         reservacionParcial.setEstado(ReservacionEstadoDTO.ACTIVA);
         reservacionParcial.setUsuario(coordinador.getUsuarioSesion());
 
+        /*
+        esto irá en comentarios xq rn no aplica
+        */
+        /*
         int opcion = JOptionPane.showConfirmDialog(this, "¿Desea pagar con créditos de la aplicación?");
 
         // ================= PAGO CON CRÉDITOS =================
@@ -795,43 +760,13 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
 
             // Ahora sí vas a la pantalla de pago
             coordinador.mostrarPago(reservacionParcial);
-        }
+        }*/
+         // Guardas como pendiente en backend
+        coordinador.venderAsientos(asientosSeleccionados, totalCompra, false, reservacionParcial);
+
+        // Ahora sí vas a la pantalla de pago
+        coordinador.mostrarPago(reservacionParcial);
     }//GEN-LAST:event_btnComprarMouseClicked
-
-    private void btnMenosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMenosMouseClicked
-        // TODO add your handling code here:
-        try {
-            int cantidadActual = Integer.parseInt(btnCant.getText());
-
-            if (cantidadActual > 0) {
-                cantidadActual--;
-                btnCant.setText(String.valueOf(cantidadActual));
-            }
-        } catch (NumberFormatException ex) {
-            btnCant.setText("0");
-        }
-
-
-    }//GEN-LAST:event_btnMenosMouseClicked
-
-    private void btnMasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMasMouseClicked
-        // TODO add your handling code here:
-        try {
-            int cantidadActual = Integer.parseInt(btnCant.getText());
-            int limiteBoletos = evento.getDisponibilidad();
-
-            if (cantidadActual < limiteBoletos) {
-                cantidadActual++;
-                btnCant.setText(String.valueOf(cantidadActual));
-            } else {
-                JOptionPane.showMessageDialog(PnlConsultarEvento.this,
-                        "Solo puedes adquirir hasta " + limiteBoletos + " boletos por transacción.",
-                        "Límite alcanzado", JOptionPane.WARNING_MESSAGE);
-            }
-        } catch (NumberFormatException ex) {
-            btnCant.setText("1");
-        }
-    }//GEN-LAST:event_btnMasMouseClicked
 
     private void btnComprarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprarActionPerformed
 //        reservacionParcial.setFechaHora(LocalDateTime.now());
@@ -847,15 +782,16 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
         // TODO add your handling code here:
+        int opcion = JOptionPane.showConfirmDialog(this, "¿Seguro de volver? Esto eliminará el proceso de compra actual.");
+        if(opcion == JOptionPane.OK_OPTION){
+            coordinador.mostrarInicio();
+        }
     }//GEN-LAST:event_btnVolverActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PnlEstadio;
-    private javax.swing.JTextField btnCant;
     private javax.swing.JButton btnComprar;
-    private javax.swing.JButton btnMas;
-    private javax.swing.JButton btnMenos;
     private javax.swing.JButton btnVolver;
     private javax.swing.JLabel iconEvento;
     private javax.swing.JLabel jLabel10;
@@ -863,6 +799,7 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
@@ -877,7 +814,7 @@ public class PnlConsultarEvento extends javax.swing.JPanel {
     private javax.swing.JLabel lblTemporizador;
     private javax.swing.JLabel lblTuSeccion;
     private javax.swing.JLabel lblUbicacion;
-    private javax.swing.JLabel txtInfo;
+    private javax.swing.JTextPane txtInfo;
     private javax.swing.JTextField txtTotal;
     // End of variables declaration//GEN-END:variables
 }

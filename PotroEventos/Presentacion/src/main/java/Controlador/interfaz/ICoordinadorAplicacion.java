@@ -53,11 +53,11 @@ public interface ICoordinadorAplicacion {
 
     public List<ReservacionDTO> consultarReservaciones(String idUsuario);
 
-    public Map<SeccionDTO, List<AsientoEventoDTO>> obtenerMapaOcupacion(String idEvento);
+    public Map<SeccionDTO, List<AsientoEventoDTO>> obtenerMapaOcupacion(EventoDTO evento);
 
     public List<AsientoDTO> obtenerCatalogoAsientos();
 
-    public ReservacionDTO agregarReservacion(ReservacionDTO reservacion) throws CoordinadorException;
+    public boolean agregarReservacion(ReservacionDTO reservacion) throws CoordinadorException;
 
     public UsuarioDTO iniciarSesion(LoginDTO login) throws CoordinadorException;
 
@@ -79,7 +79,7 @@ public interface ICoordinadorAplicacion {
 
     public boolean venderAsientos(List<AsientoEventoDTO> asientosSeleccionados, Long totalCompra, boolean gratuito, ReservacionDTO reservacion);
 
-    boolean realizarCompra(TarjetaDTO noTarjeta, CobroDTO cobro);
+    String realizarCompra(TarjetaDTO noTarjeta, CobroDTO cobro);
 
     Long getTotalPendiente();
 

@@ -19,25 +19,28 @@ public class ReservacionMongoEntidad {
     
     private double total;
     private BoletoMongoEntidad boleto;
-    private UsuarioMongoEntidad usuario;
+    private String cobro;
+    private ObjectId usuario;
     private LocalDateTime fechaRegistro;
     private String estado;
 
     public ReservacionMongoEntidad() {
     }
 
-    public ReservacionMongoEntidad(double total, BoletoMongoEntidad boleto, UsuarioMongoEntidad usuario, LocalDateTime fechaRegistro, String estado) {
+    public ReservacionMongoEntidad(double total, BoletoMongoEntidad boleto, String cobro, ObjectId usuario, LocalDateTime fechaRegistro, String estado) {
         this.total = total;
         this.boleto = boleto;
+        this.cobro = cobro;
         this.usuario = usuario;
         this.fechaRegistro = fechaRegistro;
         this.estado = estado;
     }
 
-    public ReservacionMongoEntidad(ObjectId id, double total, BoletoMongoEntidad boleto, UsuarioMongoEntidad usuario, LocalDateTime fechaRegistro, String estado) {
+    public ReservacionMongoEntidad(ObjectId id, double total, BoletoMongoEntidad boleto, String cobro, ObjectId usuario, LocalDateTime fechaRegistro, String estado) {
         this.id = id;
         this.total = total;
         this.boleto = boleto;
+        this.cobro = cobro;
         this.usuario = usuario;
         this.fechaRegistro = fechaRegistro;
         this.estado = estado;
@@ -74,12 +77,27 @@ public class ReservacionMongoEntidad {
         this.boleto = boleto;
     }
 
-    public UsuarioMongoEntidad getUsuario() {
+    public String getCobro() {
+        return cobro;
+    }
+
+    public void setCobro(String cobro) {
+        this.cobro = cobro;
+    }
+
+    public ObjectId getUsuario() {
         return usuario;
     }
 
-    public void setUsuario(UsuarioMongoEntidad usuario) {
+    public void setUsuario(ObjectId usuario) {
         this.usuario = usuario;
+    }
+    
+    public String getUsuarioComoTexto(){
+        if(usuario == null){
+            return null;
+        }
+        return usuario.toHexString();
     }
 
     public LocalDateTime getFechaRegistro() {
@@ -104,9 +122,11 @@ public class ReservacionMongoEntidad {
                 + "id=" + getIdComoTexto() 
                 + ", total=" + total 
                 + ", boleto=" + boleto 
-                + ", usuario=" + usuario 
+                + ", cobro=" + cobro
+                + ", usuario=" + getUsuarioComoTexto() 
                 + ", fechaRegistro=" + fechaRegistro 
-                + ", estado=" + estado + '}';
+                + ", estado=" + estado 
+                + '}';
     }
     
 }

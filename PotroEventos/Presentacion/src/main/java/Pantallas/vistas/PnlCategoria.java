@@ -52,21 +52,24 @@ public class PnlCategoria extends javax.swing.JPanel {
             return;
         }
 
-        java.net.URL url = getClass().getResource(categoria.getUrlImagen());
-        if (url == null) {
-            return;
-        }
+            String rutaLimpia = categoria.getUrlImagen().replace("/src/main/resources", "");
+            String rutaAlternativa = categoria.getUrlImagen().replace("src/main/resources", "");
 
-        ImageIcon icono = new ImageIcon(url);
+            java.net.URL imgUrl = getClass().getResource(rutaLimpia);
+            if (imgUrl == null) {
+                imgUrl = getClass().getResource(rutaAlternativa);
+            }
 
-        int lblW = 250;
-        int lblH = 180;
+            if (imgUrl != null) {
+                ImageIcon icono = new ImageIcon(imgUrl);
 
-        Image img = icono.getImage().getScaledInstance(lblW, lblH, Image.SCALE_SMOOTH);
+                int ancho = 306;
+                int alto = 202;
 
-        iconCategoria.setIcon(new ImageIcon(img));
-        iconCategoria.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        iconCategoria.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
+                Image imagenEscalada = icono.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+                iconCategoria.setIcon(new ImageIcon(imagenEscalada));
+            }
+            iconCategoria.setText("");
     }
 
     /**

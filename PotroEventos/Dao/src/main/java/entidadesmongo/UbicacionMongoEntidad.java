@@ -4,6 +4,8 @@
  */
 package entidadesmongo;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.bson.codecs.pojo.annotations.BsonId;
 import org.bson.types.ObjectId;
 
@@ -19,8 +21,10 @@ public class UbicacionMongoEntidad {
     private String nombre;
     private Integer capacidad;
     private String tipoUbicacion;
+    private List<SeccionMongoEntidad> secciones;
 
     public UbicacionMongoEntidad() {
+        secciones = new ArrayList<>();
     }
 
     public UbicacionMongoEntidad(String nombre, Integer capacidad, String tipoUbicacion) {
@@ -28,12 +32,20 @@ public class UbicacionMongoEntidad {
         this.capacidad = capacidad;
         this.tipoUbicacion = tipoUbicacion;
     }
+    
+    public UbicacionMongoEntidad(String nombre, Integer capacidad, String tipoUbicacion, List<SeccionMongoEntidad> secciones) {
+        this.nombre = nombre;
+        this.capacidad = capacidad;
+        this.tipoUbicacion = tipoUbicacion;
+        this.secciones = secciones;
+    }
 
-    public UbicacionMongoEntidad(ObjectId id, String nombre, Integer capacidad, String tipoUbicacion) {
+    public UbicacionMongoEntidad(ObjectId id, String nombre, Integer capacidad, String tipoUbicacion, List<SeccionMongoEntidad> secciones) {
         this.id = id;
         this.nombre = nombre;
         this.capacidad = capacidad;
         this.tipoUbicacion = tipoUbicacion;
+        this.secciones = secciones;
     }
 
     public ObjectId getId() {
@@ -75,13 +87,23 @@ public class UbicacionMongoEntidad {
         this.tipoUbicacion = tipoUbicacion;
     }
 
+    public List<SeccionMongoEntidad> getSecciones() {
+        return secciones;
+    }
+
+    public void setSecciones(List<SeccionMongoEntidad> secciones) {
+        this.secciones = secciones;
+    }
+
     @Override
     public String toString() {
         return "UbicacionMongoEntidad{" 
                 + "id=" + getIdComoTexto() 
                 + ", nombre=" + nombre 
                 + ", capacidad=" + capacidad 
-                + ", tipoUbicacion=" + tipoUbicacion + '}';
+                + ", tipoUbicacion=" + tipoUbicacion 
+                + ", secciones=" + secciones 
+                + '}';
     }
     
 }

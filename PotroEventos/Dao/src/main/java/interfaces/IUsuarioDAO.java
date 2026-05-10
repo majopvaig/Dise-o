@@ -13,8 +13,8 @@ import excepciones.PersistenciaException;
  */
 public interface IUsuarioDAO {
 
-    boolean restarCreditos(Integer cantidad, String idUsuario) throws PersistenciaException;
-
+    Usuario obtenerPorId(String idUsuario) throws PersistenciaException;
+    
     Usuario obtenerUsuario(Usuario usuario) throws PersistenciaException;
 
     Usuario guardarUsuario(Usuario usuario) throws PersistenciaException;

@@ -82,7 +82,6 @@ public class FrmPlantillaSistema extends javax.swing.JFrame {
 
         jpnlContenedor.revalidate();
         jpnlContenedor.repaint();
-        creditos.setText(usuario.getCreditos().toString());
     }
 
     public void setCategorias() {
@@ -123,8 +122,6 @@ public class FrmPlantillaSistema extends javax.swing.JFrame {
         btnConsultar = new javax.swing.JButton();
         botonInicio1 = new javax.swing.JButton();
         btnCerrarSesion = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        creditos = new javax.swing.JLabel();
         jpnlContenedor = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -147,6 +144,7 @@ public class FrmPlantillaSistema extends javax.swing.JFrame {
         btnConsultar.setForeground(new java.awt.Color(255, 255, 255));
         btnConsultar.setText("Consultar");
         btnConsultar.setBorder(null);
+        btnConsultar.setFocusPainted(false);
         btnConsultar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnConsultarMouseClicked(evt);
@@ -163,6 +161,7 @@ public class FrmPlantillaSistema extends javax.swing.JFrame {
         botonInicio1.setForeground(new java.awt.Color(255, 255, 255));
         botonInicio1.setText("Inicio");
         botonInicio1.setBorder(null);
+        botonInicio1.setFocusPainted(false);
         botonInicio1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 botonInicio1MouseClicked(evt);
@@ -185,14 +184,6 @@ public class FrmPlantillaSistema extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Créditos:");
-
-        creditos.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        creditos.setForeground(new java.awt.Color(255, 255, 255));
-        creditos.setText("-");
-
         javax.swing.GroupLayout jPanelAzulOscuroLayout = new javax.swing.GroupLayout(jPanelAzulOscuro);
         jPanelAzulOscuro.setLayout(jPanelAzulOscuroLayout);
         jPanelAzulOscuroLayout.setHorizontalGroup(
@@ -203,10 +194,6 @@ public class FrmPlantillaSistema extends javax.swing.JFrame {
                 .addGap(54, 54, 54)
                 .addComponent(btnConsultar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(creditos, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addComponent(btnCerrarSesion)
                 .addGap(18, 18, 18))
         );
@@ -217,9 +204,7 @@ public class FrmPlantillaSistema extends javax.swing.JFrame {
                 .addGroup(jPanelAzulOscuroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnConsultar)
                     .addComponent(botonInicio1)
-                    .addComponent(btnCerrarSesion)
-                    .addComponent(jLabel1)
-                    .addComponent(creditos))
+                    .addComponent(btnCerrarSesion))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -308,8 +293,6 @@ public class FrmPlantillaSistema extends javax.swing.JFrame {
     private javax.swing.JButton botonInicio1;
     private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JButton btnConsultar;
-    private javax.swing.JLabel creditos;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanelAzul;
     private javax.swing.JPanel jPanelAzulOscuro;
     private javax.swing.JPanel jPanelBase;

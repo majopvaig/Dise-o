@@ -13,6 +13,8 @@ import java.util.List;
  * @author Kaleb
  */
 public interface IAsientoDAO {
+    
+    public Asiento consultarPorID(String idAsiento) throws PersistenciaException;
 
     public List<Asiento> consultarAsientos() throws PersistenciaException;
 }

@@ -16,7 +16,7 @@ public class ReservacionDTO {
     private String idReservacion;
     private Double total;
     private BoletoDTO boleto;
-    private CobroDTO cobro;
+    private String cobro;
     private UsuarioDTO usuario;
     private LocalDateTime fechaHora;
     private ReservacionEstadoDTO estado;
@@ -24,7 +24,7 @@ public class ReservacionDTO {
     public ReservacionDTO() {
     }
 
-    public ReservacionDTO(String idReservacion, Double total, BoletoDTO boleto, CobroDTO cobro, UsuarioDTO usuario, LocalDateTime fechaHora, ReservacionEstadoDTO estado) {
+    public ReservacionDTO(String idReservacion, Double total, BoletoDTO boleto, String cobro, UsuarioDTO usuario, LocalDateTime fechaHora, ReservacionEstadoDTO estado) {
         this.idReservacion = idReservacion;
         this.total = total;
         this.boleto = boleto;
@@ -34,7 +34,7 @@ public class ReservacionDTO {
         this.estado = estado;
     }
 
-    public ReservacionDTO(Double total, BoletoDTO boleto, CobroDTO cobro, UsuarioDTO usuario, LocalDateTime fechaHora, ReservacionEstadoDTO estado) {
+    public ReservacionDTO(Double total, BoletoDTO boleto, String cobro, UsuarioDTO usuario, LocalDateTime fechaHora, ReservacionEstadoDTO estado) {
         this.total = total;
         this.boleto = boleto;
         this.cobro = cobro;
@@ -67,11 +67,11 @@ public class ReservacionDTO {
         this.boleto = boleto;
     }
 
-    public CobroDTO getCobro() {
+    public String getCobro() {
         return cobro;
     }
 
-    public void setCobro(CobroDTO cobro) {
+    public void setCobro(String cobro) {
         this.cobro = cobro;
     }
 

@@ -5,8 +5,12 @@
 package adaptadores;
 
 import Entitys.Asiento;
+import Entitys.Seccion;
+import Entitys.Ubicacion;
+import daos.UbicacionDAO;
 import entidadesmongo.AsientoMongoEntidad;
 import excepciones.PersistenciaException;
+import interfaces.IUbicacionDAO;
 import java.util.ArrayList;
 import java.util.List;
 import org.bson.types.ObjectId;
@@ -16,6 +20,8 @@ import org.bson.types.ObjectId;
  * @author maria
  */
 public class AsientoPersistenciaAdapter {
+    
+    private static IUbicacionDAO ubicacionDAO = UbicacionDAO.getInstance();
     
     public static AsientoMongoEntidad convertirAMongo(Asiento dominio) throws PersistenciaException {
         if(dominio == null){
@@ -27,7 +33,8 @@ public class AsientoPersistenciaAdapter {
         mongo.setId(convertirStringAObjectId(dominio.getIdAsiento()));
         mongo.setFila(dominio.getFila());
         mongo.setNumero(dominio.getNumero());
-        mongo.setSeccion(SeccionPersistenciaAdapter.convertirAMongo(dominio.getSeccion()));
+        mongo.setUbicacion(convertirStringAObjectId(dominio.getUbicacion().getIdUbicacion()));
+        mongo.setSeccion(convertirStringAObjectId(dominio.getSeccion().getIdSeccion()));
         
         return mongo;
     }
@@ -42,7 +49,16 @@ public class AsientoPersistenciaAdapter {
         dominio.setIdAsiento(mongo.getIdComoTexto());
         dominio.setFila(mongo.getFila());
         dominio.setNumero(mongo.getNumero());
-        dominio.setSeccion(SeccionPersistenciaAdapter.convertirADominio(mongo.getSeccion()));
+        
+        Ubicacion u = ubicacionDAO.consultarPorID(mongo.getUbicacionComoTexto());
+        if(u != null){
+            dominio.setUbicacion(u);
+        }
+        
+        Seccion s = ubicacionDAO.buscarSeccionPorId(mongo.getUbicacionComoTexto(), mongo.getSeccionComoTexto());
+        if(s != null){
+            dominio.setSeccion(s);
+        }
         
         return dominio;
     }

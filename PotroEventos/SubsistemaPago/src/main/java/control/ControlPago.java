@@ -68,7 +68,7 @@ public class ControlPago {
      * @return true si fue exitoso
      * @throws PagoException si ocurre error
      */
-    public boolean realizarPago(TarjetaDTO tarjetaDTO, CobroDTO cobroDTO) throws PagoException {
+    public String realizarPago(TarjetaDTO tarjetaDTO, CobroDTO cobroDTO) throws PagoException {
         try {
             validarDatos(tarjetaDTO, cobroDTO);
 
@@ -87,7 +87,7 @@ public class ControlPago {
                 LOG.log(Level.INFO,
                         "Pago exitoso. ID: {0}, Estado: {1}",
                         new Object[]{cargo.getId(), cargo.getStatus()});
-                return true;
+                return cargo.getId();
             }
 
             throw new PagoException("La transacción no fue aprobada.");

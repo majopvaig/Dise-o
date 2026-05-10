@@ -42,7 +42,7 @@ public interface IControlCompraBoleto {
      */
     boolean agregarReservacion(ReservacionDTO reservacion) throws CompraBoletoException;
 
-    public Map<SeccionDTO, List<AsientoEventoDTO>> obtenerMapaOcupacion(String idEvento) throws CompraBoletoException;
+    public Map<SeccionDTO, List<AsientoEventoDTO>> obtenerMapaOcupacion(EventoDTO evento) throws CompraBoletoException;
 
     public String generarCodigoQR(EventoDTO evento, AsientoEventoDTO asiento) throws CompraBoletoException;
 
@@ -52,7 +52,7 @@ public interface IControlCompraBoleto {
 
     public boolean venderAsientos(List<AsientoEventoDTO> asientosSeleccionados, Long totalCompra, boolean gratuito, ReservacionDTO reservacion) throws CompraBoletoException;
 
-    public boolean realizarCompra(TarjetaDTO tarjeta, CobroDTO cobro) throws CompraBoletoException;
+    public String realizarCompra(TarjetaDTO tarjeta, CobroDTO cobro) throws CompraBoletoException;
 
     public Long getTotalPendiente();
 

@@ -4,10 +4,11 @@
  */
 package control;
 
+import adaptadores.UsuarioInstitucionalAdapter;
 import adapter.UsuarioITSONAdapter;
 import dao.UsuarioITSONDAO;
-import dominio.UsuarioITSON;
 import dtos.UsuarioITSONDTO;
+import dtos.UsuarioInstitucionalDTO;
 import excepciones.ITSONException;
 
 /**
@@ -18,9 +19,26 @@ public class ControlITSON {
     
     private UsuarioITSONDAO usuarioItsonDAO = UsuarioITSONDAO.getInstance();
     
-    protected UsuarioITSONDTO buscarUsuario(UsuarioITSONDTO usuario){
+    protected boolean validarObjetoUsuario(UsuarioInstitucionalDTO usuario){
+        if(usuario == null){
+            return false;
+        }
+        
+        if(usuario.getIdITSON() == null){
+            return false;
+        }
+        
+        if(usuario.getClaveITSON() == null){
+            return false;
+        }
+        
+        return true;
+    }
+    
+    protected UsuarioITSONDTO buscarUsuario(UsuarioInstitucionalDTO usuario){
         try{
-            return UsuarioITSONAdapter.entidadADTO(usuarioItsonDAO.consultarUsuario(UsuarioITSONAdapter.dtoAEntidad(usuario)));
+            UsuarioITSONDTO u = UsuarioInstitucionalAdapter.dtoAInfraestructura(usuario);
+            return UsuarioITSONAdapter.entidadADTO(usuarioItsonDAO.consultarUsuario(UsuarioITSONAdapter.dtoAEntidad(u)));
         } catch(ITSONException e){
             return null;
         }

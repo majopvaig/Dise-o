@@ -69,7 +69,7 @@ public class CompraBoletoFachada implements ICompraBoleto {
     }
 
     @Override
-    public boolean realizarCompra(TarjetaDTO noTarjeta, CobroDTO cobro) throws CompraBoletoException {
+    public String realizarCompra(TarjetaDTO noTarjeta, CobroDTO cobro) throws CompraBoletoException {
         return controlCompra.realizarCompra(noTarjeta, cobro);
     }
 
@@ -79,8 +79,8 @@ public class CompraBoletoFachada implements ICompraBoleto {
     }
 
     @Override
-    public Map<SeccionDTO, List<AsientoEventoDTO>> obtenerMapaOcupacion(String idEvento) throws CompraBoletoException {
-        return controlCompra.obtenerMapaOcupacion(idEvento);
+    public Map<SeccionDTO, List<AsientoEventoDTO>> obtenerMapaOcupacion(EventoDTO evento) throws CompraBoletoException {
+        return controlCompra.obtenerMapaOcupacion(evento);
     }
     
     @Override

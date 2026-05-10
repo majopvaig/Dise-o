@@ -42,6 +42,16 @@ public class SeccionAdapter {
         }
         return listaDtos;
     }
+    
+    public static List<Seccion> listaDTOsAEntidades(List<SeccionDTO> dtos) {
+        List<Seccion> listaEntidades = new ArrayList<>();
+        if (dtos != null) {
+            for (SeccionDTO s : dtos) {
+                listaEntidades.add(dtoAEntidad(s));
+            }
+        }
+        return listaEntidades;
+    }
 
     /**
      * Convierte un DTO a una entidad Seccion (Útil para registros/updates).

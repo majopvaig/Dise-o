@@ -5,6 +5,7 @@
 package dtos;
 
 import dtos.ENUMS.TipoUbicacionN;
+import java.util.List;
 
 /**
  *
@@ -16,21 +17,30 @@ public class UbicacionDTO {
     private String nombre;
     private Integer capacidad;
     private TipoUbicacionN tipo;
+    private List<SeccionDTO> secciones;
 
     public UbicacionDTO() {
-    }
-
-    public UbicacionDTO(String idUbicacion, String nombre, Integer capacidad, TipoUbicacionN tipo) {
-        this.idUbicacion = idUbicacion;
-        this.nombre = nombre;
-        this.capacidad = capacidad;
-        this.tipo = tipo;
     }
 
     public UbicacionDTO(String nombre, Integer capacidad, TipoUbicacionN tipo) {
         this.nombre = nombre;
         this.capacidad = capacidad;
         this.tipo = tipo;
+    }
+
+    public UbicacionDTO(String nombre, Integer capacidad, TipoUbicacionN tipo, List<SeccionDTO> secciones) {
+        this.nombre = nombre;
+        this.capacidad = capacidad;
+        this.tipo = tipo;
+        this.secciones = secciones;
+    }
+
+    public UbicacionDTO(String idUbicacion, String nombre, Integer capacidad, TipoUbicacionN tipo, List<SeccionDTO> secciones) {
+        this.idUbicacion = idUbicacion;
+        this.nombre = nombre;
+        this.capacidad = capacidad;
+        this.tipo = tipo;
+        this.secciones = secciones;
     }
 
     public String getIdUbicacion() {
@@ -63,6 +73,14 @@ public class UbicacionDTO {
 
     public void setTipo(TipoUbicacionN tipo) {
         this.tipo = tipo;
+    }
+
+    public List<SeccionDTO> getSecciones() {
+        return secciones;
+    }
+
+    public void setSecciones(List<SeccionDTO> secciones) {
+        this.secciones = secciones;
     }
 
 }

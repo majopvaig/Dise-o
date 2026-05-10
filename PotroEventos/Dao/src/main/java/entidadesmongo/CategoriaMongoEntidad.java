@@ -67,9 +67,10 @@ public class CategoriaMongoEntidad {
     @Override
     public String toString() {
         return "CategoriaMongoEntidad{" 
-                + "id=" + id 
+                + "id=" + getIdComoTexto() 
                 + ", nombre=" + nombre 
-                + ", urlImagen=" + urlImagen + '}';
+                + ", urlImagen=" + urlImagen 
+                + '}';
     }
     
 }

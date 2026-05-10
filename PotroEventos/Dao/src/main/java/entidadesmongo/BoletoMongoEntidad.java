@@ -4,6 +4,8 @@
  */
 package entidadesmongo;
 
+import entidadesresumenmongo.AsientoEventoResumenMongo;
+import entidadesresumenmongo.EventoResumenMongo;
 import org.bson.codecs.pojo.annotations.BsonId;
 import org.bson.types.ObjectId;
 
@@ -13,48 +15,21 @@ import org.bson.types.ObjectId;
  */
 public class BoletoMongoEntidad {
     
-    @BsonId
-    private ObjectId id;
-    
     private String codigoQR;
     private double precio;
     private String estado;
-    private EventoMongoEntidad evento;
-    private AsientoEventoMongoEntidad asiento;
+    private EventoResumenMongo evento;
+    private AsientoEventoResumenMongo asiento;
 
     public BoletoMongoEntidad() {
     }
 
-    public BoletoMongoEntidad(String codigoQR, double precio, String estado, EventoMongoEntidad evento, AsientoEventoMongoEntidad asiento) {
+    public BoletoMongoEntidad(String codigoQR, double precio, String estado, EventoResumenMongo evento, AsientoEventoResumenMongo asiento) {
         this.codigoQR = codigoQR;
         this.precio = precio;
         this.estado = estado;
         this.evento = evento;
         this.asiento = asiento;
-    }
-
-    public BoletoMongoEntidad(ObjectId id, String codigoQR, double precio, String estado, EventoMongoEntidad evento, AsientoEventoMongoEntidad asiento) {
-        this.id = id;
-        this.codigoQR = codigoQR;
-        this.precio = precio;
-        this.estado = estado;
-        this.evento = evento;
-        this.asiento = asiento;
-    }
-
-    public ObjectId getId() {
-        return id;
-    }
-
-    public void setId(ObjectId id) {
-        this.id = id;
-    }
-    
-    public String getIdComoTexto(){
-        if(id == null){
-            return null;
-        }
-        return id.toHexString();
     }
 
     public String getCodigoQR() {
@@ -81,31 +56,31 @@ public class BoletoMongoEntidad {
         this.estado = estado;
     }
 
-    public EventoMongoEntidad getEvento() {
+    public EventoResumenMongo getEvento() {
         return evento;
     }
 
-    public void setEvento(EventoMongoEntidad evento) {
+    public void setEvento(EventoResumenMongo evento) {
         this.evento = evento;
     }
 
-    public AsientoEventoMongoEntidad getAsiento() {
+    public AsientoEventoResumenMongo getAsiento() {
         return asiento;
     }
 
-    public void setAsiento(AsientoEventoMongoEntidad asiento) {
+    public void setAsiento(AsientoEventoResumenMongo asiento) {
         this.asiento = asiento;
     }
 
     @Override
     public String toString() {
         return "BoletoMongoEntidad{" 
-                + "id=" + id 
                 + ", codigoQR=" + codigoQR 
                 + ", precio=" + precio 
                 + ", estado=" + estado 
                 + ", evento=" + evento 
-                + ", asiento=" + asiento + '}';
+                + ", asiento=" + asiento 
+                + '}';
     }
     
 }

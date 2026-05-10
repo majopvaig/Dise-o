@@ -5,6 +5,7 @@
 package Entitys;
 
 import Entitys.ENUMS.TipoUbicacionP;
+import java.util.List;
 
 /**
  *
@@ -16,21 +17,24 @@ public class Ubicacion {
     private String nombre;
     private Integer capacidad;
     private TipoUbicacionP tipo;
+    private List<Seccion> secciones;
 
     public Ubicacion() {
     }
 
-    public Ubicacion(String idUbicacion, String nombre, Integer capacidad, TipoUbicacionP tipo) {
+    public Ubicacion(String nombre, Integer capacidad, TipoUbicacionP tipo, List<Seccion> secciones) {
+        this.nombre = nombre;
+        this.capacidad = capacidad;
+        this.tipo = tipo;
+        this.secciones = secciones;
+    }
+
+    public Ubicacion(String idUbicacion, String nombre, Integer capacidad, TipoUbicacionP tipo, List<Seccion> secciones) {
         this.idUbicacion = idUbicacion;
         this.nombre = nombre;
         this.capacidad = capacidad;
         this.tipo = tipo;
-    }
-
-    public Ubicacion(String nombre, Integer capacidad, TipoUbicacionP tipo) {
-        this.nombre = nombre;
-        this.capacidad = capacidad;
-        this.tipo = tipo;
+        this.secciones = secciones;
     }
 
     public String getIdUbicacion() {
@@ -63,6 +67,14 @@ public class Ubicacion {
 
     public void setTipo(TipoUbicacionP tipo) {
         this.tipo = tipo;
+    }
+
+    public List<Seccion> getSecciones() {
+        return secciones;
+    }
+
+    public void setSecciones(List<Seccion> secciones) {
+        this.secciones = secciones;
     }
 
 }

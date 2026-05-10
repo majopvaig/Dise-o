@@ -34,14 +34,6 @@ public class UsuarioDAO implements IUsuarioDAO {
         return instance;
     }
 
-    /*
-    esta le daré cuello
-    */
-    @Override
-    public boolean restarCreditos(Integer cantidad, String idUsuario) throws PersistenciaException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
     @Override
     public Usuario obtenerUsuario(Usuario usuario) throws PersistenciaException {
         if (usuario == null) {
@@ -83,6 +75,18 @@ public class UsuarioDAO implements IUsuarioDAO {
 
         } catch (MongoException e) {
             throw new PersistenciaException("No fue posible guardar al usuario");
+        }
+    }
+
+    @Override
+    public Usuario obtenerPorId(String idUsuario) throws PersistenciaException {
+        try{
+            UsuarioMongoEntidad seccion = coleccionUsuarios
+                    .find(eq("_id", new ObjectId(idUsuario)))
+                    .first();
+            return UsuarioPersistenciaAdapter.convertirADominio(seccion);
+        } catch(MongoException me){
+            throw new PersistenciaException("No fue posible obtener al usuario.");
         }
     }
 

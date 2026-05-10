@@ -36,7 +36,7 @@ public class EventoAdapter {
         }
   
         return new EventoDTO(evento.getIdEvento(), 
-                convertirCategoriaADTO(evento.getCategoriaEvento()),
+                CategoriaAdapter.entidadADTO(evento.getCategoriaEvento()),
                 evento.getNombreEvento(), 
                 evento.getInformacionEvento(), 
                 evento.getFechaHora(), 
@@ -62,7 +62,7 @@ public class EventoAdapter {
 
         return new Evento(
                 dto.getIdEvento(), 
-                convertirCategoriaEntidad(dto.getCategoriaEvento()),
+                CategoriaAdapter.dtoAEntidad(dto.getCategoriaEvento()),
                 dto.getNombreEvento(), 
                 dto.getInformacionEvento(), 
                 dto.getFechaHora(), 
@@ -81,29 +81,6 @@ public class EventoAdapter {
             dtos.add(entidadADTO(e));
         }
         return dtos;
-    }
-
-    // Métodos de apoyo (también estáticos)
-    private static CategoriaDTO convertirCategoriaADTO(Categoria categoria) {
-        if (categoria == null) {
-            return null;
-        }
-        return new CategoriaDTO(
-                categoria.getId(),
-                categoria.getUrlImagen(),
-                CategoriaEventoDTO.valueOf(categoria.getNombre().name())
-        );
-    }
-
-    private static Categoria convertirCategoriaEntidad(CategoriaDTO dto) {
-        if (dto == null) {
-            return null;
-        }
-        return new Categoria(
-                dto.getIdCategoria(),
-                CategoriaEvento.valueOf(dto.getNombreCategoria().name()),
-                dto.getUrlImagen()
-        );
     }
 
     private static EstadoEventoDTO convertirEstadoADTO(EstadoEvento estado) {

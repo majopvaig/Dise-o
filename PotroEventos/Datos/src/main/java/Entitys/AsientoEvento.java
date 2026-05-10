@@ -12,7 +12,7 @@ import Entitys.ENUMS.EstadoAsiento;
 public class AsientoEvento {
 
     private String idAsientoEvento;
-    private Reservacion reservacion;
+    private Double precio;
     private EstadoAsiento estadoAsiento;
     private Asiento asiento;
     private Evento evento;
@@ -20,16 +20,16 @@ public class AsientoEvento {
     public AsientoEvento() {
     }
 
-    public AsientoEvento(Reservacion reservacion, EstadoAsiento estadoAsiento, Asiento asiento, Evento evento) {
-        this.reservacion = reservacion;
+    public AsientoEvento(Double precio, EstadoAsiento estadoAsiento, Asiento asiento, Evento evento) {
+        this.precio = precio;
         this.estadoAsiento = estadoAsiento;
         this.asiento = asiento;
         this.evento = evento;
     }
 
-    public AsientoEvento(String idAsientoEvento, Reservacion reservacion, EstadoAsiento estadoAsiento, Asiento asiento, Evento evento) {
+    public AsientoEvento(String idAsientoEvento, Double precio, EstadoAsiento estadoAsiento, Asiento asiento, Evento evento) {
         this.idAsientoEvento = idAsientoEvento;
-        this.reservacion = reservacion;
+        this.precio = precio;
         this.estadoAsiento = estadoAsiento;
         this.asiento = asiento;
         this.evento = evento;
@@ -43,12 +43,12 @@ public class AsientoEvento {
         this.idAsientoEvento = idAsientoEvento;
     }
 
-    public Reservacion getReservacion() {
-        return reservacion;
+    public Double getPrecio() {
+        return precio;
     }
 
-    public void setReservacion(Reservacion reservacion) {
-        this.reservacion = reservacion;
+    public void setPrecio(Double precio) {
+        this.precio = precio;
     }
 
     public EstadoAsiento getEstadoAsiento() {

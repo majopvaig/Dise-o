@@ -16,24 +16,25 @@ public class AsientoEventoMongoEntidad {
     @BsonId
     private ObjectId id;
     
-    private ReservacionMongoEntidad reservacion;
+    private double precio;
     private String estado;
-    private AsientoMongoEntidad asiento;
-    private EventoMongoEntidad evento;
+    private ObjectId asiento;
+    private ObjectId evento;
+    
 
     public AsientoEventoMongoEntidad() {
     }
 
-    public AsientoEventoMongoEntidad(ReservacionMongoEntidad reservacion, String estado, AsientoMongoEntidad asiento, EventoMongoEntidad evento) {
-        this.reservacion = reservacion;
+    public AsientoEventoMongoEntidad(double precio, String estado, ObjectId asiento, ObjectId evento) {
+        this.precio = precio;
         this.estado = estado;
         this.asiento = asiento;
         this.evento = evento;
     }
 
-    public AsientoEventoMongoEntidad(ObjectId id, ReservacionMongoEntidad reservacion, String estado, AsientoMongoEntidad asiento, EventoMongoEntidad evento) {
+    public AsientoEventoMongoEntidad(ObjectId id, double precio, String estado, ObjectId asiento, ObjectId evento) {
         this.id = id;
-        this.reservacion = reservacion;
+        this.precio = precio;
         this.estado = estado;
         this.asiento = asiento;
         this.evento = evento;
@@ -54,12 +55,12 @@ public class AsientoEventoMongoEntidad {
         return id.toHexString();
     }
 
-    public ReservacionMongoEntidad getReservacion() {
-        return reservacion;
+    public double getPrecio() {
+        return precio;
     }
 
-    public void setReservacion(ReservacionMongoEntidad reservacion) {
-        this.reservacion = reservacion;
+    public void setPrecio(double precio) {
+        this.precio = precio;
     }
 
     public String getEstado() {
@@ -70,30 +71,45 @@ public class AsientoEventoMongoEntidad {
         this.estado = estado;
     }
 
-    public AsientoMongoEntidad getAsiento() {
+    public ObjectId getAsiento() {
         return asiento;
     }
 
-    public void setAsiento(AsientoMongoEntidad asiento) {
+    public void setAsiento(ObjectId asiento) {
         this.asiento = asiento;
     }
+    
+    public String getAsientoComoTexto(){
+        if(asiento == null){
+            return null;
+        }
+        return asiento.toHexString();
+    }
 
-    public EventoMongoEntidad getEvento() {
+    public ObjectId getEvento() {
         return evento;
     }
 
-    public void setEvento(EventoMongoEntidad evento) {
+    public void setEvento(ObjectId evento) {
         this.evento = evento;
+    }
+    
+    public String getEventoComoTexto(){
+        if(evento == null){
+            return null;
+        }
+        return evento.toHexString();
     }
 
     @Override
     public String toString() {
         return "AsientoEventoMongoEntidad{" 
-                + "id=" + id 
-                + ", reservacion=" + reservacion 
+                + "id=" + getIdComoTexto() 
+                + ", precio=" + precio 
                 + ", estado=" + estado 
-                + ", asiento=" + asiento 
-                + ", evento=" + evento + '}';
-    }
+                + ", asiento=" + getAsientoComoTexto() 
+                + ", evento=" + getEventoComoTexto() 
+                + '}';
+    }  
     
 }

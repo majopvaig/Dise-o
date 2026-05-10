@@ -10,5 +10,5 @@ package Entitys.ENUMS;
  */
 public enum TipoEventoP {
     ITSON, 
-    PÚBLICO
+    PUBLICO
 }

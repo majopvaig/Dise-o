@@ -10,6 +10,8 @@ import java.util.List;
  */
 public interface ICategoriaDAO {
 
+    Categoria consultarPorId(String idCategoria) throws PersistenciaException;
+    
     List<Categoria> consultarCategorias() throws PersistenciaException;
 
 }

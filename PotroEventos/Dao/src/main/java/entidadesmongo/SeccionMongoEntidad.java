@@ -21,6 +21,7 @@ public class SeccionMongoEntidad {
     private Long precioBase;
 
     public SeccionMongoEntidad() {
+        this.id = new ObjectId();
     }
 
     public SeccionMongoEntidad(String nombre, Integer capacidad, Long precioBase) {
@@ -81,7 +82,8 @@ public class SeccionMongoEntidad {
                 + "id=" + getIdComoTexto() 
                 + ", nombre=" + nombre 
                 + ", capacidad=" + capacidad 
-                + ", precioBase=" + precioBase + '}';
+                + ", precioBase=" + precioBase 
+                + '}';
     }
     
 }

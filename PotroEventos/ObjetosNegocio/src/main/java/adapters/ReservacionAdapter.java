@@ -8,7 +8,6 @@ import dtos.ReservacionDTO;
 import Entitys.Reservacion;
 import Entitys.ENUMS.ReservacionEstado;
 import dtos.ENUMS.ReservacionEstadoDTO;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class ReservacionAdapter {
                 reservacion.getIdReservacion(), 
                 reservacion.getTotal(),
                 BoletoAdapter.entidadADTO(reservacion.getBoleto()), 
-                null, 
+                reservacion.getCobro(), 
                 UsuarioAdapter.entidadADTO(reservacion.getUsuario()), 
                 reservacion.getFechaHora(), 
                 ReservacionEstadoDTO.valueOf(reservacion.getEstado().name()));
@@ -44,6 +43,7 @@ public class ReservacionAdapter {
                 reservacion.getIdReservacion(),
                 reservacion.getTotal(),
                 BoletoAdapter.dtoAEntidad(reservacion.getBoleto()),
+                reservacion.getCobro(),
                 UsuarioAdapter.dtoAEntidad(reservacion.getUsuario()),
                 reservacion.getFechaHora(),
                 ReservacionEstado.valueOf(reservacion.getEstado().name())

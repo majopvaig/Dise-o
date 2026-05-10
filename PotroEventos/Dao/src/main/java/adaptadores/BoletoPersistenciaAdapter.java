@@ -4,10 +4,18 @@
  */
 package adaptadores;
 
+import Entitys.AsientoEvento;
 import Entitys.Boleto;
 import Entitys.ENUMS.EstadoBoleto;
+import Entitys.Evento;
+import daos.AsientoEventoDAO;
+import daos.EventoDAO;
 import entidadesmongo.BoletoMongoEntidad;
+import entidadesresumenmongo.AsientoEventoResumenMongo;
+import entidadesresumenmongo.EventoResumenMongo;
 import excepciones.PersistenciaException;
+import interfaces.IAsientoEventoDAO;
+import interfaces.IEventoDAO;
 import java.util.ArrayList;
 import java.util.List;
 import org.bson.types.ObjectId;
@@ -18,6 +26,9 @@ import org.bson.types.ObjectId;
  */
 public class BoletoPersistenciaAdapter {
     
+    private static IEventoDAO eventoDAO = EventoDAO.getInstance();
+    private static IAsientoEventoDAO asientoEventoDAO = AsientoEventoDAO.getInstancia();
+    
     public static BoletoMongoEntidad convertirAMongo(Boleto dominio) throws PersistenciaException {
         if(dominio == null){
             return null;
@@ -25,12 +36,28 @@ public class BoletoPersistenciaAdapter {
         
         BoletoMongoEntidad mongo = new BoletoMongoEntidad();
         
-        mongo.setId(convertirStringAObjectId(dominio.getIdBoleto()));
         mongo.setCodigoQR(dominio.getCodigoQR());
         mongo.setPrecio(dominio.getPrecio());
         mongo.setEstado(dominio.getEstadoBoleto().name());
-        mongo.setEvento(EventoPersistenciaAdapter.convertirAMongo(dominio.getEvento()));
-        mongo.setAsiento(AsientoEventoPersistenciaAdapter.convertirAMongo(dominio.getAsiento()));
+        
+        EventoResumenMongo e = new EventoResumenMongo(
+                convertirStringAObjectId(dominio.getEvento().getIdEvento()), 
+                dominio.getEvento().getNombreEvento(), 
+                dominio.getEvento().getFechaHora());
+        
+        mongo.setEvento(e);
+        
+        if (dominio.getAsiento() != null) {
+            AsientoEventoResumenMongo a = new AsientoEventoResumenMongo(
+                    convertirStringAObjectId(dominio.getAsiento().getIdAsientoEvento()),
+                    dominio.getAsiento().getAsiento().getFila(),
+                    dominio.getAsiento().getAsiento().getNumero(),
+                    dominio.getAsiento().getAsiento().getSeccion().getNombre());            
+            
+            mongo.setAsiento(a);
+        } else {
+            mongo.setAsiento(null);
+        }
         
         return mongo;
     }
@@ -42,12 +69,23 @@ public class BoletoPersistenciaAdapter {
         
         Boleto dominio = new Boleto();
         
-        dominio.setIdBoleto(mongo.getIdComoTexto());
         dominio.setCodigoQR(mongo.getCodigoQR());
         dominio.setPrecio(mongo.getPrecio());
         dominio.setEstadoBoleto(EstadoBoleto.valueOf(mongo.getEstado()));
-        dominio.setEvento(EventoPersistenciaAdapter.convertirADominio(mongo.getEvento()));
-        dominio.setAsiento(AsientoEventoPersistenciaAdapter.convertirADominio(mongo.getAsiento()));
+        
+        Evento e = eventoDAO.buscarPorId(mongo.getEvento().getIdComoTexto());
+        if(e != null){
+            dominio.setEvento(e);
+        }
+        
+        if (mongo.getAsiento() != null) {
+            AsientoEvento a = asientoEventoDAO.consultarPorId(mongo.getAsiento().getIdComoTexto());
+            if (a != null) {
+                dominio.setAsiento(a);
+            }
+        } else {
+            mongo.setAsiento(null);
+        }
         
         return dominio;
     }

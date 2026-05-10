@@ -330,9 +330,10 @@ public class FrmPago extends javax.swing.JFrame {
 
         TarjetaDTO tarjeta = new TarjetaDTO(txtNoTarjeta.getText(), Integer.parseInt(mes), Integer.parseInt(anio), txtCVV.getText());
         CobroDTO cobro = new CobroDTO(coordinador.getTotalPendiente(), "MXN", "Compra Boleto");
-        if (coordinador.realizarCompra(tarjeta, cobro)) {
+        String pago = coordinador.realizarCompra(tarjeta, cobro);
+        if (pago != null) {
             JOptionPane.showMessageDialog(null, "Pago realizado exitosamente", "Pago realizado", JOptionPane.INFORMATION_MESSAGE);
-            reservacion.setCobro(cobro);
+            reservacion.setCobro(pago);
             try {
                 coordinador.agregarReservacion(reservacion);
             } catch (CoordinadorException ex) {

@@ -1,6 +1,5 @@
 package control;
 
-import adapters.UsuarioInstitucionalAdapter;
 import dtos.*;
 import objetosNegocio.*;
 import excepciones.CompraBoletoException;
@@ -42,7 +41,6 @@ public class ControlCompraBoleto implements IControlCompraBoleto {
     private final IAsientoBO asientoBO;
     private final IAsientoEventoBO asientoEventoBO;
     private final IReservacionBO reservacionBO;
-    private final IUsuarioBO usuarioBO;
     private final IPago controlPago;
     private final IITSON controlItson;
 
@@ -64,7 +62,6 @@ public class ControlCompraBoleto implements IControlCompraBoleto {
         this.asientoBO = AsientoBO.getInstance();
         this.asientoEventoBO = AsientoEventoBO.getInstance();
         this.reservacionBO = ReservacionBO.getInstance();
-        this.usuarioBO = UsuarioBO.getInstance();
         this.controlPago = new PagoFachada();
         this.controlItson = new FachadaITSON();
 
@@ -119,7 +116,8 @@ public class ControlCompraBoleto implements IControlCompraBoleto {
                     a.getIdAsiento(),
                     a.getFila(),
                     a.getNumero(),
-                    a.getIdSeccion()
+                    a.getUbicacion(),
+                    a.getSeccion()
             )).collect(Collectors.toList());
 
         } catch (Exception ex) {
@@ -135,22 +133,23 @@ public class ControlCompraBoleto implements IControlCompraBoleto {
      * @throws CompraBoletoException si ocurre un error
      */
     @Override
-    public Map<SeccionDTO, List<AsientoEventoDTO>> obtenerMapaOcupacion(String idEvento) throws CompraBoletoException {
+    public Map<SeccionDTO, List<AsientoEventoDTO>> obtenerMapaOcupacion(EventoDTO evento) throws CompraBoletoException {
         try {
-            List<SeccionDTO> secciones = seccionBO.consultarSeccionesPorEvento(idEvento);
-            List<AsientoEventoDTO> ocupacion = asientoEventoBO.consultarEstadosPorEvento(idEvento);
-            List<AsientoDTO> catalogo = this.obtenerCatalogoAsientos();
+            if(evento == null || evento.getUbicacion() == null){
+                throw new CompraBoletoException("El evento y/o su ubicación no puede ser nula.");
+            }
+            List<SeccionDTO> secciones = evento.getUbicacion().getSecciones();
+            List<AsientoEventoDTO> ocupacion = asientoEventoBO.consultarEstadosPorEvento(evento.getIdEvento());
+            //List<AsientoDTO> catalogo = this.obtenerCatalogoAsientos();
 
             Map<SeccionDTO, List<AsientoEventoDTO>> mapa = new HashMap<>();
 
-            for (SeccionDTO seccion : secciones) {
-                List<AsientoEventoDTO> asientosDeSeccion = ocupacion.stream()
-                        .filter(ae -> catalogo.stream().anyMatch(asiento
-                        -> asiento.getIdAsiento().equals(ae.getIdAsiento())
-                        && asiento.getIdSeccion().equals(seccion.getIdSeccion())
-                ))
-                        .collect(Collectors.toList());
-
+                for (SeccionDTO seccion : secciones) {
+                    List<AsientoEventoDTO> asientosDeSeccion = ocupacion.stream()
+                            .filter(ae -> ae.getAsiento() != null
+                            && ae.getAsiento().getSeccion() != null
+                            && ae.getAsiento().getSeccion().getIdSeccion().equals(seccion.getIdSeccion()))
+                            .collect(Collectors.toList());
                 mapa.put(seccion, asientosDeSeccion);
             }
 
@@ -170,7 +169,10 @@ public class ControlCompraBoleto implements IControlCompraBoleto {
     @Override
     public boolean agregarReservacion(ReservacionDTO reservacion) throws CompraBoletoException {
         try {
-            return reservacionBO.agregarReservacion(reservacion);
+            if(reservacionBO.agregarReservacion(reservacion) != null){
+                return true;
+            }
+            return false;
         } catch (Exception ex) {
             throw new CompraBoletoException("Error al agregar la reservación: " + ex.getMessage());
         }
@@ -190,14 +192,14 @@ public class ControlCompraBoleto implements IControlCompraBoleto {
             String asientoID = null;
             String identificador;
 
-            if (asiento == null || asiento.getIdAsiento() == null) {
+            if (asiento == null || asiento.getIdAsientoEvento() == null) {
 
                 identificador = UUID.randomUUID().toString();
 
             } else {
 
-                asientoID = asiento.getIdAsiento();
-                identificador = asiento.getIdAsiento();
+                asientoID = asiento.getAsiento().getIdAsiento();
+                identificador = asiento.getAsiento().getIdAsiento();
             }
 
             String token = UUID.randomUUID().toString();
@@ -214,7 +216,7 @@ public class ControlCompraBoleto implements IControlCompraBoleto {
             String nombreArchivo = "Boleto_" + identificador + "_" + evento.getIdEvento() + ".png";
             Path rutaDestino = directorioDestino.resolve(nombreArchivo);
             Files.copy(temp.toPath(), rutaDestino, StandardCopyOption.REPLACE_EXISTING);
-            return rutaDestino.toAbsolutePath().toString();
+            return "/" + rutaDestino.toString().replace("\\", "/");
         } catch (Exception e) {
             throw new CompraBoletoException("Error al generar QR: " + e.getMessage());
         }
@@ -267,15 +269,15 @@ public class ControlCompraBoleto implements IControlCompraBoleto {
                 return true;
             }
 
-            if (reservacion.getCobro() != null) {
-                System.out.println((int) (totalCompra / 100.0 * 2));
-                if (usuarioBO.restarCreditos((int) (totalCompra / 100.0 * 2), reservacion.getUsuario().getIdUsuario())) {
-                    asientoEventoBO.venderAsiento(reservacion.getBoleto().getAsiento().getIdAsiento());
-                    reservacionBO.agregarReservacion(reservacion);
-                    return true;
-                }
-                return false;
-            }
+//            if (reservacion.getCobro() != null) {
+//                System.out.println((int) (totalCompra / 100.0 * 2));
+//                if (usuarioBO.restarCreditos((int) (totalCompra / 100.0 * 2), reservacion.getUsuario().getIdUsuario())) {
+//                    asientoEventoBO.venderAsiento(reservacion.getBoleto().getAsiento().getIdAsientoEvento());
+//                    reservacionBO.agregarReservacion(reservacion);
+//                    return true;
+//                }
+//                return false;
+//            }
 
             this.asientosPendientesCompra = new ArrayList<>(asientosSeleccionados);
             this.totalPendienteCompra = totalCompra;
@@ -291,26 +293,26 @@ public class ControlCompraBoleto implements IControlCompraBoleto {
      * Realiza el pago de la compra pendiente.
      */
     @Override
-    public boolean realizarCompra(TarjetaDTO tarjeta, CobroDTO cobro) throws CompraBoletoException {
+    public String realizarCompra(TarjetaDTO tarjeta, CobroDTO cobro) throws CompraBoletoException {
         try {
-            boolean pagado = controlPago.procesarPago(tarjeta, cobro);
+            String pago = controlPago.procesarPago(tarjeta, cobro);
 
-            if (pagado) {
+            if (pago != null) {
                 for (AsientoEventoDTO asiento : asientosPendientesCompra) {
-                    asientoEventoBO.venderAsiento(asiento.getIdAsiento());
+                    asientoEventoBO.venderAsiento(asiento.getIdAsientoEvento());
                 }
 
                 asientosPendientesCompra.clear();
                 totalPendienteCompra = 0L;
 
-                return true;
+                return pago;
             }
 
         } catch (NegocioException | PagoException ex) {
             throw new CompraBoletoException(ex.getMessage());
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -332,6 +334,6 @@ public class ControlCompraBoleto implements IControlCompraBoleto {
      */
     @Override
     public boolean validarCredencialesITSON(UsuarioInstitucionalDTO usuario) {
-        return controlItson.validarUsuarioITSON(UsuarioInstitucionalAdapter.dtoAInfraestructura(usuario));
+        return controlItson.validarUsuarioITSON(usuario);
     }
 }

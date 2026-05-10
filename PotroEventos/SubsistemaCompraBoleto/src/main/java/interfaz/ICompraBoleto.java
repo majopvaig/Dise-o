@@ -65,11 +65,11 @@ public interface ICompraBoleto {
 
     public boolean venderAsientos(List<AsientoEventoDTO> asientosSeleccionados, Long totalCompra, boolean gratuito, ReservacionDTO reservacion) throws CompraBoletoException;
 
-    boolean realizarCompra(TarjetaDTO noTarjeta, CobroDTO cobro) throws CompraBoletoException;
+    String realizarCompra(TarjetaDTO noTarjeta, CobroDTO cobro) throws CompraBoletoException;
 
     Long getTotalPendiente();
 
-    public Map<SeccionDTO, List<AsientoEventoDTO>> obtenerMapaOcupacion(String idEvento) throws CompraBoletoException;
+    public Map<SeccionDTO, List<AsientoEventoDTO>> obtenerMapaOcupacion(EventoDTO evento) throws CompraBoletoException;
 
     public boolean validarCredencialesITSON(UsuarioInstitucionalDTO usuario);
 

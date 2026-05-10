@@ -22,7 +22,6 @@ public class BoletoAdapter {
         }
 
         return new BoletoDTO(
-                boletoEntidad.getIdBoleto(),
                 boletoEntidad.getCodigoQR(),
                 boletoEntidad.getPrecio(),
                 convertirEstadoADTO(boletoEntidad.getEstadoBoleto()),
@@ -39,7 +38,6 @@ public class BoletoAdapter {
 
         Boleto boleto = new Boleto();
 
-        boleto.setIdBoleto(boletoDTO.getIdBoleto());
         boleto.setCodigoQR(boletoDTO.getCodigoQR());
         boleto.setPrecio(boletoDTO.getPrecio());
         boleto.setEstadoBoleto(convertirEstadoAEntidad(boletoDTO.getEstadoBoleto()));

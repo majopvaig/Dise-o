@@ -6,16 +6,16 @@ package Pantallas.vistas;
 
 import Controlador.interfaz.ICoordinadorAplicacion;
 import dtos.ENUMS.ReservacionEstadoDTO;
-import dtos.EventoDTO;
 import dtos.ReservacionDTO;
 import dtos.UsuarioDTO;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
 
 /**
  *
@@ -51,7 +51,7 @@ public class PnlConsultar extends javax.swing.JPanel {
         for (ReservacionDTO r : coordinador.consultarReservaciones(usuario.getIdUsuario())) {
             if (r.getEstado() == ReservacionEstadoDTO.CANCELADA) {
                 cancelados.add(r);
-            } else if (r.getEstado() == ReservacionEstadoDTO.ACTIVA && r.getFechaHora().isAfter(LocalDateTime.now())) {
+            } else if (r.getEstado() == ReservacionEstadoDTO.ACTIVA && r.getBoleto().getEvento().getFechaHora().isAfter(LocalDateTime.now())) {
                 proximos.add(r);
             } else {
                 pasados.add(r);
@@ -64,6 +64,9 @@ public class PnlConsultar extends javax.swing.JPanel {
             PnlEvento panel = PnlEvento.crearParaConsulta(proximo, this, coordinador);
             panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, panel.getPreferredSize().height));
             pnlProximos.add(panel);
+            JSeparator separador = new JSeparator(SwingConstants.HORIZONTAL);
+            separador.setMaximumSize(new Dimension(Integer.MAX_VALUE, 10)); // 10px de alto para el separador
+            pnlProximos.add(separador);
         }
         pnlProximos.add(Box.createVerticalGlue());
         pnlProximos.revalidate();
@@ -72,6 +75,9 @@ public class PnlConsultar extends javax.swing.JPanel {
             PnlEvento panel = PnlEvento.crearParaConsulta(pasado, this, coordinador);
             panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, panel.getPreferredSize().height));
             pnlPasados.add(panel);
+            JSeparator separador = new JSeparator(SwingConstants.HORIZONTAL);
+            separador.setMaximumSize(new Dimension(Integer.MAX_VALUE, 10));
+            pnlPasados.add(separador);
         }
         pnlPasados.add(Box.createVerticalGlue());
         pnlPasados.revalidate();
@@ -80,6 +86,9 @@ public class PnlConsultar extends javax.swing.JPanel {
             PnlEvento panel = PnlEvento.crearParaConsulta(cancelado, this, coordinador);
             panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, panel.getPreferredSize().height));
             pnlCancelados.add(panel);
+            JSeparator separador = new JSeparator(SwingConstants.HORIZONTAL);
+            separador.setMaximumSize(new Dimension(Integer.MAX_VALUE, 10));
+            pnlCancelados.add(separador);
         }
         pnlCancelados.add(Box.createVerticalGlue());
         pnlCancelados.revalidate();
@@ -123,16 +132,22 @@ public class PnlConsultar extends javax.swing.JPanel {
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel3.setText("Eventos Cancelados");
 
+        jScrollPane2.setBorder(null);
+        jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         pnlProximos.setLayout(new javax.swing.BoxLayout(pnlProximos, javax.swing.BoxLayout.LINE_AXIS));
         jScrollPane2.setViewportView(pnlProximos);
 
+        jScrollPane3.setBorder(null);
+        jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane3.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         pnlPasados.setLayout(new javax.swing.BoxLayout(pnlPasados, javax.swing.BoxLayout.LINE_AXIS));
         jScrollPane3.setViewportView(pnlPasados);
 
+        jScrollPane4.setBorder(null);
+        jScrollPane4.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane4.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         pnlCancelados.setLayout(new javax.swing.BoxLayout(pnlCancelados, javax.swing.BoxLayout.LINE_AXIS));
@@ -143,21 +158,19 @@ public class PnlConsultar extends javax.swing.JPanel {
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGap(64, 64, 64)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel2)
-                .addGap(177, 177, 177)
-                .addComponent(jLabel3)
-                .addGap(56, 56, 56))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
                 .addGap(22, 22, 22)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(77, 77, 77)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabel1)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(35, 35, 35)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabel2)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(29, 29, 29)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabel3)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(43, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

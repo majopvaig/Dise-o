@@ -61,6 +61,20 @@ public class SeccionPersistenciaAdapter {
         return secciones;
     }
     
+    public static List<SeccionMongoEntidad> convertirListaAMongo(List<Seccion> lista) throws PersistenciaException {
+        List<SeccionMongoEntidad> secciones = new ArrayList<>();
+        
+        if(lista == null){
+            return secciones;
+        }
+        
+        for(Seccion dominio : lista){
+            secciones.add(convertirAMongo(dominio));
+        }
+        
+        return secciones;
+    }
+    
     private static ObjectId convertirStringAObjectId(String id) throws PersistenciaException {
         if (id == null || id.isBlank()) {
             return null;

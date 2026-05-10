@@ -23,7 +23,8 @@ public class UbicacionAdapter {
                 entidad.getIdUbicacion(),
                 entidad.getNombre(),
                 entidad.getCapacidad(),
-                TipoUbicacionN.valueOf(entidad.getTipo().name())
+                TipoUbicacionN.valueOf(entidad.getTipo().name()),
+                SeccionAdapter.listaEntidadADTO(entidad.getSecciones())
         );
     }
     
@@ -35,7 +36,8 @@ public class UbicacionAdapter {
                 dto.getIdUbicacion(),
                 dto.getNombre(),
                 dto.getCapacidad(),
-                TipoUbicacionP.valueOf(dto.getTipo().name())
+                TipoUbicacionP.valueOf(dto.getTipo().name()),
+                SeccionAdapter.listaDTOsAEntidades(dto.getSecciones())
         );
     }
 }

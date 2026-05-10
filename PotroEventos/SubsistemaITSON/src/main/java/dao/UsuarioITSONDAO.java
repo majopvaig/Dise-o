@@ -23,10 +23,10 @@ public class UsuarioITSONDAO {
     }
     
     private static void agregarUsuariosPrueba(){
-        UsuarioITSON u1 = new UsuarioITSON("000000262775", "asheiji4ever");
-        UsuarioITSON u2 = new UsuarioITSON("00000262695", "daya");
-        UsuarioITSON u3 = new UsuarioITSON("000002622788", "aaron");
-        UsuarioITSON u4 = new UsuarioITSON("00000262741", "brian");
+        UsuarioITSON u1 = new UsuarioITSON("262775", "asheiji4ever");
+        UsuarioITSON u2 = new UsuarioITSON("262695", "daya");
+        UsuarioITSON u3 = new UsuarioITSON("262788", "aaron");
+        UsuarioITSON u4 = new UsuarioITSON("262741", "brian");
         EntityManager em = ConexionBD.crearConexion();
         try{
             em.getTransaction().begin();

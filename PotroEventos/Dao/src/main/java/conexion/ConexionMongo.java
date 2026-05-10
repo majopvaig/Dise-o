@@ -8,6 +8,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import entidadesmongo.AsientoEventoMongoEntidad;
 import entidadesmongo.AsientoMongoEntidad;
+import entidadesmongo.BoletoMongoEntidad;
 import entidadesmongo.CategoriaMongoEntidad;
 import entidadesmongo.EventoMongoEntidad;
 import entidadesmongo.ReservacionMongoEntidad;
@@ -94,5 +95,10 @@ public class ConexionMongo {
     public static MongoCollection<AsientoEventoMongoEntidad> obtenerColeccionAsientosEvento() {
         return obtenerBaseDatos()
                 .getCollection("asientoEventos", AsientoEventoMongoEntidad.class);
+    }
+    
+    public static MongoCollection<UbicacionMongoEntidad> obtenerColeccionUbicacionea(){
+        return obtenerBaseDatos()
+                .getCollection("ubicaciones", UbicacionMongoEntidad.class);
     }
 }

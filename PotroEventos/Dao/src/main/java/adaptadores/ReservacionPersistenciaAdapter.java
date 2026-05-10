@@ -4,10 +4,16 @@
  */
 package adaptadores;
 
+import Entitys.Boleto;
 import Entitys.ENUMS.ReservacionEstado;
 import Entitys.Reservacion;
+import Entitys.Usuario;
+import daos.ReservacionDAO;
+import daos.UsuarioDAO;
 import entidadesmongo.ReservacionMongoEntidad;
 import excepciones.PersistenciaException;
+import interfaces.IReservacionDAO;
+import interfaces.IUsuarioDAO;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +25,9 @@ import org.bson.types.ObjectId;
  */
 public class ReservacionPersistenciaAdapter {
     
+    public static IReservacionDAO reservacionDAO = ReservacionDAO.getInstance();
+    public static IUsuarioDAO usuarioDAO = UsuarioDAO.getInstance();
+    
     public static ReservacionMongoEntidad convertirAMongo(Reservacion dominio) throws PersistenciaException {
         if(dominio == null){
             return null;
@@ -29,7 +38,9 @@ public class ReservacionPersistenciaAdapter {
         mongo.setId(convertirStringAObjectId(dominio.getIdReservacion()));
         mongo.setTotal(dominio.getTotal());
         mongo.setBoleto(BoletoPersistenciaAdapter.convertirAMongo(dominio.getBoleto()));
-        mongo.setUsuario(UsuarioPersistenciaAdapter.convertirAMongo(dominio.getUsuario()));
+        mongo.setCobro(dominio.getCobro());
+        mongo.setUsuario(convertirStringAObjectId(dominio.getUsuario().getIdUsuario()));
+        
         if(dominio.getFechaHora() == null){
             mongo.setFechaRegistro(LocalDateTime.now());
         } else {
@@ -49,8 +60,19 @@ public class ReservacionPersistenciaAdapter {
         
         dominio.setIdReservacion(mongo.getIdComoTexto());
         dominio.setTotal(mongo.getTotal());
-        dominio.setBoleto(BoletoPersistenciaAdapter.convertirADominio(mongo.getBoleto()));
-        dominio.setUsuario(UsuarioPersistenciaAdapter.convertirADominio(mongo.getUsuario()));
+        
+        Boleto b = reservacionDAO.obtenerBoleto(mongo.getIdComoTexto());
+        if(b != null){
+            dominio.setBoleto(b);
+        }
+        
+        dominio.setCobro(mongo.getCobro());
+        
+        Usuario u = usuarioDAO.obtenerPorId(mongo.getUsuarioComoTexto());
+        if(u != null){
+            dominio.setUsuario(u);
+        }
+        
         dominio.setFechaHora(mongo.getFechaRegistro());
         dominio.setEstado(ReservacionEstado.valueOf(mongo.getEstado()));
         

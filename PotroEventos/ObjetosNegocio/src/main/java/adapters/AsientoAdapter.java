@@ -21,17 +21,12 @@ public class AsientoAdapter {
             return null;
         }
 
-        String idSeccion = null;
-
-        if (asientoEntidad.getSeccion() != null) {
-            idSeccion = asientoEntidad.getSeccion().getIdSeccion();
-        }
-
         return new AsientoDTO(
                 asientoEntidad.getIdAsiento(),
                 asientoEntidad.getFila(),
                 asientoEntidad.getNumero(),
-                idSeccion
+                UbicacionAdapter.entidadADTO(asientoEntidad.getUbicacion()),
+                SeccionAdapter.entidadADTO(asientoEntidad.getSeccion())
         );
     }
 
@@ -42,16 +37,12 @@ public class AsientoAdapter {
         }
 
         Asiento asiento = new Asiento();
-
+        
         asiento.setIdAsiento(asientoDTO.getIdAsiento());
         asiento.setFila(asientoDTO.getFila());
         asiento.setNumero(asientoDTO.getNumero());
-
-        if (asientoDTO.getIdSeccion() != null) {
-            Seccion seccion = new Seccion();
-            seccion.setIdSeccion(asientoDTO.getIdSeccion());
-            asiento.setSeccion(seccion);
-        }
+        asiento.setUbicacion(UbicacionAdapter.dtoAEntidad(asientoDTO.getUbicacion()));
+        asiento.setSeccion(SeccionAdapter.dtoAEntidad(asientoDTO.getSeccion()));
 
         return asiento;
     }

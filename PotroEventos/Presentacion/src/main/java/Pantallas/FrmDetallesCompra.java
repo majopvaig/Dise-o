@@ -57,46 +57,56 @@ public class FrmDetallesCompra extends javax.swing.JFrame {
         if(reservacion == null){
             return;
         }
-        ImageIcon icono = new ImageIcon(reservacion.getBoleto().getEvento().getUrlImagen());
-        int ancho = getWidth();
-        int alto = getHeight();
-        if (ancho <= 0) {
-            ancho = 270;
+        // cargar evento
+        if (reservacion.getBoleto().getEvento().getUrlImagen() != null && !reservacion.getBoleto().getEvento().getUrlImagen().isEmpty()) {
+
+            String rutaLimpia = reservacion.getBoleto().getEvento().getUrlImagen().replace("/src/main/resources", "");
+            String rutaAlternativa = reservacion.getBoleto().getEvento().getUrlImagen().replace("src/main/resources", "");
+
+            java.net.URL imgUrl = getClass().getResource(rutaLimpia);
+            if (imgUrl == null) {
+                imgUrl = getClass().getResource(rutaAlternativa);
+            }
+
+            if (imgUrl != null) {
+                ImageIcon icono = new ImageIcon(imgUrl);
+
+                int ancho = 306;
+                int alto = 202;
+
+                Image imagenEscalada = icono.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+                iconEvento.setIcon(new ImageIcon(imagenEscalada));
+            }
+            iconEvento.setText("");
         }
-        if (alto <= 0) {
-            alto = 188;
+        // cargar qr
+        if (reservacion.getBoleto().getCodigoQR() != null && !reservacion.getBoleto().getCodigoQR().isEmpty()) {
+
+            String rutaLimpia = reservacion.getBoleto().getCodigoQR().replace("/src/main/resources", "");
+            String rutaAlternativa = reservacion.getBoleto().getCodigoQR().replace("src/main/resources", "");
+
+            java.net.URL imgUrl = getClass().getResource(rutaLimpia);
+            if (imgUrl == null) {
+                imgUrl = getClass().getResource(rutaAlternativa);
+            }
+
+            if (imgUrl != null) {
+                ImageIcon icono = new ImageIcon(imgUrl);
+
+                int ancho = 306;
+                int alto = 202;
+
+                Image imagenEscalada = icono.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+                iconQR.setIcon(new ImageIcon(imagenEscalada));
+            }
+            iconQR.setText("");
         }
-        Image img = icono.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
-        iconEvento.setIcon(new ImageIcon(img));
-        iconEvento.setText("");
-        
-        ImageIcon icono2 = new ImageIcon(reservacion.getBoleto().getCodigoQR());  
-        int tamañoQR = iconQR.getWidth();       
-        if (tamañoQR <= 0) {
-            tamañoQR = 150;
-        }
-        Image img2 = icono2.getImage().getScaledInstance(tamañoQR, tamañoQR, Image.SCALE_SMOOTH);     
-        iconQR.setIcon(new ImageIcon(img2));
-        iconQR.setText("");
-//        ImageIcon icono2 = new ImageIcon(reservacion.getBoleto().getCodigoQR());
-//        int ancho2 = getWidth();
-//        int alto2 = getHeight();
-//        if (ancho2 <= 0) {
-//            ancho2 = 181;
-//        }
-//        if (alto2 <= 0) {
-//            alto2 = 152;
-//        }
-//        Image img2 = icono2.getImage().getScaledInstance(ancho2, alto2, Image.SCALE_SMOOTH);
-//        iconQR.setIcon(new ImageIcon(img2));
-//        iconQR.setText("");
         this.txtEvento.setText(reservacion.getBoleto().getEvento().getNombreEvento());
         if(reservacion.getBoleto().getEvento().isGratuito()){
             txtAsientos.setText("LIBRE");
         } else {
-            txtAsientos.setText(reservacion.getBoleto().getAsiento().getIdAsiento().toString());
+            txtAsientos.setText(reservacion.getBoleto().getAsiento().getAsiento().getNumero().toString());
         }
-        //this.txtAsientos.setText("10, 11, 12");
         DateTimeFormatter formateadorFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         DateTimeFormatter formateadorHora = DateTimeFormatter.ofPattern("HH:mm");
         this.txtFechaHora.setText(String.valueOf(reservacion.getBoleto().getEvento().getFechaHora().format(formateadorFecha)) + " - " + String.valueOf(reservacion.getBoleto().getEvento().getFechaHora().format(formateadorHora)));
@@ -252,6 +262,8 @@ public class FrmDetallesCompra extends javax.swing.JFrame {
         btnAceptar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnAceptar.setForeground(new java.awt.Color(255, 255, 255));
         btnAceptar.setText("Aceptar");
+        btnAceptar.setBorderPainted(false);
+        btnAceptar.setFocusPainted(false);
         btnAceptar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnAceptarMouseClicked(evt);

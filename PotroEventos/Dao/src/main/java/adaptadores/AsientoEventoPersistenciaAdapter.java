@@ -7,9 +7,13 @@ package adaptadores;
 import Entitys.Asiento;
 import Entitys.AsientoEvento;
 import Entitys.ENUMS.EstadoAsiento;
+import Entitys.Evento;
+import daos.AsientoDAO;
+import daos.EventoDAO;
 import entidadesmongo.AsientoEventoMongoEntidad;
-import entidadesmongo.AsientoMongoEntidad;
 import excepciones.PersistenciaException;
+import interfaces.IAsientoDAO;
+import interfaces.IEventoDAO;
 import java.util.ArrayList;
 import java.util.List;
 import org.bson.types.ObjectId;
@@ -19,6 +23,9 @@ import org.bson.types.ObjectId;
  * @author maria
  */
 public class AsientoEventoPersistenciaAdapter {
+    
+    private static IAsientoDAO asientoDAO = AsientoDAO.getInstance();
+    private static IEventoDAO eventoDAO = EventoDAO.getInstance();
  
     public static AsientoEventoMongoEntidad convertirAMongo(AsientoEvento dominio) throws PersistenciaException {
         if(dominio == null){
@@ -28,10 +35,10 @@ public class AsientoEventoPersistenciaAdapter {
         AsientoEventoMongoEntidad mongo = new AsientoEventoMongoEntidad();
         
         mongo.setId(convertirStringAObjectId(dominio.getIdAsientoEvento()));
-        mongo.setReservacion(ReservacionPersistenciaAdapter.convertirAMongo(dominio.getReservacion()));
+        mongo.setPrecio(dominio.getPrecio());
         mongo.setEstado(dominio.getEstadoAsiento().name());
-        mongo.setAsiento(AsientoPersistenciaAdapter.convertirAMongo(dominio.getAsiento()));
-        mongo.setEvento(EventoPersistenciaAdapter.convertirAMongo(dominio.getEvento()));
+        mongo.setAsiento(convertirStringAObjectId(dominio.getAsiento().getIdAsiento()));
+        mongo.setEvento(convertirStringAObjectId(dominio.getEvento().getIdEvento()));
         
         return mongo;
     }
@@ -44,10 +51,18 @@ public class AsientoEventoPersistenciaAdapter {
         AsientoEvento dominio = new AsientoEvento();
         
         dominio.setIdAsientoEvento(mongo.getIdComoTexto());
-        dominio.setReservacion(ReservacionPersistenciaAdapter.convertirADominio(mongo.getReservacion()));
+        dominio.setPrecio(mongo.getPrecio());
         dominio.setEstadoAsiento(EstadoAsiento.valueOf(mongo.getEstado()));
-        dominio.setAsiento(AsientoPersistenciaAdapter.convertirADominio(mongo.getAsiento()));
-        dominio.setEvento(EventoPersistenciaAdapter.convertirADominio(mongo.getEvento()));
+        
+        Asiento asiento = asientoDAO.consultarPorID(mongo.getAsientoComoTexto());
+        if(asiento != null){
+            dominio.setAsiento(asiento);
+        }
+        
+        Evento evento = eventoDAO.buscarPorId(mongo.getEventoComoTexto());
+        if(evento != null){
+            dominio.setEvento(evento);
+        }    
         
         return dominio;
     }

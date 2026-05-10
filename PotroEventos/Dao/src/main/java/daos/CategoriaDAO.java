@@ -8,12 +8,14 @@ import Entitys.Categoria;
 import adaptadores.CategoriaPersistenciaAdapter;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
+import static com.mongodb.client.model.Filters.eq;
 import conexion.ConexionMongo;
 import entidadesmongo.CategoriaMongoEntidad;
 import excepciones.PersistenciaException;
 import interfaces.ICategoriaDAO;
 import java.util.ArrayList;
 import java.util.List;
+import org.bson.types.ObjectId;
 
 /**
  *
@@ -42,6 +44,18 @@ public class CategoriaDAO implements ICategoriaDAO {
             return CategoriaPersistenciaAdapter.convertirListaADominio(categorias);
         } catch (MongoException e) {
             throw new PersistenciaException("No fue posible obtener las categorías");
+        }
+    }
+
+    @Override
+    public Categoria consultarPorId(String idCategoria) throws PersistenciaException {
+        try{
+            CategoriaMongoEntidad seccion = coleccionCategorias
+                    .find(eq("_id", new ObjectId(idCategoria)))
+                    .first();
+            return CategoriaPersistenciaAdapter.convertirADominio(seccion);
+        } catch(MongoException me){
+            throw new PersistenciaException("No fue posible obtener la categoría.");
         }
     }
 }

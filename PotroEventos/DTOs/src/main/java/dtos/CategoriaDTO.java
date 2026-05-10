@@ -13,9 +13,7 @@ import dtos.ENUMS.CategoriaEventoDTO;
 public class CategoriaDTO {
 
     private String idCategoria;
-
     private String UrlImagen;
-
     private CategoriaEventoDTO nombreCategoria;
 
     public CategoriaDTO(String idCategoria, String UrlImagen, CategoriaEventoDTO nombreCategoria) {

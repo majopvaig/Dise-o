@@ -1,6 +1,5 @@
 package Pantallas.vistas;
 
-import Controlador.coordinador.CoordinadorAplicacion;
 import Controlador.interfaz.ICoordinadorAplicacion;
 import Observer.IAsientosSeleccionadosListener;
 import dtos.*;
@@ -22,7 +21,7 @@ import javax.swing.*;
 public class PnlEstadio extends JPanel {
 
     private final Map<SeccionDTO, List<AsientoEventoDTO>> mapaOcupacion;
-    private final List<AsientoDTO> catalogoAsientos;
+    //private final List<AsientoDTO> catalogoAsientos;
     private final IAsientosSeleccionadosListener listenerSeleccion;
 
     /**
@@ -75,7 +74,7 @@ public class PnlEstadio extends JPanel {
      */
     public PnlEstadio(Map<SeccionDTO, List<AsientoEventoDTO>> mapa, List<AsientoDTO> catalogo, IAsientosSeleccionadosListener listener, ICoordinadorAplicacion coordinador) {
         this.mapaOcupacion = mapa;
-        this.catalogoAsientos = catalogo;
+        //this.catalogoAsientos = catalogo;
         this.listenerSeleccion = listener;
         this.asientosSeleccionados = new ArrayList<>();
         this.coodinador = coordinador;
@@ -188,7 +187,7 @@ public class PnlEstadio extends JPanel {
 
         for (int i = 0; i < asientos.size(); i++) {
             AsientoEventoDTO ae = asientos.get(i);
-            AsientoDTO info = buscarDetalle(ae.getIdAsiento());
+            AsientoDTO info = ae.getAsiento();
 
             int px = x + (i % cols) * (size + esp);
             int py = y + (i / cols) * (size + esp);
@@ -236,7 +235,7 @@ public class PnlEstadio extends JPanel {
                     AsientoEventoDTO seleccionado = null;
 
                     for (AsientoEventoDTO item : asientosSeleccionados) {
-                        if (item.getIdAsiento().equals(ae.getIdAsiento())) {
+                        if (item.getAsiento().getIdAsiento().equals(ae.getAsiento().getIdAsiento())) {
                             seleccionado = item;
                             break;
                         }
@@ -245,7 +244,7 @@ public class PnlEstadio extends JPanel {
                     // Si ya estaba seleccionado → quitar selección
                     if (seleccionado != null) {
                         boolean liberado = coodinador.liberarAsiento(
-                                ae.getIdAsiento()
+                                ae.getIdAsientoEvento()
                         );
 
                         if (liberado) {
@@ -270,7 +269,7 @@ public class PnlEstadio extends JPanel {
 
                     // Intentar reservar
                     boolean reservado = coodinador.reservarAsiento(
-                            ae.getIdAsiento()
+                            ae.getIdAsientoEvento()
                     );
 
                     if (reservado) {
@@ -299,32 +298,32 @@ public class PnlEstadio extends JPanel {
         List<AsientoDTO> listInfo = new ArrayList<>();
 
         for (AsientoEventoDTO ae : asientosSeleccionados) {
-            listInfo.add(buscarDetalle(ae.getIdAsiento()));
-            listSecciones.add(buscarSeccion(ae));
+            listInfo.add(ae.getAsiento());
+            listSecciones.add(ae.getAsiento().getSeccion());
         }
 
         listenerSeleccion.onSeleccionCambiada(listSecciones, listInfo, asientosSeleccionados);
     }
 
-    private AsientoDTO buscarDetalle(Object idBuscado) {
-        if (catalogoAsientos == null || idBuscado == null) {
-            return null;
-        }
-        String idStr = String.valueOf(idBuscado);
-        for (AsientoDTO a : catalogoAsientos) {
-            if (String.valueOf(a.getIdAsiento()).equals(idStr)) {
-                return a;
-            }
-        }
-        return null;
-    }
-
-    private SeccionDTO buscarSeccion(AsientoEventoDTO ae) {
-        for (Map.Entry<SeccionDTO, List<AsientoEventoDTO>> entry : mapaOcupacion.entrySet()) {
-            if (entry.getValue().contains(ae)) {
-                return entry.getKey();
-            }
-        }
-        return null;
-    }
+//    private AsientoDTO buscarDetalle(Object idBuscado) {
+//        if (catalogoAsientos == null || idBuscado == null) {
+//            return null;
+//        }
+//        String idStr = String.valueOf(idBuscado);
+//        for (AsientoDTO a : catalogoAsientos) {
+//            if (String.valueOf(a.getIdAsiento()).equals(idStr)) {
+//                return a;
+//            }
+//        }
+//        return null;
+//    }
+//
+//    private SeccionDTO buscarSeccion(AsientoEventoDTO ae) {
+//        for (Map.Entry<SeccionDTO, List<AsientoEventoDTO>> entry : mapaOcupacion.entrySet()) {
+//            if (entry.getValue().contains(ae)) {
+//                return entry.getKey();
+//            }
+//        }
+//        return null;
+//    }
 }

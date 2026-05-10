@@ -60,6 +60,15 @@ public class EventoBO implements IEventoBO {
             throw new NegocioException(ex.getMessage());
         }
     }
+    
+    @Override
+    public boolean reducirDisponibilidadEvento(String id) throws NegocioException {
+        try{
+            return eventoDAO.reducirDisponibilidad(id);
+        } catch(PersistenciaException ex){
+            throw new NegocioException(ex.getMessage());
+        }
+    }
 
     public boolean validarDatos(EventoDTO eventoDTO) {
         // 1. Validar que el objeto no sea nulo

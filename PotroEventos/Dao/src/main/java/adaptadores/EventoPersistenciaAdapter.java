@@ -4,11 +4,19 @@
  */
 package adaptadores;
 
+import Entitys.Categoria;
 import Entitys.ENUMS.EstadoEvento;
 import Entitys.ENUMS.TipoEventoP;
 import Entitys.Evento;
+import Entitys.Ubicacion;
+import daos.CategoriaDAO;
+import daos.UbicacionDAO;
 import entidadesmongo.EventoMongoEntidad;
+import entidadesresumenmongo.CategoriaResumenMongo;
+import entidadesresumenmongo.UbicacionResumenMongo;
 import excepciones.PersistenciaException;
+import interfaces.ICategoriaDAO;
+import interfaces.IUbicacionDAO;
 import java.util.ArrayList;
 import java.util.List;
 import org.bson.types.ObjectId;
@@ -19,6 +27,9 @@ import org.bson.types.ObjectId;
  */
 public class EventoPersistenciaAdapter {
     
+    private static ICategoriaDAO categoriaDAO = CategoriaDAO.getInstance();
+    private static IUbicacionDAO ubicacionDAO = UbicacionDAO.getInstance();
+    
     public static EventoMongoEntidad convertirAMongo(Evento evento) throws PersistenciaException {
         if(evento == null){
             return null;
@@ -27,11 +38,21 @@ public class EventoPersistenciaAdapter {
         EventoMongoEntidad mongo = new EventoMongoEntidad();
         
         mongo.setId(convertirStringAObjectId(evento.getIdEvento()));
-        mongo.setCategoria(CategoriaPersistenciaAdapter.convetirAMongo(evento.getCategoriaEvento()));
+        
+        mongo.setCategoria(
+                new CategoriaResumenMongo(
+                        convertirStringAObjectId(evento.getCategoriaEvento().getId()), 
+                        evento.getCategoriaEvento().getNombre().name()));
+        
         mongo.setNombre(evento.getNombreEvento());
         mongo.setInformacion(evento.getInformacionEvento());
         mongo.setFechaHora(evento.getFechaHora());
-        mongo.setUbicacion(UbicacionPersistenciaAdapter.convetirAMongo(evento.getUbicacion()));
+        
+        mongo.setUbicacion(
+                new UbicacionResumenMongo(
+                        convertirStringAObjectId(evento.getUbicacion().getIdUbicacion()), 
+                        evento.getUbicacion().getNombre()));
+        
         mongo.setEstado(evento.getEstadoEvento().name());
         mongo.setUrlImagen(evento.getUrlImagen());
         mongo.setGratuito(evento.isGratuito());
@@ -48,11 +69,21 @@ public class EventoPersistenciaAdapter {
         
         Evento dominio = new Evento();
         dominio.setIdEvento(mongo.getIdComoTexto());
-        dominio.setCategoriaEvento(CategoriaPersistenciaAdapter.convertirADominio(mongo.getCategoria()));
+        
+        Categoria categoria = categoriaDAO.consultarPorId(mongo.getCategoria().getIdComoTexto());
+        if(categoria != null){
+            dominio.setCategoriaEvento(categoria);
+        }
+        
         dominio.setNombreEvento(mongo.getNombre());
         dominio.setInformacionEvento(mongo.getInformacion());
         dominio.setFechaHora(mongo.getFechaHora());
-        dominio.setUbicacion(UbicacionPersistenciaAdapter.convertirADominio(mongo.getUbicacion()));
+        
+        Ubicacion ubicacion = ubicacionDAO.consultarPorID(mongo.getUbicacion().getIdComoTexto());
+        if(ubicacion != null){
+            dominio.setUbicacion(ubicacion);
+        }
+
         dominio.setEstadoEvento(EstadoEvento.valueOf(mongo.getEstado()));
         dominio.setUrlImagen(mongo.getUrlImagen());
         dominio.setGratuito(mongo.isGratuito());

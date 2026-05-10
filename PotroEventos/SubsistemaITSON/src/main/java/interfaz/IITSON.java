@@ -4,9 +4,7 @@
  */
 package interfaz;
 
-import dtos.UsuarioITSONDTO;
 import dtos.UsuarioInstitucionalDTO;
-import excepciones.ITSONException;
 
 /**
  *
@@ -14,5 +12,5 @@ import excepciones.ITSONException;
  */
 public interface IITSON {
     
-    boolean validarUsuarioITSON(UsuarioITSONDTO usuario);
+    boolean validarUsuarioITSON(UsuarioInstitucionalDTO usuario);
 }

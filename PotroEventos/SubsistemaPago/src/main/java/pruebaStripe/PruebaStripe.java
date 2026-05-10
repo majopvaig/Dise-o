@@ -53,9 +53,9 @@ public class PruebaStripe {
 
             ControlPago control = ControlPago.getInstance();
 
-            boolean exito = control.realizarPago(tarjeta, cobro);
+            String exito = control.realizarPago(tarjeta, cobro);
 
-            if (exito) {
+            if (exito != null) {
                 System.out.println("Pago procesado correctamente.");
             } else {
                 System.out.println("El pago no fue aprobado.");

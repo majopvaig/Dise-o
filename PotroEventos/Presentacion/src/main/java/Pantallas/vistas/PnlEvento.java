@@ -54,18 +54,50 @@ public class PnlEvento extends Panel {
     }
 
     private void cargarEvento() {
-        ImageIcon icono = new ImageIcon(evento.getUrlImagen());
-        int ancho = getWidth();
-        int alto = getHeight();
-        if (ancho <= 0) {
-            ancho = 270;
+        if (modoConsulta) {
+            if (reservacion.getBoleto().getEvento().getUrlImagen() != null && !reservacion.getBoleto().getEvento().getUrlImagen().isEmpty()) {
+
+                String rutaLimpia = reservacion.getBoleto().getEvento().getUrlImagen().replace("/src/main/resources", "");
+                String rutaAlternativa = reservacion.getBoleto().getEvento().getUrlImagen().replace("src/main/resources", "");
+
+                java.net.URL imgUrl = getClass().getResource(rutaLimpia);
+                if (imgUrl == null) {
+                    imgUrl = getClass().getResource(rutaAlternativa);
+                }
+
+                if (imgUrl != null) {
+                    ImageIcon icono = new ImageIcon(imgUrl);
+
+                    int ancho = 306;
+                    int alto = 202;
+
+                    Image imagenEscalada = icono.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+                    iconEvento.setIcon(new ImageIcon(imagenEscalada));
+                }
+                iconEvento.setText("");
+            }
+        } else {
+            if (evento.getUrlImagen() != null && !evento.getUrlImagen().isEmpty() && !evento.getUrlImagen().isBlank()) {
+                String rutaLimpia = evento.getUrlImagen().replace("/src/main/resources", "");
+                String rutaAlternativa = evento.getUrlImagen().replace("src/main/resources", "");
+
+                java.net.URL imgUrl = getClass().getResource(rutaLimpia);
+                if (imgUrl == null) {
+                    imgUrl = getClass().getResource(rutaAlternativa);
+                }
+
+                if (imgUrl != null) {
+                    ImageIcon icono = new ImageIcon(imgUrl);
+
+                    int ancho = 306;
+                    int alto = 202;
+
+                    Image imagenEscalada = icono.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+                    iconEvento.setIcon(new ImageIcon(imagenEscalada));
+                }
+                iconEvento.setText("");
+            }
         }
-        if (alto <= 0) {
-            alto = 188;
-        }
-        Image img = icono.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
-        iconEvento.setIcon(new ImageIcon(img));
-        iconEvento.setText("");
         this.lblNombre.setText(evento.getNombreEvento());
         DateTimeFormatter formateadorFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         DateTimeFormatter formateadorHora = DateTimeFormatter.ofPattern("HH:mm");

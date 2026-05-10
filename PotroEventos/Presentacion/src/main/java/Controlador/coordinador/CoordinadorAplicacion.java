@@ -270,7 +270,7 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
     }
 
     @Override
-    public ReservacionDTO agregarReservacion(ReservacionDTO reservacion) throws CoordinadorException {
+    public boolean agregarReservacion(ReservacionDTO reservacion) throws CoordinadorException {
         try {
             return controlCompra.agregarReservacion(reservacion);
         } catch (CompraBoletoException ex) {
@@ -289,9 +289,9 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
      * AsientoEventoDTO.
      */
     @Override
-    public Map<SeccionDTO, List<AsientoEventoDTO>> obtenerMapaOcupacion(String idEvento) {
+    public Map<SeccionDTO, List<AsientoEventoDTO>> obtenerMapaOcupacion(EventoDTO evento) {
         try {
-            return controlCompra.obtenerMapaOcupacion(idEvento);
+            return controlCompra.obtenerMapaOcupacion(evento);
         } catch (CompraBoletoException e) {
             System.err.println(e.getMessage());
             return new HashMap<>();
@@ -344,11 +344,11 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
     }
 
     @Override
-    public boolean realizarCompra(TarjetaDTO tarjeta, CobroDTO cobro) {
+    public String realizarCompra(TarjetaDTO tarjeta, CobroDTO cobro) {
         try {
             return controlCompra.realizarCompra(tarjeta, cobro);
         } catch (CompraBoletoException ex) {
-            return false;
+            return null;
         }
     }
 

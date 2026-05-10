@@ -6,7 +6,7 @@ package fachada;
 
 import control.ControlITSON;
 import dtos.UsuarioITSONDTO;
-import excepciones.ITSONException;
+import dtos.UsuarioInstitucionalDTO;
 import interfaz.IITSON;
 
 /**
@@ -16,12 +16,12 @@ import interfaz.IITSON;
 public class FachadaITSON extends ControlITSON implements IITSON {
     
     @Override
-    public boolean validarUsuarioITSON(UsuarioITSONDTO usuario){
-        UsuarioITSONDTO resultado = super.buscarUsuario(usuario);
-        if(resultado != null){
-            return true;
+    public boolean validarUsuarioITSON(UsuarioInstitucionalDTO usuario){
+        if(!super.validarObjetoUsuario(usuario)){
+            return false;
         }
-        return false;
+        UsuarioITSONDTO resultado = super.buscarUsuario(usuario);
+        return resultado != null;
     }
     
 }

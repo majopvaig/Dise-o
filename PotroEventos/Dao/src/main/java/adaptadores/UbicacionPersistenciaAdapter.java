@@ -29,6 +29,7 @@ public class UbicacionPersistenciaAdapter {
         mongo.setNombre(ubicacion.getNombre());
         mongo.setCapacidad(ubicacion.getCapacidad());
         mongo.setTipoUbicacion(ubicacion.getTipo().name());
+        mongo.setSecciones(SeccionPersistenciaAdapter.convertirListaAMongo(ubicacion.getSecciones()));
         
         return mongo;
     }
@@ -44,6 +45,7 @@ public class UbicacionPersistenciaAdapter {
         dominio.setNombre(ubicacion.getNombre());
         dominio.setCapacidad(ubicacion.getCapacidad());
         dominio.setTipo(TipoUbicacionP.valueOf(ubicacion.getTipoUbicacion()));
+        dominio.setSecciones(SeccionPersistenciaAdapter.convertirListaADominio(ubicacion.getSecciones()));
         
         return dominio;
     }

@@ -4,6 +4,8 @@
  */
 package entidadesmongo;
 
+import entidadesresumenmongo.CategoriaResumenMongo;
+import entidadesresumenmongo.UbicacionResumenMongo;
 import java.time.LocalDateTime;
 import org.bson.codecs.pojo.annotations.BsonId;
 import org.bson.types.ObjectId;
@@ -17,11 +19,11 @@ public class EventoMongoEntidad {
     @BsonId
     private ObjectId id;
     
-    private CategoriaMongoEntidad categoria;
+    private CategoriaResumenMongo categoria;
     private String nombre;
     private String informacion;
     private LocalDateTime fechaHora;
-    private UbicacionMongoEntidad ubicacion;
+    private UbicacionResumenMongo ubicacion;
     private String estado;
     private String urlImagen;
     private boolean gratuito;
@@ -31,7 +33,7 @@ public class EventoMongoEntidad {
     public EventoMongoEntidad() {
     }
 
-    public EventoMongoEntidad(CategoriaMongoEntidad categoria, String nombre, String informacion, LocalDateTime fechaHora, UbicacionMongoEntidad ubicacion, String estado, String urlImagen, boolean gratuito, String tipo, int disponibilidad) {
+    public EventoMongoEntidad(CategoriaResumenMongo categoria, String nombre, String informacion, LocalDateTime fechaHora, UbicacionResumenMongo ubicacion, String estado, String urlImagen, boolean gratuito, String tipo, int disponibilidad) {
         this.categoria = categoria;
         this.nombre = nombre;
         this.informacion = informacion;
@@ -44,7 +46,7 @@ public class EventoMongoEntidad {
         this.disponibilidad = disponibilidad;
     }
 
-    public EventoMongoEntidad(ObjectId id, CategoriaMongoEntidad categoria, String nombre, String informacion, LocalDateTime fechaHora, UbicacionMongoEntidad ubicacion, String estado, String urlImagen, boolean gratuito, String tipo, int disponibilidad) {
+    public EventoMongoEntidad(ObjectId id, CategoriaResumenMongo categoria, String nombre, String informacion, LocalDateTime fechaHora, UbicacionResumenMongo ubicacion, String estado, String urlImagen, boolean gratuito, String tipo, int disponibilidad) {
         this.id = id;
         this.categoria = categoria;
         this.nombre = nombre;
@@ -73,11 +75,11 @@ public class EventoMongoEntidad {
         return id.toHexString();
     }
 
-    public CategoriaMongoEntidad getCategoria() {
+    public CategoriaResumenMongo getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(CategoriaMongoEntidad categoria) {
+    public void setCategoria(CategoriaResumenMongo categoria) {
         this.categoria = categoria;
     }
 
@@ -105,11 +107,11 @@ public class EventoMongoEntidad {
         this.fechaHora = fechaHora;
     }
 
-    public UbicacionMongoEntidad getUbicacion() {
+    public UbicacionResumenMongo getUbicacion() {
         return ubicacion;
     }
 
-    public void setUbicacion(UbicacionMongoEntidad ubicacion) {
+    public void setUbicacion(UbicacionResumenMongo ubicacion) {
         this.ubicacion = ubicacion;
     }
 
@@ -166,7 +168,8 @@ public class EventoMongoEntidad {
                 + ", urlImagen=" + urlImagen 
                 + ", gratuito=" + gratuito 
                 + ", tipo=" + tipo 
-                + ", disponibilidad=" + disponibilidad + '}';
+                + ", disponibilidad=" + disponibilidad 
+                + '}';
     }
     
 }

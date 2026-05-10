@@ -45,4 +45,16 @@ public class AsientoDAO implements IAsientoDAO {
         }
     }
 
+    @Override
+    public Asiento consultarPorID(String idAsiento) throws PersistenciaException {
+        try{
+            AsientoMongoEntidad seccion = coleccionAsientos
+                    .find(eq("_id", new ObjectId(idAsiento)))
+                    .first();
+            return AsientoPersistenciaAdapter.convertirADominio(seccion);
+        } catch(MongoException me){
+            throw new PersistenciaException("No fue posible obtener el asiento.");
+        }
+    }
+
 }

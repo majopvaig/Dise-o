@@ -253,6 +253,7 @@ public class FrmRegistroItson extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Formato de ID inválido.");
             return;
         }
+        id = id.replaceFirst("^0+", "");
         UsuarioInstitucionalDTO usuario = new UsuarioInstitucionalDTO(id, contrasenia);
         exitoRegistro = coordinador.validarCredenciales(usuario);
         if (!exitoRegistro) {
