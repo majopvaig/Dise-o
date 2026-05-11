@@ -46,14 +46,35 @@ public class ControlGestionUsuarios {
         return usuarioActivo;
     }
 
-//    public boolean restarCreditos(Integer cantidad, String idUsuario) {
-//        return usuarioBO.restarCreditos(cantidad, idUsuario);
-//    }
+    public boolean restarCreditos(Integer cantidad, String idUsuario) throws GestionUsuarioException {
+        try {
+            return usuarioBO.restarCreditos(cantidad, idUsuario);
+        } catch (NegocioException ne) {
+            throw new GestionUsuarioException(ne.getMessage());
+        }
+    }
+    
+    public boolean aumentarCreditos(Integer cantidad, String idUsuario) throws GestionUsuarioException {
+        try{
+            return usuarioBO.aumentarCreditos(cantidad, idUsuario);
+        } catch(NegocioException ne){
+            throw new GestionUsuarioException(ne.getMessage());
+        }
+    }
+    
     public List<ReservacionDTO> obtenerReservacionUsuario(String idUsuario) throws GestionUsuarioException {
         try {
             return reservacionBO.obtenerReservacionesUsuario(idUsuario);
         } catch (NegocioException ex) {
             throw new GestionUsuarioException(ex.getMessage());
+        }
+    }
+    
+    public String consultarCreditos(String idUsuario) throws GestionUsuarioException {
+        try{
+            return usuarioBO.consultarCreditos(idUsuario);
+        } catch(NegocioException ne){
+            throw new GestionUsuarioException(ne.getMessage());
         }
     }
 

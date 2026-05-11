@@ -28,6 +28,10 @@ public interface IGestionUsuariosFachada {
     public UsuarioDTO obtenerUsuarioActivo();
 
     public boolean restarCreditos(Integer cantidad, String idUsuario);
+    
+    public boolean aumentarCreditos(Integer cantidad, String idUsuario);
+    
+    public String consultarCreditos(String idUsuario);
 
     public List<ReservacionDTO> obtenerReservacionesUsuario(String idUsuario) throws GestionUsuarioException;
 }

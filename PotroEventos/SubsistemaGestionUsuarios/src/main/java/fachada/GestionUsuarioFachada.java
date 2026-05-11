@@ -40,6 +40,28 @@ public class GestionUsuarioFachada implements IGestionUsuariosFachada {
 
     @Override
     public boolean restarCreditos(Integer cantidad, String idUsuario) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            return control.restarCreditos(cantidad, idUsuario);
+        } catch (GestionUsuarioException gue) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean aumentarCreditos(Integer cantidad, String idUsuario) {
+        try {
+            return control.aumentarCreditos(cantidad, idUsuario);
+        } catch (GestionUsuarioException gue) {
+            return false;
+        }
+    }
+
+    @Override
+    public String consultarCreditos(String idUsuario) {
+        try {
+            return control.consultarCreditos(idUsuario);
+        } catch (GestionUsuarioException gue) {
+            return null;
+        }
     }
 }

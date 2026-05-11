@@ -151,7 +151,10 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
         ocultarTodo();
         if (frmPlantilla == null) {
             frmPlantilla = new FrmPlantillaSistema(this);
-            frmPlantilla.setUsuario(usuario);
+        }
+        String creditos = controlUsuarios.consultarCreditos(usuario.getIdUsuario());
+        if(creditos != null){
+            frmPlantilla.setCreditos(creditos);
         }
         frmPlantilla.setCategorias();
         frmPlantilla.setVisible(true);
@@ -165,6 +168,10 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
         ocultarTodo();
         if (frmPlantilla == null) {
             frmPlantilla = new FrmPlantillaSistema(this);
+            String creditos = controlUsuarios.consultarCreditos(usuario.getIdUsuario());
+            if(creditos != null){
+                frmPlantilla.setCreditos(creditos);
+            }
         }
         frmPlantilla.setContenido(new PnlConsultar(this));
         frmPlantilla.setVisible(true);
@@ -178,6 +185,10 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
         }
         frmPlantilla.setContenido(new PnlConsultarEvento(this, evento));
         frmPlantilla.setVisible(true);
+        String creditos = controlUsuarios.consultarCreditos(usuario.getIdUsuario());
+        if (creditos != null) {
+            frmPlantilla.setCreditos(creditos);
+        }
     }
 
     @Override
@@ -212,13 +223,15 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
             JOptionPane.showMessageDialog(null, ex.getMessage(), "Advertencia", JOptionPane.WARNING_MESSAGE);
         }
         frmPlantilla.setVisible(true);
+        String creditos = controlUsuarios.consultarCreditos(usuario.getIdUsuario());
+        if (creditos != null) {
+            frmPlantilla.setCreditos(creditos);
+        }
     }
 
     @Override
     public List<EventoDTO> consultarEventos(CategoriaDTO categoria) throws GestionEventoException {
-
         return controlEvento.consultarEventosPorCategoria(categoria);
-
     }
 
     @Override
