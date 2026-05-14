@@ -5,21 +5,26 @@
 package daos;
 
 import Entitys.Boleto;
+import Entitys.Devolucion;
 import Entitys.Reservacion;
 import adaptadores.BoletoPersistenciaAdapter;
 import adaptadores.ReservacionPersistenciaAdapter;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
 import static com.mongodb.client.model.Filters.eq;
 import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.Indexes;
+import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.InsertOneResult;
+import com.mongodb.client.result.UpdateResult;
 import conexion.ConexionMongo;
 import entidadesmongo.ReservacionMongoEntidad;
 import excepciones.PersistenciaException;
 import interfaces.IReservacionDAO;
 import java.util.ArrayList;
 import java.util.List;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
 /**
@@ -33,7 +38,7 @@ public class ReservacionDAO implements IReservacionDAO {
     
     private ReservacionDAO() {
         // esto es para que no se repitan los qrs y su forma de buscarlos sea
-        // más rápida.
+        // más rápida. aunq ahora q lo pienso debería ser el token
         coleccionReservaciones
                 .createIndex(
                         Indexes.ascending("boleto.codigoQR"), 
@@ -106,6 +111,20 @@ public class ReservacionDAO implements IReservacionDAO {
 
         } catch (MongoException e) {
             throw new PersistenciaException("No fue posible obtener el boleto de la reservación.");
+        }
+    }
+
+    @Override
+    public boolean agregarDevolucion(String idReservacion, Devolucion devolucion) throws PersistenciaException {
+        try{
+            Bson r = Filters.eq("_id", idReservacion);
+            Bson campo = Updates.set("devolucion", devolucion);
+            
+            UpdateResult resultado = coleccionReservaciones.updateOne(r, campo);
+            
+            return resultado.getModifiedCount() > 0;
+        } catch(MongoException me){
+            throw new PersistenciaException("No fue posible agregar la devolución a la reservación.");
         }
     }
     

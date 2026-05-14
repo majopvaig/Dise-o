@@ -110,4 +110,13 @@ public class EventoBO implements IEventoBO {
 
         return true; // Si pasó todos los filtros
     }
+
+    @Override
+    public boolean aumentarDisponibilidadEvento(String idEvento) throws NegocioException {
+        try{
+            return eventoDAO.aumentarDisponibilidad(idEvento);
+        } catch(PersistenciaException pe){
+            throw new NegocioException(pe.getMessage());
+        }
+    }
 }

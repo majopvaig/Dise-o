@@ -23,4 +23,6 @@ public interface IEventoDAO {
     Evento actualizarEvento(Evento evento) throws PersistenciaException;
     
     boolean reducirDisponibilidad(String idEvento) throws PersistenciaException;
+    
+    boolean aumentarDisponibilidad(String idEvento) throws PersistenciaException;
 }

@@ -23,20 +23,22 @@ public class ReservacionMongoEntidad {
     private ObjectId usuario;
     private LocalDateTime fechaRegistro;
     private String estado;
+    private DevolucionMongoEntidad devolucion;
 
     public ReservacionMongoEntidad() {
     }
 
-    public ReservacionMongoEntidad(double total, BoletoMongoEntidad boleto, String cobro, ObjectId usuario, LocalDateTime fechaRegistro, String estado) {
+    public ReservacionMongoEntidad(double total, BoletoMongoEntidad boleto, String cobro, ObjectId usuario, LocalDateTime fechaRegistro, String estado, DevolucionMongoEntidad devolucion) {
         this.total = total;
         this.boleto = boleto;
         this.cobro = cobro;
         this.usuario = usuario;
         this.fechaRegistro = fechaRegistro;
         this.estado = estado;
+        this.devolucion = devolucion;
     }
 
-    public ReservacionMongoEntidad(ObjectId id, double total, BoletoMongoEntidad boleto, String cobro, ObjectId usuario, LocalDateTime fechaRegistro, String estado) {
+    public ReservacionMongoEntidad(ObjectId id, double total, BoletoMongoEntidad boleto, String cobro, ObjectId usuario, LocalDateTime fechaRegistro, String estado, DevolucionMongoEntidad devolucion) {
         this.id = id;
         this.total = total;
         this.boleto = boleto;
@@ -44,6 +46,7 @@ public class ReservacionMongoEntidad {
         this.usuario = usuario;
         this.fechaRegistro = fechaRegistro;
         this.estado = estado;
+        this.devolucion = devolucion;
     }
 
     public ObjectId getId() {
@@ -116,16 +119,25 @@ public class ReservacionMongoEntidad {
         this.estado = estado;
     }
 
+    public DevolucionMongoEntidad getDevolucion() {
+        return devolucion;
+    }
+
+    public void setDevolucion(DevolucionMongoEntidad devolucion) {
+        this.devolucion = devolucion;
+    }
+
     @Override
     public String toString() {
         return "ReservacionMongoEntidad{" 
-                + "id=" + getIdComoTexto() 
+                + "id=" + id 
                 + ", total=" + total 
                 + ", boleto=" + boleto 
-                + ", cobro=" + cobro
-                + ", usuario=" + getUsuarioComoTexto() 
+                + ", cobro=" + cobro 
+                + ", usuario=" + usuario 
                 + ", fechaRegistro=" + fechaRegistro 
                 + ", estado=" + estado 
+                + ", devolucion=" + devolucion 
                 + '}';
     }
     

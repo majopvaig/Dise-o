@@ -156,4 +156,24 @@ public class EventoDAO implements IEventoDAO {
         }
     }
 
+    @Override
+    public boolean aumentarDisponibilidad(String idEvento) throws PersistenciaException {
+        if (idEvento == null) {
+            throw new PersistenciaException("El id del evento es requerido.");
+        }
+        try {
+            Bson filtro = Filters.and(
+                    Filters.eq("_id", new ObjectId(idEvento)));
+
+            Bson aumento = inc("disponibilidad", +1);
+
+            UpdateResult resultado = coleccionEventos.updateOne(filtro, aumento);
+
+            return resultado.getModifiedCount() > 0;
+
+        } catch (MongoException me) {
+            throw new PersistenciaException("No fue posible aumentar la capacidad del evento.");
+        }
+    }
+
 }

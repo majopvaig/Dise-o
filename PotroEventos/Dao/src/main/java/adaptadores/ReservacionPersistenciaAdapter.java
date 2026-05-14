@@ -48,6 +48,10 @@ public class ReservacionPersistenciaAdapter {
         }
         mongo.setEstado(dominio.getEstado().name());
         
+        if(dominio.getDevolucion() != null){
+            mongo.setDevolucion(DevolucionPersistenciaAdapter.convertirAMongo(dominio.getDevolucion()));
+        }
+        
         return mongo;
     }
     
@@ -75,6 +79,10 @@ public class ReservacionPersistenciaAdapter {
         
         dominio.setFechaHora(mongo.getFechaRegistro());
         dominio.setEstado(ReservacionEstado.valueOf(mongo.getEstado()));
+        
+        if(mongo.getDevolucion() != null){
+            dominio.setDevolucion(DevolucionPersistenciaAdapter.convertirADominio(mongo.getDevolucion()));
+        } 
         
         return dominio;
     }

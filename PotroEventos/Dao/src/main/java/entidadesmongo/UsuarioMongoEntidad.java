@@ -21,25 +21,28 @@ public class UsuarioMongoEntidad {
     private String apellidoMaterno;
     private String correo;
     private String contrasenia;
+    private Integer creditos;
 
     public UsuarioMongoEntidad() {
     }
 
-    public UsuarioMongoEntidad(String nombre, String apellidoPaterno, String apellidoMaterno, String correo, String contrasenia) {
+    public UsuarioMongoEntidad(String nombre, String apellidoPaterno, String apellidoMaterno, String correo, String contrasenia, Integer creditos) {
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.correo = correo;
         this.contrasenia = contrasenia;
+        this.creditos = creditos;
     }
 
-    public UsuarioMongoEntidad(ObjectId id, String nombre, String apellidoPaterno, String apellidoMaterno, String correo, String contrasenia) {
+    public UsuarioMongoEntidad(ObjectId id, String nombre, String apellidoPaterno, String apellidoMaterno, String correo, String contrasenia, Integer creditos) {
         this.id = id;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.correo = correo;
         this.contrasenia = contrasenia;
+        this.creditos = creditos;
     }
 
     public ObjectId getId() {
@@ -97,14 +100,23 @@ public class UsuarioMongoEntidad {
         this.contrasenia = contrasenia;
     }
 
+    public Integer getCreditos() {
+        return creditos;
+    }
+
+    public void setCreditos(Integer creditos) {
+        this.creditos = creditos;
+    }
+
     @Override
     public String toString() {
         return "UsuarioMongoEntidad{" 
-                + "id=" + getIdComoTexto() 
+                + "id=" + id 
                 + ", nombre=" + nombre 
                 + ", apellidoPaterno=" + apellidoPaterno 
                 + ", apellidoMaterno=" + apellidoMaterno 
-                + ", correo=" + correo 
+                + ", correo=" + correo  
+                + ", creditos=" + creditos 
                 + '}';
     }
     

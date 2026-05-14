@@ -21,7 +21,7 @@ public class GestionEventoFachada implements IFachadaGestionEvento {
     private ControlGestionEvento control = ControlGestionEvento.getInstance();
 
     @Override
-    public EventoDTO consultarEvento(String idEvento) {
+    public EventoDTO consultarEvento(String idEvento) throws GestionEventoException {
         return control.consultarEvento(idEvento);
     }
 
@@ -37,6 +37,11 @@ public class GestionEventoFachada implements IFachadaGestionEvento {
     @Override
     public List<CategoriaDTO> consultarCategorias() throws GestionEventoException {
         return control.consultarCategorias();
+    }
+
+    @Override
+    public boolean aumentarCapacidad(String idEvento) throws GestionEventoException {
+        return control.aumentarCapacidad(idEvento);
     }
 
 }

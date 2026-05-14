@@ -18,7 +18,8 @@ public class PantallaEventoCancelar extends JFrame {
     /**
      * Creates new form PantallaEventoCancelar
      */
-    public PantallaEventoCancelar() {
+    public PantallaEventoCancelar(ReservacionDTO reservacion) {
+        this.reservacion = reservacion;
         initComponents();
     }
 
@@ -44,8 +45,8 @@ public class PantallaEventoCancelar extends JFrame {
         txtInfo = new javax.swing.JTextPane();
         txtFechaHora = new javax.swing.JLabel();
         txtUbicacion = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
+        btnRegresar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAutoRequestFocus(false);
@@ -128,17 +129,19 @@ public class PantallaEventoCancelar extends JFrame {
         txtUbicacion.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         txtUbicacion.setText("Ubicacion");
 
-        jButton1.setBackground(new java.awt.Color(255, 0, 0));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Cancelar ");
-        jButton1.setFocusPainted(false);
+        btnCancelar.setBackground(new java.awt.Color(255, 0, 0));
+        btnCancelar.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
+        btnCancelar.setText("Cancelar ");
+        btnCancelar.setBorder(null);
+        btnCancelar.setFocusPainted(false);
 
-        jButton2.setBackground(new java.awt.Color(47, 47, 47));
-        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Regresar");
-        jButton2.setFocusPainted(false);
+        btnRegresar.setBackground(new java.awt.Color(47, 47, 47));
+        btnRegresar.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        btnRegresar.setForeground(new java.awt.Color(255, 255, 255));
+        btnRegresar.setText("Regresar");
+        btnRegresar.setBorder(null);
+        btnRegresar.setFocusPainted(false);
 
         javax.swing.GroupLayout pnlLayout = new javax.swing.GroupLayout(pnl);
         pnl.setLayout(pnlLayout);
@@ -161,9 +164,9 @@ public class PantallaEventoCancelar extends JFrame {
                             .addComponent(txtUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(pnlLayout.createSequentialGroup()
                         .addGap(338, 338, 338)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(216, 216, 216)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(179, Short.MAX_VALUE))
         );
         pnlLayout.setVerticalGroup(
@@ -187,8 +190,8 @@ public class PantallaEventoCancelar extends JFrame {
                 .addComponent(txtUbicacion)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 103, Short.MAX_VALUE)
                 .addGroup(pnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(52, 52, 52))
         );
 
@@ -207,11 +210,11 @@ public class PantallaEventoCancelar extends JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCancelar;
     private javax.swing.JLabel btnConsultar;
     private javax.swing.JLabel btnInicio;
+    private javax.swing.JButton btnRegresar;
     private javax.swing.JLabel iconEvento;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblPotroEventos;
     private javax.swing.JLabel lblResumen;
