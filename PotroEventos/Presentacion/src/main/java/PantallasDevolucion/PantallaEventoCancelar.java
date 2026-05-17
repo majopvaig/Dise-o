@@ -4,8 +4,14 @@
  */
 package PantallasDevolucion;
 
+import Controlador.interfaz.ICoordinadorDevolucion;
 import dtos.ReservacionDTO;
+import java.awt.Image;
+import java.net.URL;
+import java.time.format.DateTimeFormatter;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -13,16 +19,73 @@ import javax.swing.JFrame;
  */
 public class PantallaEventoCancelar extends JFrame {
     
+    private ICoordinadorDevolucion coordinadorDev;
     private ReservacionDTO reservacion;
 
     /**
      * Creates new form PantallaEventoCancelar
      */
-    public PantallaEventoCancelar(ReservacionDTO reservacion) {
+    public PantallaEventoCancelar(ReservacionDTO reservacion, ICoordinadorDevolucion coordinadorDev) {
         this.reservacion = reservacion;
+        this.coordinadorDev = coordinadorDev;
         initComponents();
+        mostrarInformacionEvento();
+        validarTiempo();
+    }
+    
+    private void validarTiempo(){
+        if(coordinadorDev.validarTiempo(reservacion.getBoleto().getEvento())){
+            JOptionPane.showMessageDialog(this, "El evento está a menos de 48 horas de ocurrir, por lo que no puede ser cancelado.");
+            coordinadorDev.abrirConsultar(reservacion.getUsuario());
+            dispose();
+        }
+    }
+    
+    public void setReservacion(ReservacionDTO reservacion){
+        limpiar();
+        this.reservacion = reservacion;
+        mostrarInformacionEvento();
+    }
+    
+    private void mostrarInformacionEvento(){
+        txtTitulo.setText(reservacion.getBoleto().getEvento().getNombreEvento());
+        txtInfo.setText(reservacion.getBoleto().getEvento().getInformacionEvento());
+        DateTimeFormatter formateadorFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formateadorHora = DateTimeFormatter.ofPattern("HH:mm");
+        txtFechaHora.setText(String.valueOf(reservacion.getBoleto().getEvento().getFechaHora().format(formateadorFecha)) + " - " + String.valueOf(reservacion.getBoleto().getEvento().getFechaHora().format(formateadorHora)));
+        txtUbicacion.setText(reservacion.getBoleto().getEvento().getUbicacion().getNombre());
+        
+        // desplegar la imagen del evento
+        String rutaLimpia = reservacion.getBoleto().getEvento().getUrlImagen().replace("/src/main/resources", "");
+        String rutaAlternativa = reservacion.getBoleto().getEvento().getUrlImagen().replace("src/main/resources", "");
+
+        URL imgUrl = getClass().getResource(rutaLimpia);
+        if (imgUrl == null) {
+            imgUrl = getClass().getResource(rutaAlternativa);
+        }
+
+        if (imgUrl != null) {
+            ImageIcon icono = new ImageIcon(imgUrl);
+
+            int ancho = 373;
+            int alto = 234;
+
+            Image imagenEscalada = icono.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+            iconEvento.setIcon(new ImageIcon(imagenEscalada));
+        }
+        iconEvento.setText("");
     }
 
+    public void limpiar(){
+        txtTitulo.setText("");
+        txtInfo.setText("");
+        txtFechaHora.setText("");
+        txtUbicacion.setText("");
+        iconEvento.setIcon(null);
+        iconEvento.setText("");
+        reservacion = null;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -37,7 +100,6 @@ public class PantallaEventoCancelar extends JFrame {
         lblPotroEventos = new javax.swing.JLabel();
         pnlAzulFuerte = new javax.swing.JPanel();
         btnInicio = new javax.swing.JLabel();
-        btnConsultar = new javax.swing.JLabel();
         lblResumen = new javax.swing.JLabel();
         iconEvento = new javax.swing.JLabel();
         txtTitulo = new javax.swing.JLabel();
@@ -51,7 +113,6 @@ public class PantallaEventoCancelar extends JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAutoRequestFocus(false);
         setBackground(new java.awt.Color(255, 255, 255));
-        setPreferredSize(new java.awt.Dimension(1225, 688));
 
         pnl.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -83,10 +144,15 @@ public class PantallaEventoCancelar extends JFrame {
         btnInicio.setFont(new java.awt.Font("Segoe UI Black", 1, 24)); // NOI18N
         btnInicio.setForeground(new java.awt.Color(255, 255, 255));
         btnInicio.setText("Inicio");
-
-        btnConsultar.setFont(new java.awt.Font("Segoe UI Black", 1, 24)); // NOI18N
-        btnConsultar.setForeground(new java.awt.Color(255, 255, 255));
-        btnConsultar.setText("Consultar");
+        btnInicio.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                btnInicioAncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
 
         javax.swing.GroupLayout pnlAzulFuerteLayout = new javax.swing.GroupLayout(pnlAzulFuerte);
         pnlAzulFuerte.setLayout(pnlAzulFuerteLayout);
@@ -95,17 +161,13 @@ public class PantallaEventoCancelar extends JFrame {
             .addGroup(pnlAzulFuerteLayout.createSequentialGroup()
                 .addGap(22, 22, 22)
                 .addComponent(btnInicio)
-                .addGap(54, 54, 54)
-                .addComponent(btnConsultar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlAzulFuerteLayout.setVerticalGroup(
             pnlAzulFuerteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlAzulFuerteLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnlAzulFuerteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnInicio)
-                    .addComponent(btnConsultar))
+                .addComponent(btnInicio)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -135,6 +197,7 @@ public class PantallaEventoCancelar extends JFrame {
         btnCancelar.setText("Cancelar ");
         btnCancelar.setBorder(null);
         btnCancelar.setFocusPainted(false);
+        btnCancelar.addActionListener(this::btnCancelarActionPerformed);
 
         btnRegresar.setBackground(new java.awt.Color(47, 47, 47));
         btnRegresar.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -142,6 +205,7 @@ public class PantallaEventoCancelar extends JFrame {
         btnRegresar.setText("Regresar");
         btnRegresar.setBorder(null);
         btnRegresar.setFocusPainted(false);
+        btnRegresar.addActionListener(this::btnRegresarActionPerformed);
 
         javax.swing.GroupLayout pnlLayout = new javax.swing.GroupLayout(pnl);
         pnl.setLayout(pnlLayout);
@@ -209,9 +273,29 @@ public class PantallaEventoCancelar extends JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+        // TODO add your handling code here:
+        coordinadorDev.abrirConsultar(reservacion.getUsuario());
+        limpiar();
+        dispose();
+    }//GEN-LAST:event_btnRegresarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        // TODO add your handling code here:
+        coordinadorDev.mostrarDevolucion(reservacion);
+        limpiar();
+        dispose();
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnInicioAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_btnInicioAncestorAdded
+        // TODO add your handling code here:
+        coordinadorDev.inicioAplicacion();
+        limpiar();
+        dispose();
+    }//GEN-LAST:event_btnInicioAncestorAdded
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
-    private javax.swing.JLabel btnConsultar;
     private javax.swing.JLabel btnInicio;
     private javax.swing.JButton btnRegresar;
     private javax.swing.JLabel iconEvento;

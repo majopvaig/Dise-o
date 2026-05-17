@@ -22,5 +22,9 @@ public interface IReservacionDAO {
     
     Boleto obtenerBoleto(String idReservacion) throws PersistenciaException;
     
-    boolean agregarDevolucion(String idReservacion, Devolucion devolucion) throws PersistenciaException;
+    // lo agregó la majo
+    //boolean agregarDevolucion(String idReservacion, Devolucion devolucion) throws PersistenciaException;
+    
+    // lo agregó la majo
+    boolean cancelarReservacion(Devolucion devolucion, String idReservacion) throws PersistenciaException;
 }

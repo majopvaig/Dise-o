@@ -1,7 +1,11 @@
 package fachada;
 
+import adaptadores.BancoAdapter;
+import com.stripe.exception.StripeException;
 import control.ControlPago;
 import dtos.CobroDTO;
+import dtos.ReembolsoDTO;
+import dtos.RefundDTO;
 import dtos.TarjetaDTO;
 import excepciones.PagoException;
 import interfaz.IPago;
@@ -61,5 +65,13 @@ public class PagoFachada implements IPago {
             LOG.log(Level.SEVERE, "Error al procesar pago en fachada.", ex);
             throw ex;
         }
+    }
+
+    // lo agregó la majo
+    @Override
+    public ReembolsoDTO regresarDinero(String idTransaccion) throws PagoException {
+        RefundDTO reembolso = control.crearReembolso(idTransaccion);
+        LOG.log(Level.INFO, "Reembolso procesado correctamente.");
+        return BancoAdapter.infraestructuraADTO(reembolso);
     }
 }

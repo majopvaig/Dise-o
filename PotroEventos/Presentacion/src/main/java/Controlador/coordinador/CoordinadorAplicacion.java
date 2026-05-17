@@ -1,6 +1,7 @@
 package Controlador.coordinador;
 
 import Controlador.interfaz.ICoordinadorAplicacion;
+import Controlador.interfaz.ICoordinadorDevolucion;
 import Pantallas.FrmInicioSesion;
 import Pantallas.FrmPago;
 import Pantallas.FrmPlantillaSistema;
@@ -55,6 +56,8 @@ public class CoordinadorAplicacion implements ICoordinadorAplicacion {
     private final ICompraBoleto controlCompra = new CompraBoletoFachada();
     private final IFachadaGestionEvento controlEvento = new GestionEventoFachada();
     private final IGestionUsuariosFachada controlUsuarios = new GestionUsuarioFachada();
+    
+    private final ICoordinadorDevolucion coordinadorDevolucion = new CoordinadorDevolucion(this);
 
     private UsuarioDTO usuario;
     private UsuarioInstitucionalDTO usuarioITSON;

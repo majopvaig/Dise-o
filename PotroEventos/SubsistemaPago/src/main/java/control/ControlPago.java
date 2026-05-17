@@ -3,10 +3,13 @@ package control;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
+import com.stripe.model.Refund;
 import dtos.CobroDTO;
+import dtos.RefundDTO;
 import dtos.StripeChargeDTO;
 import dtos.TarjetaDTO;
 import excepciones.PagoException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -164,5 +167,34 @@ public class ControlPago {
         return cargo != null
                 && Boolean.TRUE.equals(cargo.getPaid())
                 && "succeeded".equalsIgnoreCase(cargo.getStatus());
+    }
+    
+    // lo agregó la majo
+    private boolean reembolsoExitoso(Refund reembolso){
+        return reembolso != null
+                && "succeeded".equalsIgnoreCase(reembolso.getStatus());
+    }
+    
+    // lo agregó la majo
+    public RefundDTO crearReembolso(String idOperacion) throws PagoException {
+        try {
+            Map<String, Object> parametros = new HashMap<>();
+
+            parametros.put("charge", idOperacion);
+
+            Refund reembolso = Refund.create(parametros);
+            if (reembolsoExitoso(reembolso)) {
+                LOG.log(Level.INFO,
+                        "Reembolso exitoso. ID: {0}, Estado: {1}");
+                return new RefundDTO(
+                        reembolso.getId(),
+                        LocalDateTime.now(),
+                        reembolso.getAmount().doubleValue(),
+                        "Tarjeta");
+            }
+            throw new PagoException("La operación no fue realizada.");
+        } catch (StripeException se) {
+            throw new PagoException("No se pudo realizar el reembolso: " + se.getMessage());
+        }
     }
 }

@@ -18,4 +18,9 @@ public interface IUsuarioDAO {
     Usuario obtenerUsuario(Usuario usuario) throws PersistenciaException;
 
     Usuario guardarUsuario(Usuario usuario) throws PersistenciaException;
+    
+    boolean restarCreditos(String idUsuario, Integer cantidad) throws PersistenciaException;
+    
+    // lo agregó la majo
+    boolean aumentarCreditos(String idUsuario, Integer cantidad) throws PersistenciaException;
 }

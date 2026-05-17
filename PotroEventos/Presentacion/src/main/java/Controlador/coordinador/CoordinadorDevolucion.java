@@ -4,6 +4,7 @@
  */
 package Controlador.coordinador;
 
+import Controlador.interfaz.ICoordinadorAplicacion;
 import Controlador.interfaz.ICoordinadorDevolucion;
 import PantallasDevolucion.PantallaDevolucion;
 import PantallasDevolucion.PantallaEventoCancelar;
@@ -15,6 +16,8 @@ import dtos.UsuarioDTO;
 import excepciones.GestionEventoException;
 import fachada.GestionEventoFachada;
 import interfaces.IFachadaGestionEvento;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 /**
@@ -25,7 +28,21 @@ public class CoordinadorDevolucion implements ICoordinadorDevolucion {
     
     private PantallaDevolucion frmDevolucion;
     private PantallaEventoCancelar frmEventoCancelar;
-    private IFachadaGestionEvento controlEvento = new GestionEventoFachada();
+    private final ICoordinadorAplicacion coordinadorApp;
+    private final IFachadaGestionEvento controlEvento = new GestionEventoFachada();
+    
+    public CoordinadorDevolucion(ICoordinadorAplicacion coordinador){
+        this.coordinadorApp = coordinador;
+    }
+    
+    private void ocultarTodo(){
+        if(frmDevolucion != null){
+            frmDevolucion.setVisible(false);
+        }
+        if(frmEventoCancelar != null){
+            frmEventoCancelar.setVisible(false);
+        }
+    }
     
     @Override
     public List<ReservacionDTO> consultarReservacionesUsuario(String idUsuario) {
@@ -34,7 +51,13 @@ public class CoordinadorDevolucion implements ICoordinadorDevolucion {
 
     @Override
     public void abrirMostrarEventoCancelar(ReservacionDTO reservacion) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        ocultarTodo();
+        if(frmEventoCancelar == null){
+            frmEventoCancelar = new PantallaEventoCancelar(reservacion, this);
+        } else {
+            frmEventoCancelar.setReservacion(reservacion);
+        }
+        frmEventoCancelar.setVisible(true);
     }
 
     @Override
@@ -43,7 +66,7 @@ public class CoordinadorDevolucion implements ICoordinadorDevolucion {
     }
 
     @Override
-    public boolean cancelarReservacionGratuita(ReservacionDTO reservaciom) {
+    public boolean cancelarReservacionGratuita(ReservacionDTO reservacion) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
@@ -54,7 +77,8 @@ public class CoordinadorDevolucion implements ICoordinadorDevolucion {
 
     @Override
     public void abrirConsultar(UsuarioDTO usuario) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        ocultarTodo();
+        coordinadorApp.mostrarConsultar();
     }
 
     @Override
@@ -62,13 +86,17 @@ public class CoordinadorDevolucion implements ICoordinadorDevolucion {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
+    /*
+    sabes k we yo creo q esto lo puede hacer el subsistema as well
+    */
     @Override
     public boolean validarTiempo(EventoDTO evento) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        LocalDateTime limite48Horas = LocalDateTime.now().minus(48, ChronoUnit.HOURS);
+        return evento.getFechaHora().isBefore(limite48Horas);
     }
 
     @Override
-    public boolean registrarMotivoCancelacion(DevolucionDTO devolucion) {
+    public boolean registrarMotivoCancelacion(DevolucionDTO devolucion, String idReservacion) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
@@ -79,6 +107,12 @@ public class CoordinadorDevolucion implements ICoordinadorDevolucion {
         } catch (GestionEventoException gee) {
             return false;
         }
+    }
+    
+    @Override
+    public void inicioAplicacion(){
+        ocultarTodo();
+        coordinadorApp.mostrarInicio();
     }
     
 }

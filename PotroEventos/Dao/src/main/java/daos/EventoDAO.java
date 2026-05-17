@@ -76,66 +76,6 @@ public class EventoDAO implements IEventoDAO {
     }
 
     @Override
-    public Evento guardar(Evento evento) throws PersistenciaException {
-        if (evento == null) {
-            throw new PersistenciaException("El evento no puede ser null");
-        }
-
-        if (evento.getFechaHora() == null) {
-            evento.setFechaHora(LocalDateTime.now());
-        }
-
-        try {
-            EventoMongoEntidad e = EventoPersistenciaAdapter.convertirAMongo(evento);
-            InsertOneResult resultado = this.coleccionEventos.insertOne(e);
-
-            if (resultado.getInsertedId() == null) {
-                throw new PersistenciaException("Error al guardar.");
-            }
-            ObjectId idGenerado = resultado.getInsertedId().asObjectId().getValue();
-            //String idGenerado = resultado.getInsertedId().asObjectId().getValue().toHexString();
-
-            e.setId(idGenerado);
-
-            return EventoPersistenciaAdapter.convertirADominio(e);
-
-        } catch (MongoException e) {
-            throw new PersistenciaException("No fue posible guardar el evento");
-        }
-    }
-
-    /*
-    creo q esto está mal ya q nunca actualizamos eventos nosotros, a lo mucho
-    les restamos disponibilidad pero para eso está el método de abajo
-    */
-    @Override
-    public Evento actualizarEvento(Evento evento) throws PersistenciaException {
-        if (evento == null) {
-            throw new PersistenciaException("El evento no puede ser null");
-        }
-
-        if (evento.getIdEvento() == null) {
-            throw new PersistenciaException("El id del evento es requerido");
-        }
-
-        try {
-            EventoMongoEntidad e = EventoPersistenciaAdapter.convertirAMongo(evento);
-            
-            UpdateResult resultado = this.coleccionEventos
-                    .replaceOne(eq("_id", new ObjectId(evento.getIdEvento())), e);
-
-            if (resultado.getMatchedCount() == 0) {
-                throw new PersistenciaException("No se encontró el evento");
-            }
-
-            return EventoPersistenciaAdapter.convertirADominio(e);
-
-        } catch (MongoException e) {
-            throw new PersistenciaException("No fue posible actualizar el evento");
-        }
-    }
-
-    @Override
     public boolean reducirDisponibilidad(String idEvento) throws PersistenciaException {
         if(idEvento == null){
             throw new PersistenciaException("El id del evento es requerido.");
@@ -156,6 +96,7 @@ public class EventoDAO implements IEventoDAO {
         }
     }
 
+    // lo agregó la majo
     @Override
     public boolean aumentarDisponibilidad(String idEvento) throws PersistenciaException {
         if (idEvento == null) {

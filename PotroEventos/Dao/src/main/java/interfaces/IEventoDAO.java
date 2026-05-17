@@ -17,12 +17,9 @@ public interface IEventoDAO {
     Evento buscarPorId(String idEvento) throws PersistenciaException;
 
     List<Evento> buscarTodosCategoria(Categoria categoria) throws PersistenciaException;
-
-    Evento guardar(Evento evento) throws PersistenciaException;
-
-    Evento actualizarEvento(Evento evento) throws PersistenciaException;
     
     boolean reducirDisponibilidad(String idEvento) throws PersistenciaException;
     
+    // lo agregó la majo
     boolean aumentarDisponibilidad(String idEvento) throws PersistenciaException;
 }

@@ -4,7 +4,21 @@
  */
 package PantallasDevolucion;
 
+import Controlador.interfaz.ICoordinadorAplicacion;
+import Controlador.interfaz.ICoordinadorDevolucion;
 import dtos.DevolucionDTO;
+import dtos.ENUMS.MotivoDevolucionN;
+import dtos.ENUMS.TipoDevolucionN;
+import dtos.ReembolsoDTO;
+import dtos.ReservacionDTO;
+import java.awt.Image;
+import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import javax.swing.JRadioButton;
 
 /**
  *
@@ -12,13 +26,95 @@ import dtos.DevolucionDTO;
  */
 public class PantallaDevolucion extends javax.swing.JFrame {
     
+    private ICoordinadorDevolucion coordinadorDevolucion;
+    private ICoordinadorAplicacion coordinadorAplicacion;
     private DevolucionDTO devolucion;
+    private ReservacionDTO reservacion;
+    private ButtonGroup grupoMotivos;
     
     /**
      * Creates new form PantallaDevolucion
      */
-    public PantallaDevolucion() {
+    public PantallaDevolucion(ICoordinadorAplicacion coordinadorApp, ICoordinadorDevolucion coordinadorDev, ReservacionDTO reservacion) {
+        this.coordinadorAplicacion = coordinadorApp;
+        this.reservacion = reservacion;
+        this.coordinadorDevolucion = coordinadorDev;
         initComponents();
+        cargarDatos();
+    }
+    
+    private void cargarDatos(){
+        lblNombreEvento.setText(reservacion.getBoleto().getEvento().getNombreEvento());
+        lblUbicacion.setText(reservacion.getBoleto().getEvento().getUbicacion().getNombre());
+        DateTimeFormatter formateadorFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formateadorHora = DateTimeFormatter.ofPattern("HH:mm");
+        txtFechaHora.setText(String.valueOf(reservacion.getBoleto().getEvento().getFechaHora().format(formateadorFecha)) + " - " + String.valueOf(reservacion.getBoleto().getEvento().getFechaHora().format(formateadorHora)));
+        // cargar imagen
+        String rutaLimpia = reservacion.getBoleto().getEvento().getUrlImagen().replace("/src/main/resources", "");
+        String rutaAlternativa = reservacion.getBoleto().getEvento().getUrlImagen().replace("src/main/resources", "");
+
+        URL imgUrl = getClass().getResource(rutaLimpia);
+        if (imgUrl == null) {
+            imgUrl = getClass().getResource(rutaAlternativa);
+        }
+
+        if (imgUrl != null) {
+            ImageIcon icono = new ImageIcon(imgUrl);
+
+            int ancho = 123;
+            int alto = 115;
+
+            Image imagenEscalada = icono.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+            iconEvento.setIcon(new ImageIcon(imagenEscalada));
+        }
+        iconEvento.setText("");
+        
+        grupoMotivos = new ButtonGroup();
+        
+        for(MotivoDevolucionN tipo : MotivoDevolucionN.values()){
+            JRadioButton opcion = new JRadioButton(tipo.name());
+            grupoMotivos.add(opcion);
+            pnlMotivos.add(opcion);
+        }
+    }
+    
+    private void limpiar(){
+        lblNombreEvento.setText("");
+        lblUbicacion.setText("");
+        txtFechaHora.setText("");
+        iconEvento.setIcon(null);
+        iconEvento.setText("");
+        pnlMotivos.removeAll();
+        txtComentarios.setText("");
+    }
+    
+    public void llenarFormularioDevolucion(){
+        devolucion.setMotivo(MotivoDevolucionN.valueOf(grupoMotivos.getSelection().getActionCommand()));
+        if(txtComentarios.getText() == null || txtComentarios.getText().isEmpty() || txtComentarios.getText().isBlank()){
+            devolucion.setDescripcion(null);
+        } else {
+            devolucion.setDescripcion(txtComentarios.getText());
+        }
+        devolucion.setFechaHoraDevolucion(LocalDateTime.now());
+    }
+    
+    public TipoDevolucionN mostrarTipoDevolucion(){
+        Object[] opciones = {"Crédito de la Aplicación", "Pago a tarjeta"};
+        int opcion = JOptionPane.showOptionDialog(
+                this, 
+                "El evento es de paga, donde tuvo un costo de $" + reservacion.getTotal() + ". ¿Cómo prefiere la devolución de su costo?", 
+                "Tipo Devolución",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                opciones,
+                null);
+        if(opcion == 0){
+            return TipoDevolucionN.CREDITO;
+        } else if (opcion == 1){
+            return TipoDevolucionN.DINERO;
+        } 
+        return null;
     }
 
     /**
@@ -46,12 +142,11 @@ public class PantallaDevolucion extends javax.swing.JFrame {
         lblNombreEvento = new javax.swing.JLabel();
         lblUbicacion = new javax.swing.JLabel();
         txtFechaHora = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnRegresar = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
-        setPreferredSize(new java.awt.Dimension(1225, 688));
 
         pnlBlanco.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -162,17 +257,19 @@ public class PantallaDevolucion extends javax.swing.JFrame {
                 .addContainerGap(20, Short.MAX_VALUE))
         );
 
-        jButton1.setBackground(new java.awt.Color(47, 47, 47));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Regresar");
-        jButton1.setBorder(null);
+        btnRegresar.setBackground(new java.awt.Color(47, 47, 47));
+        btnRegresar.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        btnRegresar.setForeground(new java.awt.Color(255, 255, 255));
+        btnRegresar.setText("Regresar");
+        btnRegresar.setBorder(null);
+        btnRegresar.addActionListener(this::btnRegresarActionPerformed);
 
-        jButton2.setBackground(new java.awt.Color(255, 0, 0));
-        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Cancelar");
-        jButton2.setBorder(null);
+        btnCancelar.setBackground(new java.awt.Color(255, 0, 0));
+        btnCancelar.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
+        btnCancelar.setText("Cancelar");
+        btnCancelar.setBorder(null);
+        btnCancelar.addActionListener(this::btnCancelarActionPerformed);
 
         javax.swing.GroupLayout pnlBlancoLayout = new javax.swing.GroupLayout(pnlBlanco);
         pnlBlanco.setLayout(pnlBlancoLayout);
@@ -187,13 +284,13 @@ public class PantallaDevolucion extends javax.swing.JFrame {
                         .addComponent(lblForm))
                     .addGroup(pnlBlancoLayout.createSequentialGroup()
                         .addGap(50, 50, 50)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(50, 50, 50)
                         .addGroup(pnlBlancoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pnlBlancoLayout.createSequentialGroup()
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 361, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(117, 117, 117)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(pnlBlancoLayout.createSequentialGroup()
                                 .addGroup(pnlBlancoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblMotivo)
@@ -226,12 +323,12 @@ public class PantallaDevolucion extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                 .addGroup(pnlBlancoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlBlancoLayout.createSequentialGroup()
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(75, 75, 75))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlBlancoLayout.createSequentialGroup()
                         .addGroup(pnlBlancoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(76, 76, 76))))
         );
 
@@ -249,11 +346,81 @@ public class PantallaDevolucion extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+        // TODO add your handling code here:
+        coordinadorDevolucion.abrirMostrarEventoCancelar(reservacion);
+    }//GEN-LAST:event_btnRegresarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        // TODO add your handling code here:
+        if(grupoMotivos.getSelection() == null){
+            JOptionPane.showMessageDialog(this, "Por lo menos seleccione el motivo de cancelación.");
+            return;
+        }
+        llenarFormularioDevolucion();
+        if(reservacion.getBoleto().getEvento().isGratuito()){
+            devolucion.setTipo(null);
+            devolucion.setReembolso(null);
+            boolean registro = coordinadorDevolucion.cancelarReservacionGratuita(reservacion);
+            if(!registro){
+                JOptionPane.showMessageDialog(this, "No se pudo cancelar su reservación. Por favor intente otra vez o más tarde.");
+                return;
+            }
+            coordinadorDevolucion.registrarMotivoCancelacion(devolucion, reservacion.getIdReservacion());
+            JOptionPane.showMessageDialog(this, "Su reservación para el evento " + reservacion.getBoleto().getEvento().getNombreEvento().toUpperCase() + " ha sido cancelada correctamente!");
+            coordinadorDevolucion.aumentarCapacidadEvento(reservacion.getBoleto().getEvento().getIdEvento());
+            coordinadorDevolucion.abrirConsultar(reservacion.getUsuario());
+            limpiar();
+            dispose();
+        } else {
+            TipoDevolucionN tipo = mostrarTipoDevolucion();
+            if(tipo == TipoDevolucionN.CREDITO){
+                boolean exitoCreditos = coordinadorDevolucion.cancelarReservacionPaga(reservacion, tipo);
+                if(!exitoCreditos){
+                    JOptionPane.showMessageDialog(this, "No se pudo cancelar su reservación. Por favor intente otra vez o más tarde.");
+                    return;
+                } 
+                JOptionPane.showMessageDialog(
+                            this, 
+                            "Se le cargarán " + reservacion.getTotal().intValue()*2 + " créditos a su cuenta para usar en futuras compras en la aplicación", 
+                            "Operación Éxitosa", 
+                            JOptionPane.INFORMATION_MESSAGE);
+                devolucion.setTipo(tipo);
+                devolucion.setReembolso(new ReembolsoDTO(null, LocalDateTime.now(), reservacion.getTotal()*2, "Créditos"));
+                coordinadorDevolucion.registrarMotivoCancelacion(devolucion, reservacion.getIdReservacion());
+                coordinadorDevolucion.aumentarCapacidadEvento(reservacion.getBoleto().getEvento().getIdEvento());
+                coordinadorDevolucion.abrirConsultar(reservacion.getUsuario());
+                limpiar();
+                dispose();
+            } else if (tipo == TipoDevolucionN.DINERO){
+                boolean exitoDinero = coordinadorDevolucion.cancelarReservacionPaga(reservacion, tipo);
+                if(!exitoDinero){
+                    JOptionPane.showMessageDialog(this, "No se pudo cancelar su reservación. Por favor intente otra vez o más tarde.");
+                    return;
+                }
+                JOptionPane.showMessageDialog(
+                            this, 
+                            "Su devolución, con un monto de $" + reservacion.getTotal() + ", se verá reflejada en las próximas 72 horas.", 
+                            "Operación Éxitosa", 
+                            JOptionPane.INFORMATION_MESSAGE);
+                /*
+                creo q efectivamente el método de realizar cancelación pago/gratis registrará la devolución también
+                */
+                devolucion.setTipo(tipo);
+                devolucion.setReembolso(new ReembolsoDTO(null, LocalDateTime.now(), reservacion.getTotal(), "Tarjeta"));
+                coordinadorDevolucion.registrarMotivoCancelacion(devolucion, reservacion.getIdReservacion());
+                coordinadorDevolucion.aumentarCapacidadEvento(reservacion.getBoleto().getEvento().getIdEvento());
+                coordinadorDevolucion.abrirConsultar(reservacion.getUsuario());
+                limpiar();
+                dispose();
+            }
+        }
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnRegresar;
     private javax.swing.JLabel iconEvento;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblComen;
     private javax.swing.JLabel lblEvento;

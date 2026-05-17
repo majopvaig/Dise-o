@@ -114,17 +114,36 @@ public class ReservacionDAO implements IReservacionDAO {
         }
     }
 
+    // lo agregó la majo
+//    @Override
+//    public boolean agregarDevolucion(String idReservacion, Devolucion devolucion) throws PersistenciaException {
+//        try{
+//            Bson r = Filters.eq("_id", new ObjectId(idReservacion));
+//            Bson campo = Updates.set("devolucion", devolucion);
+//            
+//            UpdateResult resultado = coleccionReservaciones.updateOne(r, campo);
+//            
+//            return resultado.getModifiedCount() > 0;
+//        } catch(MongoException me){
+//            throw new PersistenciaException("No fue posible agregar la devolución a la reservación.");
+//        }
+//    }
+
+    // lo agregó la majo
     @Override
-    public boolean agregarDevolucion(String idReservacion, Devolucion devolucion) throws PersistenciaException {
+    public boolean cancelarReservacion(Devolucion devolucion, String idReservacion) throws PersistenciaException {
         try{
-            Bson r = Filters.eq("_id", idReservacion);
-            Bson campo = Updates.set("devolucion", devolucion);
+            Bson filtro = Filters.eq("_id", new ObjectId(idReservacion));
+            Bson actualizacion = Updates.combine(
+                    Updates.set("estado", "CANCELADA"),
+                    Updates.set("boleto.estado", "CANCELADO"),
+                    Updates.set("devoluciom", devolucion));
             
-            UpdateResult resultado = coleccionReservaciones.updateOne(r, campo);
+            UpdateResult resultado = coleccionReservaciones.updateOne(filtro, actualizacion);
             
             return resultado.getModifiedCount() > 0;
         } catch(MongoException me){
-            throw new PersistenciaException("No fue posible agregar la devolución a la reservación.");
+            throw new PersistenciaException("No fue posible cancelar la reservacón.");
         }
     }
     
