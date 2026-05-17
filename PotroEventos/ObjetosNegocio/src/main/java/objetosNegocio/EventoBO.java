@@ -32,18 +32,6 @@ public class EventoBO implements IEventoBO {
     }
 
     @Override
-    public EventoDTO guardarEvento(EventoDTO evento) throws NegocioException {
-        if (!validarDatos(evento)) {
-            throw new NegocioException("Evento inválido.");
-        }
-        try {
-            return EventoAdapter.entidadADTO(eventoDAO.guardar(EventoAdapter.dtoAEntidad(evento)));
-        } catch (PersistenciaException ex) {
-            throw new NegocioException(ex.getMessage());
-        }
-    }
-
-    @Override
     public List<EventoDTO> obtenerEventosPorCategoria(CategoriaDTO categoria) throws NegocioException {
         try {
             return EventoAdapter.listaDTOs(eventoDAO.buscarTodosCategoria(new Categoria(categoria.getIdCategoria(), CategoriaEvento.valueOf(categoria.getNombreCategoria().name()), categoria.getUrlImagen())));
@@ -68,47 +56,6 @@ public class EventoBO implements IEventoBO {
         } catch(PersistenciaException ex){
             throw new NegocioException(ex.getMessage());
         }
-    }
-
-    public boolean validarDatos(EventoDTO eventoDTO) {
-        // 1. Validar que el objeto no sea nulo
-        if (eventoDTO == null) {
-            return false;
-        }
-
-        // 2. Validar Nombre (No nulo, no vacío y aplicar trim/lowercase)
-        if (eventoDTO.getNombreEvento() == null || eventoDTO.getNombreEvento().isBlank()) {
-            return false;
-        }
-        // Formateo simple
-        eventoDTO.setNombreEvento(eventoDTO.getNombreEvento().trim().toLowerCase());
-
-        // 3. Validar Ubicación
-        if (eventoDTO.getUbicacion() == null) {
-            return false;
-        }
-        eventoDTO.setUbicacion(eventoDTO.getUbicacion());
-
-        // 4. Validar Categoría y Estado (Enums)
-        if (eventoDTO.getCategoriaEvento() == null || eventoDTO.getEstadoEvento() == null || eventoDTO.getTipoEvento() == null) {
-            return false;
-        }
-
-        // 5. Validar Fecha (Que no sea nula)
-        if (eventoDTO.getFechaHora() == null) {
-            return false;
-        }
-
-        // 6. Formatear campos opcionales (Información)
-        if (eventoDTO.getInformacionEvento() != null) {
-            eventoDTO.setInformacionEvento(eventoDTO.getInformacionEvento().trim().toLowerCase());
-        }
-
-        if (eventoDTO.getDisponibilidad() == null || eventoDTO.getDisponibilidad() < 0) {
-            return false;
-        }
-
-        return true; // Si pasó todos los filtros
     }
 
     @Override

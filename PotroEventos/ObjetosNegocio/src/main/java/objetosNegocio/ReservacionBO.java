@@ -1,12 +1,15 @@
 package objetosNegocio;
 
+import adapters.DevolucionAdapter;
 import adapters.ReservacionAdapter;
 import daos.ReservacionDAO;
+import dtos.DevolucionDTO;
 import dtos.ReservacionDTO;
 import excepciones.NegocioException;
 import excepciones.PersistenciaException;
 import interfaces.IReservacionBO;
 import interfaces.IReservacionDAO;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -79,6 +82,35 @@ public class ReservacionBO implements IReservacionBO {
         }
 
         return true;
+    }
+    
+    private boolean validarDevolucion(DevolucionDTO devolucion){
+        
+        if(devolucion == null){
+            return false;
+        }
+        
+        if(devolucion.getMotivo() == null){
+            return false;
+        }
+        
+        if(devolucion.getFechaHoraDevolucion() == null){
+            devolucion.setFechaHoraDevolucion(LocalDateTime.now());
+        }
+        
+        return true;
+    }
+
+    @Override
+    public boolean cancelarReservacion(DevolucionDTO devolucion, String idReservacion) throws NegocioException {
+        try{
+            if(!validarDevolucion(devolucion)){
+                throw new NegocioException("La devolución no es válida por falta de información.");
+            }
+            return reservacionDAO.cancelarReservacion(DevolucionAdapter.convertirAEntidad(devolucion), idReservacion);
+        } catch(PersistenciaException pe){
+            throw new NegocioException(pe.getMessage());
+        }
     }
 
 }

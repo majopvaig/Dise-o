@@ -36,12 +36,12 @@ public interface ICoordinadorDevolucion {
     /*
     esto ya son operaciones de negocio, es ir al subsistema y cancelar reservacion gratis
     */
-    boolean cancelarReservacionGratuita(ReservacionDTO reservacion);
+    boolean cancelarReservacionGratuita(ReservacionDTO reservacion, DevolucionDTO devolucion);
     
     /*
     esto ya son operaciones de negocio, es ir al subsistema y cancelar reservacion de paga
     */
-    boolean cancelarReservacionPaga(ReservacionDTO reservacion, TipoDevolucionN tipo);
+    boolean cancelarReservacionPaga(ReservacionDTO reservacion, TipoDevolucionN tipo, DevolucionDTO devolucion);
     
     /*
     abrir el panel de consultar

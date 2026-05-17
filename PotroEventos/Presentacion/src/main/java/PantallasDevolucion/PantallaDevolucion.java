@@ -361,7 +361,7 @@ public class PantallaDevolucion extends javax.swing.JFrame {
         if(reservacion.getBoleto().getEvento().isGratuito()){
             devolucion.setTipo(null);
             devolucion.setReembolso(null);
-            boolean registro = coordinadorDevolucion.cancelarReservacionGratuita(reservacion);
+            boolean registro = coordinadorDevolucion.cancelarReservacionGratuita(reservacion, devolucion);
             if(!registro){
                 JOptionPane.showMessageDialog(this, "No se pudo cancelar su reservación. Por favor intente otra vez o más tarde.");
                 return;
@@ -375,7 +375,7 @@ public class PantallaDevolucion extends javax.swing.JFrame {
         } else {
             TipoDevolucionN tipo = mostrarTipoDevolucion();
             if(tipo == TipoDevolucionN.CREDITO){
-                boolean exitoCreditos = coordinadorDevolucion.cancelarReservacionPaga(reservacion, tipo);
+                boolean exitoCreditos = coordinadorDevolucion.cancelarReservacionPaga(reservacion, tipo, devolucion);
                 if(!exitoCreditos){
                     JOptionPane.showMessageDialog(this, "No se pudo cancelar su reservación. Por favor intente otra vez o más tarde.");
                     return;
@@ -393,7 +393,7 @@ public class PantallaDevolucion extends javax.swing.JFrame {
                 limpiar();
                 dispose();
             } else if (tipo == TipoDevolucionN.DINERO){
-                boolean exitoDinero = coordinadorDevolucion.cancelarReservacionPaga(reservacion, tipo);
+                boolean exitoDinero = coordinadorDevolucion.cancelarReservacionPaga(reservacion, tipo, devolucion);
                 if(!exitoDinero){
                     JOptionPane.showMessageDialog(this, "No se pudo cancelar su reservación. Por favor intente otra vez o más tarde.");
                     return;

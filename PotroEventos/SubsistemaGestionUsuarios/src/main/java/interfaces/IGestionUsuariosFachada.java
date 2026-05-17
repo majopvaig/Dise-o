@@ -22,8 +22,10 @@ public interface IGestionUsuariosFachada {
 
     public UsuarioDTO obtenerUsuarioActivo();
 
+    // de la majo
     public boolean restarCreditos(Integer cantidad, String idUsuario);
     
+    // de la majo
     public boolean aumentarCreditos(Integer cantidad, String idUsuario);
     
     public String consultarCreditos(String idUsuario);

@@ -39,9 +39,17 @@ public class GestionEventoFachada implements IFachadaGestionEvento {
         return control.consultarCategorias();
     }
 
+    /*
+    esto es d la majo
+    */
     @Override
     public boolean aumentarCapacidad(String idEvento) throws GestionEventoException {
         return control.aumentarCapacidad(idEvento);
+    }
+
+    @Override
+    public boolean reducirCapacidad(String idEvento) throws GestionEventoException {
+        return control.reducirCapacidad(idEvento);
     }
 
 }

@@ -14,9 +14,12 @@ public interface IUsuarioBO {
 
     public UsuarioDTO guardarUsuario(UsuarioDTO usuario) throws NegocioException;
     
+    // esto lo agregó la majo
     public boolean restarCreditos(Integer cantidad, String idUsuario) throws NegocioException;
     
+    // esto lo agregó la majo
     public boolean aumentarCreditos(Integer cantidad, String idUsuario) throws NegocioException;
     
+    // esto lo agregó la majo
     public String consultarCreditos(String idUsuario) throws NegocioException;
 }

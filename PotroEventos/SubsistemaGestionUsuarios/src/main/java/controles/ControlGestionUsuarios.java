@@ -46,6 +46,7 @@ public class ControlGestionUsuarios {
         return usuarioActivo;
     }
 
+    // de la majo
     public boolean restarCreditos(Integer cantidad, String idUsuario) throws GestionUsuarioException {
         try {
             return usuarioBO.restarCreditos(cantidad, idUsuario);
@@ -54,6 +55,7 @@ public class ControlGestionUsuarios {
         }
     }
     
+    // de la majo
     public boolean aumentarCreditos(Integer cantidad, String idUsuario) throws GestionUsuarioException {
         try{
             return usuarioBO.aumentarCreditos(cantidad, idUsuario);

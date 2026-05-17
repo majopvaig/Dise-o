@@ -14,16 +14,12 @@ import java.util.List;
  */
 public interface IEventoBO {
 
-    /*
-    creo q esto está mal ya q nunca registramos eventos nosotros
-    */
-    EventoDTO guardarEvento(EventoDTO evento) throws NegocioException;
-
     List<EventoDTO> obtenerEventosPorCategoria(CategoriaDTO categoria) throws NegocioException;
 
     EventoDTO obtenerEventoPorId(String id) throws NegocioException;
     
     boolean reducirDisponibilidadEvento(String id) throws NegocioException;
     
+    // esto lo agregó la majo
     boolean aumentarDisponibilidadEvento(String idEvento) throws NegocioException;
 }

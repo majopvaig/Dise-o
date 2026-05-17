@@ -7,7 +7,6 @@ package interfaces;
 import dtos.CategoriaDTO;
 import dtos.EventoDTO;
 import excepciones.GestionEventoException;
-import excepciones.NegocioException;
 import java.util.List;
 
 /**
@@ -22,5 +21,8 @@ public interface IFachadaGestionEvento {
 
     List<CategoriaDTO> consultarCategorias() throws GestionEventoException;
     
+    // de la majo
     boolean aumentarCapacidad(String idEvento) throws GestionEventoException;
+    
+    boolean reducirCapacidad(String idEvento) throws GestionEventoException;
 }

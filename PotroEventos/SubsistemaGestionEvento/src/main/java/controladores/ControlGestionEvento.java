@@ -59,10 +59,19 @@ public class ControlGestionEvento {
         }
     }
     
+    // d la majo
     public boolean aumentarCapacidad(String idEvento) throws GestionEventoException {
         try {
             return eventoBO.aumentarDisponibilidadEvento(idEvento);
         } catch (NegocioException ne) {
+            throw new GestionEventoException(ne.getMessage());
+        }
+    }
+    
+    public boolean reducirCapacidad(String idEvento) throws GestionEventoException {
+        try{
+            return eventoBO.reducirDisponibilidadEvento(idEvento);
+        } catch(NegocioException ne){
             throw new GestionEventoException(ne.getMessage());
         }
     }

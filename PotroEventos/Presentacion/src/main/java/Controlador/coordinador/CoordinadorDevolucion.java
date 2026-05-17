@@ -44,6 +44,7 @@ public class CoordinadorDevolucion implements ICoordinadorDevolucion {
         }
     }
     
+    // este no se usa
     @Override
     public List<ReservacionDTO> consultarReservacionesUsuario(String idUsuario) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -60,18 +61,19 @@ public class CoordinadorDevolucion implements ICoordinadorDevolucion {
         frmEventoCancelar.setVisible(true);
     }
 
+    // la neta aquí no sé qp
     @Override
     public void mostrarDevolucion(ReservacionDTO reservacion) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public boolean cancelarReservacionGratuita(ReservacionDTO reservacion) {
+    public boolean cancelarReservacionGratuita(ReservacionDTO reservacion, DevolucionDTO devolucion) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public boolean cancelarReservacionPaga(ReservacionDTO reservacion, TipoDevolucionN tipo) {
+    public boolean cancelarReservacionPaga(ReservacionDTO reservacion, TipoDevolucionN tipo, DevolucionDTO devolucion) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
@@ -81,6 +83,7 @@ public class CoordinadorDevolucion implements ICoordinadorDevolucion {
         coordinadorApp.mostrarConsultar();
     }
 
+    // este no se usa
     @Override
     public EventoDTO consultarEvento(EventoDTO evento) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -95,6 +98,7 @@ public class CoordinadorDevolucion implements ICoordinadorDevolucion {
         return evento.getFechaHora().isBefore(limite48Horas);
     }
 
+    // esto lo dejaré junto con el de cancelar la reservación
     @Override
     public boolean registrarMotivoCancelacion(DevolucionDTO devolucion, String idReservacion) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
